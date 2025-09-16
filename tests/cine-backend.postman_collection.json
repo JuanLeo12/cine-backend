@@ -1,0 +1,1157 @@
+{
+  "info": {
+    "name": "Cine Backend - Colección Postman",
+    "_postman_id": "cine-backend-collection",
+    "description": "Colección para testear el backend de cine.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "🧩 Módulos individuales",
+      "item": [
+        {
+          "name": "Usuarios",
+          "item": [
+            {
+              "name": "Usuarios - Crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Juan Pérez\",\n  \"email\": \"juan@example.com\",\n  \"password\": \"123456\"\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/usuarios",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["usuarios"]
+                }
+              }
+            },
+            {
+              "name": "Usuarios - Listar",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/usuarios",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["usuarios"]
+                }
+              }
+            },
+            {
+              "name": "Usuarios - Obtener por ID",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/usuarios/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["usuarios", "1"]
+                }
+              }
+            },
+            {
+              "name": "Usuarios - Actualizar",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Juan Actualizado\",\n  \"email\": \"juan_actualizado@example.com\"\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/usuarios/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["usuarios", "1"]
+                }
+              }
+            },
+            {
+              "name": "Usuarios - Eliminar",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "http://localhost:3000/usuarios/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["usuarios", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sedes",
+          "item": [
+            {
+              "name": "Sedes - Crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Sede Central\",\n  \"direccion\": \"Av. Principal 123\"\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/sedes",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["sedes"]
+                }
+              }
+            },
+            {
+              "name": "Sedes - Listar",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/sedes",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["sedes"]
+                }
+              }
+            },
+            {
+              "name": "Sedes - Obtener por ID",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/sedes/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["sedes", "1"]
+                }
+              }
+            },
+            {
+              "name": "Sedes - Actualizar",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Sede Norte\",\n  \"direccion\": \"Av. Norte 456\"\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/sedes/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["sedes", "1"]
+                }
+              }
+            },
+            {
+              "name": "Sedes - Eliminar",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "http://localhost:3000/sedes/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["sedes", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Salas",
+          "item": [
+            {
+              "name": "Salas - Crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Sala 1\",\n  \"id_sede\": 1,\n  \"capacidad\": 100\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/salas",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["salas"]
+                }
+              }
+            },
+            {
+              "name": "Salas - Listar",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/salas",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["salas"]
+                }
+              }
+            },
+            {
+              "name": "Salas - Obtener por ID",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/salas/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["salas", "1"]
+                }
+              }
+            },
+            {
+              "name": "Salas - Actualizar",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Sala VIP\",\n  \"id_sede\": 1,\n  \"capacidad\": 80\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/salas/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["salas", "1"]
+                }
+              }
+            },
+            {
+              "name": "Salas - Eliminar",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "http://localhost:3000/salas/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["salas", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Películas",
+          "item": [
+            {
+              "name": "Películas - Crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titulo\": \"Matrix\",\n  \"duracion\": 120,\n  \"clasificacion\": \"PG-13\",\n  \"genero\": \"Ciencia ficción\",\n  \"sinopsis\": \"Un hacker descubre la verdad sobre su realidad.\"\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/peliculas",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["peliculas"]
+                }
+              }
+            },
+            {
+              "name": "Películas - Listar",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/peliculas",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["peliculas"]
+                }
+              }
+            },
+            {
+              "name": "Películas - Obtener por ID",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/peliculas/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["peliculas", "1"]
+                }
+              }
+            },
+            {
+              "name": "Películas - Actualizar",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titulo\": \"Matrix Reloaded\",\n  \"duracion\": 138,\n  \"clasificacion\": \"PG-13\",\n  \"genero\": \"Acción\",\n  \"sinopsis\": \"Neo continúa su lucha contra las máquinas.\"\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/peliculas/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["peliculas", "1"]
+                }
+              }
+            },
+            {
+              "name": "Películas - Eliminar",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "http://localhost:3000/peliculas/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["peliculas", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Funciones",
+          "item": [
+            {
+              "name": "Funciones - Crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id_pelicula\": 1,\n  \"id_sala\": 1,\n  \"fecha_hora\": \"2025-09-15T20:00:00\"\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/funciones",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["funciones"]
+                }
+              }
+            },
+            {
+              "name": "Funciones - Listar",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/funciones",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["funciones"]
+                }
+              }
+            },
+            {
+              "name": "Funciones - Obtener por ID",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/funciones/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["funciones", "1"]
+                }
+              }
+            },
+            {
+              "name": "Funciones - Actualizar",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id_pelicula\": 1,\n  \"id_sala\": 1,\n  \"fecha_hora\": \"2025-09-15T22:00:00\"\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/funciones/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["funciones", "1"]
+                }
+              }
+            },
+            {
+              "name": "Funciones - Eliminar",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "http://localhost:3000/funciones/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["funciones", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Asientos",
+          "item": [
+            {
+              "name": "Asientos - Crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id_sala\": 1,\n  \"fila\": \"A\",\n  \"numero\": 1,\n  \"estado\": \"disponible\"\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/asientos",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["asientos"]
+                }
+              }
+            },
+            {
+              "name": "Asientos - Listar",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/asientos",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["asientos"]
+                }
+              }
+            },
+            {
+              "name": "Asientos - Obtener por ID",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/asientos/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["asientos", "1"]
+                }
+              }
+            },
+            {
+              "name": "Asientos - Actualizar estado",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"bloqueado\",\n  \"id_usuario_bloqueo\": 1\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/asientos/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["asientos", "1"]
+                }
+              }
+            },
+            {
+              "name": "Asientos - Eliminar",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "http://localhost:3000/asientos/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["asientos", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Órdenes de compra",
+          "item": [
+            {
+              "name": "Órdenes - Crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id_usuario\": 1,\n  \"id_funcion\": 1\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/ordenes",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["ordenes"]
+                }
+              }
+            },
+            {
+              "name": "Órdenes - Listar",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/ordenes",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["ordenes"]
+                }
+              }
+            },
+            {
+              "name": "Órdenes - Obtener por ID",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/ordenes/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["ordenes", "1"]
+                }
+              }
+            },
+            {
+              "name": "Órdenes - Actualizar",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id_usuario\": 1,\n  \"id_funcion\": 1\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/ordenes/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["ordenes", "1"]
+                }
+              }
+            },
+            {
+              "name": "Órdenes - Eliminar",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "http://localhost:3000/ordenes/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["ordenes", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Tickets",
+          "item": [
+            {
+              "name": "Tickets - Emitir",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id_orden_ticket\": 1,\n  \"id_asiento\": 1\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/tickets",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["tickets"]
+                }
+              }
+            },
+            {
+              "name": "Tickets - Listar",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/tickets",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["tickets"]
+                }
+              }
+            },
+            {
+              "name": "Tickets - Obtener por ID",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/tickets/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["tickets", "1"]
+                }
+              }
+            },
+            {
+              "name": "Tickets - Eliminar",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "http://localhost:3000/tickets/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["tickets", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Combos",
+          "item": [
+            {
+              "name": "Combos - Crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Combo Clásico\",\n  \"descripcion\": \"Popcorn + Gaseosa\",\n  \"precio\": 12.00\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/combos",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["combos"]
+                }
+              }
+            },
+            {
+              "name": "Combos - Listar",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/combos",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["combos"]
+                }
+              }
+            },
+            {
+              "name": "Combos - Obtener por ID",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/combos/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["combos", "1"]
+                }
+              }
+            },
+            {
+              "name": "Combos - Actualizar",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Combo Familiar\",\n  \"descripcion\": \"2 Popcorn + 2 Gaseosas\",\n  \"precio\": 20.00\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/combos/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["combos", "1"]
+                }
+              }
+            },
+            {
+              "name": "Combos - Eliminar",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "http://localhost:3000/combos/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["combos", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Pagos",
+          "item": [
+            {
+              "name": "Pagos - Registrar",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id_orden_compra\": 1,\n  \"id_metodo_pago\": 1,\n  \"monto\": 30.00\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/pagos",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["pagos"]
+                }
+              }
+            },
+            {
+              "name": "Pagos - Listar",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/pagos",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["pagos"]
+                }
+              }
+            },
+            {
+              "name": "Pagos - Obtener por ID",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/pagos/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["pagos", "1"]
+                }
+              }
+            },
+            {
+              "name": "Pagos - Eliminar",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "http://localhost:3000/pagos/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["pagos", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Tipos de usuario",
+          "item": [
+            {
+              "name": "Tipos - Crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"adulto mayor\"\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/tipos_usuario",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["tipos_usuario"]
+                }
+              }
+            },
+            {
+              "name": "Tipos - Listar",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/tipos_usuario",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["tipos_usuario"]
+                }
+              }
+            },
+            {
+              "name": "Tipos - Eliminar",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "http://localhost:3000/tipos_usuario/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["tipos_usuario", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Métodos de pago",
+          "item": [
+            {
+              "name": "Métodos - Crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Tarjeta de crédito\"\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/metodos_pago",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["metodos_pago"]
+                }
+              }
+            },
+            {
+              "name": "Métodos - Listar",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/metodos_pago",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["metodos_pago"]
+                }
+              }
+            },
+            {
+              "name": "Métodos - Eliminar",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "http://localhost:3000/metodos_pago/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["metodos_pago", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Publicidad",
+          "item": [
+            {
+              "name": "Publicidad - Crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titulo\": \"Promo 2x1\",\n  \"descripcion\": \"Aplica solo los martes\",\n  \"imagen_url\": \"https://ejemplo.com/banner.jpg\"\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/publicidad",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["publicidad"]
+                }
+              }
+            },
+            {
+              "name": "Publicidad - Listar",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/publicidad",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["publicidad"]
+                }
+              }
+            },
+            {
+              "name": "Publicidad - Eliminar",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "http://localhost:3000/publicidad/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["publicidad", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Vales corporativos",
+          "item": [
+            {
+              "name": "Vales - Crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"codigo\": \"VALE123\",\n  \"monto\": 50.00,\n  \"estado\": \"activo\"\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/vales",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["vales"]
+                }
+              }
+            },
+            {
+              "name": "Vales - Listar",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/vales",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["vales"]
+                }
+              }
+            },
+            {
+              "name": "Vales - Eliminar",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "http://localhost:3000/vales/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["vales", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Tarifas corporativas",
+          "item": [
+            {
+              "name": "Tarifas - Crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id_tipo_usuario\": 1,\n  \"precio\": 10.00\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/tarifas_corporativas",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["tarifas_corporativas"]
+                }
+              }
+            },
+            {
+              "name": "Tarifas - Listar",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/tarifas_corporativas",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["tarifas_corporativas"]
+                }
+              }
+            },
+            {
+              "name": "Tarifas - Eliminar",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "http://localhost:3000/tarifas_corporativas/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["tarifas_corporativas", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Combos corporativos",
+          "item": [
+            {
+              "name": "Combos - Crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Combo Empresa\",\n  \"descripcion\": \"Popcorn + Agua\",\n  \"precio\": 8.00\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/combos_corporativos",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["combos_corporativos"]
+                }
+              }
+            },
+            {
+              "name": "Combos - Listar",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/combos_corporativos",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["combos_corporativos"]
+                }
+              }
+            },
+            {
+              "name": "Combos - Eliminar",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "http://localhost:3000/combos_corporativos/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["combos_corporativos", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Alquiler de salas",
+          "item": [
+            {
+              "name": "Alquiler - Crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id_sala\": 1,\n  \"fecha_hora\": \"2025-09-20T18:00:00\",\n  \"empresa\": \"Empresa XYZ\",\n  \"contacto\": \"contacto@xyz.com\"\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:3000/alquiler_salas",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["alquiler_salas"]
+                }
+              }
+            },
+            {
+              "name": "Alquiler - Listar",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "http://localhost:3000/alquiler_salas",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["alquiler_salas"]
+                }
+              }
+            },
+            {
+              "name": "Alquiler - Eliminar",
+              "request": {
+                "method": "DELETE",
+                "url": {
+                  "raw": "http://localhost:3000/alquiler_salas/1",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["alquiler_salas", "1"]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
