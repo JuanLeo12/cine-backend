@@ -8,8 +8,8 @@ const Usuario = sequelize.define(
   "Usuario",
   {
   nombre: { type: DataTypes.STRING(100), allowNull: false },
-  dni: { type: DataTypes.STRING(15), unique: true, allowNull: true },
-  ruc: { type: DataTypes.STRING(15), unique: true, allowNull: true },
+  dni: { type: DataTypes.STRING(8), unique: true, allowNull: true },
+  ruc: { type: DataTypes.STRING(11), unique: true, allowNull: true },
   apellido: { type: DataTypes.STRING(100) },
   telefono: { type: DataTypes.STRING(20) },
   direccion: { type: DataTypes.STRING(255) },
