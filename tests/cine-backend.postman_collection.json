@@ -61,55 +61,6 @@
       ]
     },
     {
-      "name": "Alquiler de salas",
-      "item": [
-        {
-          "name": "Alquiler - Crear",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"id_sala\": 1,\n  \"fecha\": \"2025-09-25\",\n  \"hora_inicio\": \"15:00:00\",\n  \"hora_fin\": \"18:00:00\",\n  \"descripcion_evento\": \"Evento corporativo anual\",\n  \"precio\": 800.00\n}"
-            },
-            "url": {
-              "raw": "http://localhost:3000/alquiler_salas",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["alquiler_salas"]
-            }
-          },
-          "description": "Crea un nuevo alquiler de sala. Solo corporativo o admin. Campos obligatorios: id_sala, fecha, hora_inicio, hora_fin, descripcion_evento, precio."
-        },
-        {
-          "name": "Alquiler - Listar",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "http://localhost:3000/alquiler_salas",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["alquiler_salas"]
-            }
-          },
-          "description": "Lista los alquileres de salas. Admin ve todos, corporativo solo los suyos."
-        },
-        {
-          "name": "Alquiler - Eliminar",
-          "request": {
-            "method": "DELETE",
-            "url": {
-              "raw": "http://localhost:3000/alquiler_salas/1",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["alquiler_salas", "1"]
-            }
-          },
-          "description": "Elimina un alquiler de sala por ID. Solo admin. No se puede eliminar si ya está pagado."
-        }
-      ]
-    },
-    {
       "name": "Usuarios",
       "item": [
         {
@@ -129,60 +80,15 @@
             "url": {
               "raw": "http://localhost:3000/usuarios/registro",
               "host": ["localhost"],
-              "port": "3000",
-              "path": ["usuarios", "registro"]
-            }
-          },
-          "description": "Registra un usuario corporativo. Requiere nombre, email, password, RUC y rol corporativo."
-        },
-        {
-          "name": "Usuarios - Login",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
+              "url": {
+                "raw": "http://localhost:3000/usuarios",
+                "host": ["localhost"],
+                "port": "3000",
+                "path": ["usuarios"]
               }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"juan@example.com\",\n  \"password\": \"12345678\"\n}"
             },
-            "url": {
-              "raw": "http://localhost:3000/usuarios/login",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["usuarios", "login"]
-            }
-          },
-          "description": "Login de usuario. Requiere email y password."
-        },
-        {
-          "name": "Usuarios - Perfil",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "http://localhost:3000/usuarios/perfil",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["usuarios", "perfil"]
-            }
-          },
-          "description": "Obtiene el perfil del usuario autenticado."
-        },
-        {
-          "name": "Usuarios - Listar",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "http://localhost:3000/usuarios",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["usuarios"]
-            }
-          },
-          "description": "Lista todos los usuarios (solo admin)."
+            "description": "Lista todos los usuarios (solo admin)."
+          }
         },
         {
           "name": "Usuarios - Actualizar (Cliente)",
@@ -1300,52 +1206,6 @@
             }
           },
           "description": "Elimina una tarifa corporativa por ID. Solo admin o dueño pueden eliminar."
-        }
-      ]
-    },
-    {
-      "name": "Combos corporativos",
-      "item": [
-        {
-          "name": "Combos - Crear",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Combo Empresa\",\n  \"descripcion\": \"Popcorn + Agua\",\n  \"precio\": 8.00\n}"
-            },
-            "url": {
-              "raw": "http://localhost:3000/combos_corporativos",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["combos_corporativos"]
-            }
-          }
-        },
-        {
-          "name": "Combos - Listar",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "http://localhost:3000/combos_corporativos",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["combos_corporativos"]
-            }
-          }
-        },
-        {
-          "name": "Combos - Eliminar",
-          "request": {
-            "method": "DELETE",
-            "url": {
-              "raw": "http://localhost:3000/combos_corporativos/1",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["combos_corporativos", "1"]
-            }
-          }
         }
       ]
     },
