@@ -5,12 +5,35 @@ const { Usuario } = require("../models");
 // 📌 Registro de usuario
 exports.registrarUsuario = async (req, res) => {
   try {
-    let { nombre, email, password, rol } = req.body;
+    let {
+      nombre,
+      apellido,
+      telefono,
+      direccion,
+      fecha_nacimiento,
+      genero,
+      foto_perfil,
+      estado,
+      dni,
+      ruc,
+      email,
+      password,
+      rol
+    } = req.body;
 
     if (!nombre || !email || !password) {
       return res
         .status(400)
         .json({ error: "Nombre, email y contraseña son obligatorios" });
+    }
+
+    // Validar dni/ruc según rol
+    const rolUsuario = rol || "cliente";
+    if (rolUsuario === "cliente" && !dni) {
+      return res.status(400).json({ error: "El campo DNI es obligatorio para clientes" });
+    }
+    if (rolUsuario === "corporativo" && !ruc) {
+      return res.status(400).json({ error: "El campo RUC es obligatorio para usuarios corporativos" });
     }
 
     email = email.trim().toLowerCase();
@@ -32,6 +55,18 @@ exports.registrarUsuario = async (req, res) => {
     if (existe) {
       return res.status(409).json({ error: "El email ya está registrado" });
     }
+    if (dni) {
+      const existeDni = await Usuario.findOne({ where: { dni } });
+      if (existeDni) {
+        return res.status(409).json({ error: "El DNI ya está registrado" });
+      }
+    }
+    if (ruc) {
+      const existeRuc = await Usuario.findOne({ where: { ruc } });
+      if (existeRuc) {
+        return res.status(409).json({ error: "El RUC ya está registrado" });
+      }
+    }
 
     // Roles permitidos y control de asignación
     const rolesPermitidos = ["cliente", "admin", "corporativo"];
@@ -47,6 +82,15 @@ exports.registrarUsuario = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const nuevoUsuario = await Usuario.create({
       nombre: nombre.trim(),
+      apellido: apellido ? apellido.trim() : null,
+      telefono: telefono ? telefono.trim() : null,
+      direccion: direccion ? direccion.trim() : null,
+      fecha_nacimiento: fecha_nacimiento || null,
+      genero: genero ? genero.trim() : null,
+      foto_perfil: foto_perfil ? foto_perfil.trim() : null,
+      estado: estado ? estado.trim() : undefined,
+      dni: dni ? dni.trim() : null,
+      ruc: ruc ? ruc.trim() : null,
       email,
       password: hashedPassword,
       rol: rol || "cliente",
@@ -57,6 +101,15 @@ exports.registrarUsuario = async (req, res) => {
       usuario: {
         id: nuevoUsuario.id,
         nombre: nuevoUsuario.nombre,
+        apellido: nuevoUsuario.apellido,
+        telefono: nuevoUsuario.telefono,
+        direccion: nuevoUsuario.direccion,
+        fecha_nacimiento: nuevoUsuario.fecha_nacimiento,
+        genero: nuevoUsuario.genero,
+        foto_perfil: nuevoUsuario.foto_perfil,
+        estado: nuevoUsuario.estado,
+        dni: nuevoUsuario.dni,
+        ruc: nuevoUsuario.ruc,
         email: nuevoUsuario.email,
         rol: nuevoUsuario.rol,
         fecha_registro: nuevoUsuario.fecha_registro,
@@ -103,8 +156,18 @@ exports.loginUsuario = async (req, res) => {
       usuario: {
         id: usuario.id,
         nombre: usuario.nombre,
+        apellido: usuario.apellido,
+        telefono: usuario.telefono,
+        direccion: usuario.direccion,
+        fecha_nacimiento: usuario.fecha_nacimiento,
+        genero: usuario.genero,
+        foto_perfil: usuario.foto_perfil,
+        estado: usuario.estado,
+        dni: usuario.dni,
+        ruc: usuario.ruc,
         email: usuario.email,
         rol: usuario.rol,
+        fecha_registro: usuario.fecha_registro,
       },
     });
   } catch (error) {
@@ -117,7 +180,22 @@ exports.loginUsuario = async (req, res) => {
 exports.obtenerPerfil = async (req, res) => {
   try {
     const usuario = await Usuario.findByPk(req.user.id, {
-      attributes: ["id", "nombre", "email", "rol", "fecha_registro"],
+      attributes: [
+        "id",
+        "nombre",
+        "apellido",
+        "telefono",
+        "direccion",
+        "fecha_nacimiento",
+        "genero",
+        "foto_perfil",
+        "estado",
+        "dni",
+        "ruc",
+        "email",
+        "rol",
+        "fecha_registro"
+      ],
     });
 
     if (!usuario) {
@@ -139,7 +217,22 @@ exports.listarUsuarios = async (req, res) => {
     }
 
     const usuarios = await Usuario.findAll({
-      attributes: ["id", "nombre", "email", "rol", "fecha_registro"],
+      attributes: [
+        "id",
+        "nombre",
+        "apellido",
+        "telefono",
+        "direccion",
+        "fecha_nacimiento",
+        "genero",
+        "foto_perfil",
+        "estado",
+        "dni",
+        "ruc",
+        "email",
+        "rol",
+        "fecha_registro"
+      ],
       order: [["fecha_registro", "DESC"]],
     });
 
@@ -167,7 +260,21 @@ exports.actualizarUsuario = async (req, res) => {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    const { nombre, email, password, rol } = req.body;
+    const {
+      nombre,
+      apellido,
+      telefono,
+      direccion,
+      fecha_nacimiento,
+      genero,
+      foto_perfil,
+      estado,
+      dni,
+      ruc,
+      email,
+      password,
+      rol
+    } = req.body;
 
     // Si se envía email, validar formato y duplicados
     if (email) {
@@ -185,7 +292,16 @@ exports.actualizarUsuario = async (req, res) => {
       usuario.email = emailTrim;
     }
 
-    if (nombre) usuario.nombre = nombre.trim();
+  if (nombre) usuario.nombre = nombre.trim();
+  if (apellido !== undefined) usuario.apellido = apellido ? apellido.trim() : null;
+  if (telefono !== undefined) usuario.telefono = telefono ? telefono.trim() : null;
+  if (direccion !== undefined) usuario.direccion = direccion ? direccion.trim() : null;
+  if (fecha_nacimiento !== undefined) usuario.fecha_nacimiento = fecha_nacimiento || null;
+  if (genero !== undefined) usuario.genero = genero ? genero.trim() : null;
+  if (foto_perfil !== undefined) usuario.foto_perfil = foto_perfil ? foto_perfil.trim() : null;
+  if (estado !== undefined) usuario.estado = estado ? estado.trim() : usuario.estado;
+  if (dni !== undefined) usuario.dni = dni ? dni.trim() : null;
+  if (ruc !== undefined) usuario.ruc = ruc ? ruc.trim() : null;
 
     // Si se envía password, validar longitud y encriptar
     if (password) {
@@ -218,6 +334,15 @@ exports.actualizarUsuario = async (req, res) => {
       usuario: {
         id: usuario.id,
         nombre: usuario.nombre,
+        apellido: usuario.apellido,
+        telefono: usuario.telefono,
+        direccion: usuario.direccion,
+        fecha_nacimiento: usuario.fecha_nacimiento,
+        genero: usuario.genero,
+        foto_perfil: usuario.foto_perfil,
+        estado: usuario.estado,
+        dni: usuario.dni,
+        ruc: usuario.ruc,
         email: usuario.email,
         rol: usuario.rol,
         fecha_registro: usuario.fecha_registro,

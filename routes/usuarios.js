@@ -1,27 +1,24 @@
 const express = require('express');
 const router = express.Router();
 const { autenticarUsuario, permitirRoles } = require('../middleware/authMiddleware');
-const {
-  listarTipos,
-  obtenerTipo,
-  crearTipo,
-  actualizarTipo,
-  eliminarTipo
-} = require('../controllers/tiposUsuarioController');
+const usuariosController = require('../controllers/usuariosController');
 
-// 📌 Listar tipos de usuario → solo admin
-router.get('/', autenticarUsuario, permitirRoles('admin'), listarTipos);
+// Registro de usuario (público)
+router.post('/registro', usuariosController.registrarUsuario);
 
-// 📌 Obtener tipo de usuario por ID → solo admin
-router.get('/:id', autenticarUsuario, permitirRoles('admin'), obtenerTipo);
+// Login de usuario (público)
+router.post('/login', usuariosController.loginUsuario);
 
-// 📌 Crear tipo de usuario → solo admin
-router.post('/', autenticarUsuario, permitirRoles('admin'), crearTipo);
+// Perfil autenticado
+router.get('/perfil', autenticarUsuario, usuariosController.obtenerPerfil);
 
-// 📌 Actualizar tipo de usuario → solo admin
-router.put('/:id', autenticarUsuario, permitirRoles('admin'), actualizarTipo);
+// Listado general de usuarios (solo admin)
+router.get('/', autenticarUsuario, permitirRoles('admin'), usuariosController.listarUsuarios);
 
-// 📌 Eliminar tipo de usuario → solo admin
-router.delete('/:id', autenticarUsuario, permitirRoles('admin'), eliminarTipo);
+// Actualizar usuario (admin o el propio usuario)
+router.put('/:id', autenticarUsuario, usuariosController.actualizarUsuario);
+
+// Eliminar usuario (admin o el propio usuario)
+router.delete('/:id', autenticarUsuario, usuariosController.eliminarUsuario);
 
 module.exports = router;

@@ -4,7 +4,7 @@ const { TipoUsuario, Usuario, TarifaCorporativa } = require("../models");
 exports.listarTipos = async (req, res) => {
   try {
     const tipos = await TipoUsuario.findAll({
-      attributes: ["id", "nombre", "descripcion", "descuento"],
+      attributes: ["id", "nombre"],
     });
     res.json(tipos);
   } catch (error) {
@@ -36,18 +36,12 @@ exports.crearTipo = async (req, res) => {
         .json({ error: "No tienes permiso para crear tipos de usuario" });
     }
 
-    const { nombre, descripcion, descuento } = req.body;
+    const { nombre } = req.body;
 
-    if (!nombre || descuento === undefined) {
+    if (!nombre) {
       return res
         .status(400)
-        .json({ error: "Nombre y descuento son obligatorios" });
-    }
-
-    if (isNaN(descuento) || descuento < 0 || descuento > 100) {
-      return res
-        .status(400)
-        .json({ error: "El descuento debe ser un número entre 0 y 100" });
+        .json({ error: "El nombre es obligatorio" });
     }
 
     const existe = await TipoUsuario.findOne({
@@ -59,8 +53,6 @@ exports.crearTipo = async (req, res) => {
 
     const nuevo = await TipoUsuario.create({
       nombre: nombre.trim(),
-      descripcion,
-      descuento,
     });
     res.status(201).json(nuevo);
   } catch (error) {
@@ -83,15 +75,7 @@ exports.actualizarTipo = async (req, res) => {
       return res.status(404).json({ error: "Tipo de usuario no encontrado" });
     }
 
-    const { nombre, descuento } = req.body;
-
-    if (descuento !== undefined) {
-      if (isNaN(descuento) || descuento < 0 || descuento > 100) {
-        return res
-          .status(400)
-          .json({ error: "El descuento debe ser un número entre 0 y 100" });
-      }
-    }
+    const { nombre } = req.body;
 
     if (nombre) {
       const existe = await TipoUsuario.findOne({
@@ -102,12 +86,10 @@ exports.actualizarTipo = async (req, res) => {
           .status(409)
           .json({ error: "Ya existe otro tipo de usuario con ese nombre" });
       }
+      tipo.nombre = nombre.trim();
     }
 
-    await tipo.update({
-      ...req.body,
-      nombre: nombre?.trim() || tipo.nombre,
-    });
+    await tipo.save();
     res.json(tipo);
   } catch (error) {
     console.error(error);

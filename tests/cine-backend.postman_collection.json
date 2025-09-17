@@ -7,1149 +7,1391 @@
   },
   "item": [
     {
-      "name": "🧩 Módulos individuales",
+      "name": "Órdenes de combos",
       "item": [
         {
-          "name": "Usuarios",
-          "item": [
-            {
-              "name": "Usuarios - Crear",
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"nombre\": \"Juan Pérez\",\n  \"email\": \"juan@example.com\",\n  \"password\": \"123456\"\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/usuarios",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["usuarios"]
-                }
+          "name": "Órdenes de combos - Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
               }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_orden_compra\": 1,\n  \"id_combo\": 1,\n  \"cantidad\": 2,\n  \"precio_unitario\": 10.00,\n  \"descuento\": 1.00\n}"
             },
-            {
-              "name": "Usuarios - Listar",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/usuarios",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["usuarios"]
-                }
-              }
-            },
-            {
-              "name": "Usuarios - Obtener por ID",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/usuarios/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["usuarios", "1"]
-                }
-              }
-            },
-            {
-              "name": "Usuarios - Actualizar",
-              "request": {
-                "method": "PUT",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"nombre\": \"Juan Actualizado\",\n  \"email\": \"juan_actualizado@example.com\"\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/usuarios/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["usuarios", "1"]
-                }
-              }
-            },
-            {
-              "name": "Usuarios - Eliminar",
-              "request": {
-                "method": "DELETE",
-                "url": {
-                  "raw": "http://localhost:3000/usuarios/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["usuarios", "1"]
-                }
-              }
+            "url": {
+              "raw": "http://localhost:3000/ordenes_combos",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["ordenes_combos"]
             }
-          ]
+          },
+          "description": "Crea una nueva orden de combo. Requiere id_orden_compra, id_combo, cantidad, precio_unitario y opcional descuento. Usuario autenticado."
         },
         {
-          "name": "Sedes",
-          "item": [
-            {
-              "name": "Sedes - Crear",
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"nombre\": \"Sede Central\",\n  \"direccion\": \"Av. Principal 123\"\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/sedes",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["sedes"]
-                }
-              }
-            },
-            {
-              "name": "Sedes - Listar",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/sedes",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["sedes"]
-                }
-              }
-            },
-            {
-              "name": "Sedes - Obtener por ID",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/sedes/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["sedes", "1"]
-                }
-              }
-            },
-            {
-              "name": "Sedes - Actualizar",
-              "request": {
-                "method": "PUT",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"nombre\": \"Sede Norte\",\n  \"direccion\": \"Av. Norte 456\"\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/sedes/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["sedes", "1"]
-                }
-              }
-            },
-            {
-              "name": "Sedes - Eliminar",
-              "request": {
-                "method": "DELETE",
-                "url": {
-                  "raw": "http://localhost:3000/sedes/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["sedes", "1"]
-                }
-              }
+          "name": "Órdenes de combos - Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/ordenes_combos",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["ordenes_combos"]
             }
-          ]
+          },
+          "description": "Lista todas las órdenes de combos. Solo admin."
         },
         {
-          "name": "Salas",
-          "item": [
-            {
-              "name": "Salas - Crear",
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"nombre\": \"Sala 1\",\n  \"id_sede\": 1,\n  \"capacidad\": 100\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/salas",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["salas"]
-                }
-              }
-            },
-            {
-              "name": "Salas - Listar",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/salas",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["salas"]
-                }
-              }
-            },
-            {
-              "name": "Salas - Obtener por ID",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/salas/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["salas", "1"]
-                }
-              }
-            },
-            {
-              "name": "Salas - Actualizar",
-              "request": {
-                "method": "PUT",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"nombre\": \"Sala VIP\",\n  \"id_sede\": 1,\n  \"capacidad\": 80\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/salas/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["salas", "1"]
-                }
-              }
-            },
-            {
-              "name": "Salas - Eliminar",
-              "request": {
-                "method": "DELETE",
-                "url": {
-                  "raw": "http://localhost:3000/salas/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["salas", "1"]
-                }
-              }
+          "name": "Órdenes de combos - Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:3000/ordenes_combos/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["ordenes_combos", "1"]
             }
-          ]
+          },
+          "description": "Elimina una orden de combo por ID. Solo admin."
+        }
+      ]
+    },
+    {
+      "name": "Alquiler de salas",
+      "item": [
+        {
+          "name": "Alquiler - Crear",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_sala\": 1,\n  \"fecha\": \"2025-09-25\",\n  \"hora_inicio\": \"15:00:00\",\n  \"hora_fin\": \"18:00:00\",\n  \"descripcion_evento\": \"Evento corporativo anual\",\n  \"precio\": 800.00\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/alquiler_salas",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["alquiler_salas"]
+            }
+          },
+          "description": "Crea un nuevo alquiler de sala. Solo corporativo o admin. Campos obligatorios: id_sala, fecha, hora_inicio, hora_fin, descripcion_evento, precio."
         },
         {
-          "name": "Películas",
-          "item": [
-            {
-              "name": "Películas - Crear",
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"titulo\": \"Matrix\",\n  \"duracion\": 120,\n  \"clasificacion\": \"PG-13\",\n  \"genero\": \"Ciencia ficción\",\n  \"sinopsis\": \"Un hacker descubre la verdad sobre su realidad.\"\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/peliculas",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["peliculas"]
-                }
-              }
-            },
-            {
-              "name": "Películas - Listar",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/peliculas",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["peliculas"]
-                }
-              }
-            },
-            {
-              "name": "Películas - Obtener por ID",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/peliculas/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["peliculas", "1"]
-                }
-              }
-            },
-            {
-              "name": "Películas - Actualizar",
-              "request": {
-                "method": "PUT",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"titulo\": \"Matrix Reloaded\",\n  \"duracion\": 138,\n  \"clasificacion\": \"PG-13\",\n  \"genero\": \"Acción\",\n  \"sinopsis\": \"Neo continúa su lucha contra las máquinas.\"\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/peliculas/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["peliculas", "1"]
-                }
-              }
-            },
-            {
-              "name": "Películas - Eliminar",
-              "request": {
-                "method": "DELETE",
-                "url": {
-                  "raw": "http://localhost:3000/peliculas/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["peliculas", "1"]
-                }
-              }
+          "name": "Alquiler - Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/alquiler_salas",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["alquiler_salas"]
             }
-          ]
+          },
+          "description": "Lista los alquileres de salas. Admin ve todos, corporativo solo los suyos."
         },
         {
-          "name": "Funciones",
-          "item": [
-            {
-              "name": "Funciones - Crear",
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"id_pelicula\": 1,\n  \"id_sala\": 1,\n  \"fecha_hora\": \"2025-09-15T20:00:00\"\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/funciones",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["funciones"]
-                }
-              }
-            },
-            {
-              "name": "Funciones - Listar",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/funciones",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["funciones"]
-                }
-              }
-            },
-            {
-              "name": "Funciones - Obtener por ID",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/funciones/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["funciones", "1"]
-                }
-              }
-            },
-            {
-              "name": "Funciones - Actualizar",
-              "request": {
-                "method": "PUT",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"id_pelicula\": 1,\n  \"id_sala\": 1,\n  \"fecha_hora\": \"2025-09-15T22:00:00\"\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/funciones/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["funciones", "1"]
-                }
-              }
-            },
-            {
-              "name": "Funciones - Eliminar",
-              "request": {
-                "method": "DELETE",
-                "url": {
-                  "raw": "http://localhost:3000/funciones/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["funciones", "1"]
-                }
-              }
+          "name": "Alquiler - Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:3000/alquiler_salas/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["alquiler_salas", "1"]
             }
-          ]
+          },
+          "description": "Elimina un alquiler de sala por ID. Solo admin. No se puede eliminar si ya está pagado."
+        }
+      ]
+    },
+    {
+      "name": "Usuarios",
+      "item": [
+        {
+          "name": "Usuarios - Crear (Corporativo)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Empresa SAC\",\n  \"email\": \"empresa@corporativo.com\",\n  \"password\": \"12345678\",\n  \"ruc\": \"20123456789\",\n  \"telefono\": \"999888777\",\n  \"direccion\": \"Av. Empresarial 456\",\n  \"rol\": \"corporativo\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/usuarios/registro",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["usuarios", "registro"]
+            }
+          },
+          "description": "Registra un usuario corporativo. Requiere nombre, email, password, RUC y rol corporativo."
         },
         {
-          "name": "Asientos",
-          "item": [
-            {
-              "name": "Asientos - Crear",
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"id_sala\": 1,\n  \"fila\": \"A\",\n  \"numero\": 1,\n  \"estado\": \"disponible\"\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/asientos",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["asientos"]
-                }
+          "name": "Usuarios - Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
               }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"juan@example.com\",\n  \"password\": \"12345678\"\n}"
             },
-            {
-              "name": "Asientos - Listar",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/asientos",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["asientos"]
-                }
-              }
-            },
-            {
-              "name": "Asientos - Obtener por ID",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/asientos/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["asientos", "1"]
-                }
-              }
-            },
-            {
-              "name": "Asientos - Actualizar estado",
-              "request": {
-                "method": "PUT",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"estado\": \"bloqueado\",\n  \"id_usuario_bloqueo\": 1\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/asientos/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["asientos", "1"]
-                }
-              }
-            },
-            {
-              "name": "Asientos - Eliminar",
-              "request": {
-                "method": "DELETE",
-                "url": {
-                  "raw": "http://localhost:3000/asientos/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["asientos", "1"]
-                }
-              }
+            "url": {
+              "raw": "http://localhost:3000/usuarios/login",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["usuarios", "login"]
             }
-          ]
+          },
+          "description": "Login de usuario. Requiere email y password."
         },
         {
-          "name": "Órdenes de compra",
-          "item": [
-            {
-              "name": "Órdenes - Crear",
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"id_usuario\": 1,\n  \"id_funcion\": 1\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/ordenes",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["ordenes"]
-                }
-              }
-            },
-            {
-              "name": "Órdenes - Listar",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/ordenes",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["ordenes"]
-                }
-              }
-            },
-            {
-              "name": "Órdenes - Obtener por ID",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/ordenes/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["ordenes", "1"]
-                }
-              }
-            },
-            {
-              "name": "Órdenes - Actualizar",
-              "request": {
-                "method": "PUT",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"id_usuario\": 1,\n  \"id_funcion\": 1\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/ordenes/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["ordenes", "1"]
-                }
-              }
-            },
-            {
-              "name": "Órdenes - Eliminar",
-              "request": {
-                "method": "DELETE",
-                "url": {
-                  "raw": "http://localhost:3000/ordenes/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["ordenes", "1"]
-                }
-              }
+          "name": "Usuarios - Perfil",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/usuarios/perfil",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["usuarios", "perfil"]
             }
-          ]
+          },
+          "description": "Obtiene el perfil del usuario autenticado."
         },
         {
-          "name": "Tickets",
-          "item": [
-            {
-              "name": "Tickets - Emitir",
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"id_orden_ticket\": 1,\n  \"id_asiento\": 1\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/tickets",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["tickets"]
-                }
-              }
-            },
-            {
-              "name": "Tickets - Listar",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/tickets",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["tickets"]
-                }
-              }
-            },
-            {
-              "name": "Tickets - Obtener por ID",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/tickets/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["tickets", "1"]
-                }
-              }
-            },
-            {
-              "name": "Tickets - Eliminar",
-              "request": {
-                "method": "DELETE",
-                "url": {
-                  "raw": "http://localhost:3000/tickets/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["tickets", "1"]
-                }
-              }
+          "name": "Usuarios - Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/usuarios",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["usuarios"]
             }
-          ]
+          },
+          "description": "Lista todos los usuarios (solo admin)."
         },
         {
-          "name": "Combos",
-          "item": [
-            {
-              "name": "Combos - Crear",
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"nombre\": \"Combo Clásico\",\n  \"descripcion\": \"Popcorn + Gaseosa\",\n  \"precio\": 12.00\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/combos",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["combos"]
-                }
+          "name": "Usuarios - Actualizar (Cliente)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
               }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan Actualizado\",\n  \"apellido\": \"García\",\n  \"email\": \"juan_actualizado@example.com\",\n  \"dni\": \"12345678\",\n  \"telefono\": \"999888777\",\n  \"direccion\": \"Av. Siempre Viva 123\",\n  \"fecha_nacimiento\": \"1990-01-01\",\n  \"genero\": \"masculino\",\n  \"foto_perfil\": \"https://ejemplo.com/foto.jpg\"\n}"
             },
-            {
-              "name": "Combos - Listar",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/combos",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["combos"]
-                }
-              }
-            },
-            {
-              "name": "Combos - Obtener por ID",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/combos/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["combos", "1"]
-                }
-              }
-            },
-            {
-              "name": "Combos - Actualizar",
-              "request": {
-                "method": "PUT",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"nombre\": \"Combo Familiar\",\n  \"descripcion\": \"2 Popcorn + 2 Gaseosas\",\n  \"precio\": 20.00\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/combos/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["combos", "1"]
-                }
-              }
-            },
-            {
-              "name": "Combos - Eliminar",
-              "request": {
-                "method": "DELETE",
-                "url": {
-                  "raw": "http://localhost:3000/combos/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["combos", "1"]
-                }
-              }
+            "url": {
+              "raw": "http://localhost:3000/usuarios/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["usuarios", "1"]
             }
-          ]
+          },
+          "description": "Actualiza los datos de un usuario cliente. Solo admin o el propio usuario."
         },
         {
-          "name": "Pagos",
-          "item": [
-            {
-              "name": "Pagos - Registrar",
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"id_orden_compra\": 1,\n  \"id_metodo_pago\": 1,\n  \"monto\": 30.00\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/pagos",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["pagos"]
-                }
+          "name": "Usuarios - Actualizar (Corporativo)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
               }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Empresa SAC Actualizada\",\n  \"email\": \"empresa_actualizada@corporativo.com\",\n  \"ruc\": \"20123456789\",\n  \"telefono\": \"999888777\",\n  \"direccion\": \"Av. Empresarial 456\",\n  \"rol\": \"corporativo\"\n}"
             },
-            {
-              "name": "Pagos - Listar",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/pagos",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["pagos"]
-                }
-              }
-            },
-            {
-              "name": "Pagos - Obtener por ID",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/pagos/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["pagos", "1"]
-                }
-              }
-            },
-            {
-              "name": "Pagos - Eliminar",
-              "request": {
-                "method": "DELETE",
-                "url": {
-                  "raw": "http://localhost:3000/pagos/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["pagos", "1"]
-                }
-              }
+            "url": {
+              "raw": "http://localhost:3000/usuarios/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["usuarios", "1"]
             }
-          ]
+          },
+          "description": "Actualiza los datos de un usuario corporativo. Solo admin o el propio usuario."
         },
         {
-          "name": "Tipos de usuario",
-          "item": [
-            {
-              "name": "Tipos - Crear",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"nombre\": \"adulto mayor\"\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/tipos_usuario",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["tipos_usuario"]
-                }
-              }
-            },
-            {
-              "name": "Tipos - Listar",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/tipos_usuario",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["tipos_usuario"]
-                }
-              }
-            },
-            {
-              "name": "Tipos - Eliminar",
-              "request": {
-                "method": "DELETE",
-                "url": {
-                  "raw": "http://localhost:3000/tipos_usuario/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["tipos_usuario", "1"]
-                }
-              }
+          "name": "Usuarios - Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:3000/usuarios/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["usuarios", "1"]
             }
-          ]
+          },
+          "description": "Elimina un usuario por ID. Solo admin o el propio usuario."
+        }
+      ]
+    },
+    {
+      "name": "Órdenes de compra",
+      "item": [
+        {
+          "name": "Órdenes - Crear (con función)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_funcion\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/ordenes",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["ordenes"]
+            }
+          },
+          "description": "Crea una nueva orden de compra asociada a una función. Usuario autenticado."
         },
         {
-          "name": "Métodos de pago",
-          "item": [
-            {
-              "name": "Métodos - Crear",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"nombre\": \"Tarjeta de crédito\"\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/metodos_pago",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["metodos_pago"]
-                }
+          "name": "Órdenes - Crear (solo combos)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
               }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
             },
-            {
-              "name": "Métodos - Listar",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/metodos_pago",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["metodos_pago"]
-                }
-              }
-            },
-            {
-              "name": "Métodos - Eliminar",
-              "request": {
-                "method": "DELETE",
-                "url": {
-                  "raw": "http://localhost:3000/metodos_pago/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["metodos_pago", "1"]
-                }
-              }
+            "url": {
+              "raw": "http://localhost:3000/ordenes",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["ordenes"]
             }
-          ]
+          },
+          "description": "Crea una nueva orden de compra solo para combos (sin función). Usuario autenticado."
         },
         {
-          "name": "Publicidad",
-          "item": [
-            {
-              "name": "Publicidad - Crear",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"titulo\": \"Promo 2x1\",\n  \"descripcion\": \"Aplica solo los martes\",\n  \"imagen_url\": \"https://ejemplo.com/banner.jpg\"\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/publicidad",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["publicidad"]
-                }
-              }
-            },
-            {
-              "name": "Publicidad - Listar",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/publicidad",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["publicidad"]
-                }
-              }
-            },
-            {
-              "name": "Publicidad - Eliminar",
-              "request": {
-                "method": "DELETE",
-                "url": {
-                  "raw": "http://localhost:3000/publicidad/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["publicidad", "1"]
-                }
-              }
+          "name": "Órdenes - Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/ordenes",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["ordenes"]
             }
-          ]
+          },
+          "description": "Lista todas las órdenes de compra. Admin ve todas, otros solo las suyas."
         },
         {
-          "name": "Vales corporativos",
-          "item": [
-            {
-              "name": "Vales - Crear",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"codigo\": \"VALE123\",\n  \"monto\": 50.00,\n  \"estado\": \"activo\"\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/vales",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["vales"]
-                }
-              }
-            },
-            {
-              "name": "Vales - Listar",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/vales",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["vales"]
-                }
-              }
-            },
-            {
-              "name": "Vales - Eliminar",
-              "request": {
-                "method": "DELETE",
-                "url": {
-                  "raw": "http://localhost:3000/vales/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["vales", "1"]
-                }
-              }
+          "name": "Órdenes - Obtener por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/ordenes/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["ordenes", "1"]
             }
-          ]
+          },
+          "description": "Obtiene una orden de compra por su ID. Admin cualquier orden, otros solo las suyas."
+        }
+      ]
+    },
+    {
+      "name": "Sedes",
+      "item": [
+        {
+          "name": "Sedes - Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Sede Central\",\n  \"direccion\": \"Av. Principal 123\",\n  \"ciudad\": \"Lima\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/sedes",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["sedes"]
+            }
+          },
+          "description": "Crea una nueva sede. Requiere nombre, dirección y ciudad. Solo admin."
         },
         {
-          "name": "Tarifas corporativas",
-          "item": [
-            {
-              "name": "Tarifas - Crear",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"id_tipo_usuario\": 1,\n  \"precio\": 10.00\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/tarifas_corporativas",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["tarifas_corporativas"]
-                }
-              }
-            },
-            {
-              "name": "Tarifas - Listar",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/tarifas_corporativas",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["tarifas_corporativas"]
-                }
-              }
-            },
-            {
-              "name": "Tarifas - Eliminar",
-              "request": {
-                "method": "DELETE",
-                "url": {
-                  "raw": "http://localhost:3000/tarifas_corporativas/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["tarifas_corporativas", "1"]
-                }
-              }
+          "name": "Sedes - Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/sedes",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["sedes"]
             }
-          ]
+          },
+          "description": "Lista todas las sedes. Público."
         },
         {
-          "name": "Combos corporativos",
-          "item": [
-            {
-              "name": "Combos - Crear",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"nombre\": \"Combo Empresa\",\n  \"descripcion\": \"Popcorn + Agua\",\n  \"precio\": 8.00\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/combos_corporativos",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["combos_corporativos"]
-                }
-              }
-            },
-            {
-              "name": "Combos - Listar",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/combos_corporativos",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["combos_corporativos"]
-                }
-              }
-            },
-            {
-              "name": "Combos - Eliminar",
-              "request": {
-                "method": "DELETE",
-                "url": {
-                  "raw": "http://localhost:3000/combos_corporativos/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["combos_corporativos", "1"]
-                }
-              }
+          "name": "Sedes - Obtener por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/sedes/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["sedes", "1"]
             }
-          ]
+          },
+          "description": "Obtiene una sede por su ID. Público."
         },
         {
-          "name": "Alquiler de salas",
-          "item": [
-            {
-              "name": "Alquiler - Crear",
-              "request": {
-                "method": "POST",
-                "header": [
-                  { "key": "Content-Type", "value": "application/json" }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"id_sala\": 1,\n  \"fecha_hora\": \"2025-09-20T18:00:00\",\n  \"empresa\": \"Empresa XYZ\",\n  \"contacto\": \"contacto@xyz.com\"\n}"
-                },
-                "url": {
-                  "raw": "http://localhost:3000/alquiler_salas",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["alquiler_salas"]
-                }
+          "name": "Sedes - Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
               }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Sede Norte\",\n  \"direccion\": \"Av. Norte 456\",\n  \"ciudad\": \"Trujillo\"\n}"
             },
-            {
-              "name": "Alquiler - Listar",
-              "request": {
-                "method": "GET",
-                "url": {
-                  "raw": "http://localhost:3000/alquiler_salas",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["alquiler_salas"]
-                }
-              }
-            },
-            {
-              "name": "Alquiler - Eliminar",
-              "request": {
-                "method": "DELETE",
-                "url": {
-                  "raw": "http://localhost:3000/alquiler_salas/1",
-                  "host": ["localhost"],
-                  "port": "3000",
-                  "path": ["alquiler_salas", "1"]
-                }
-              }
+            "url": {
+              "raw": "http://localhost:3000/sedes/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["sedes", "1"]
             }
-          ]
+          },
+          "description": "Actualiza los datos de una sede. Solo admin."
+        },
+        {
+          "name": "Sedes - Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:3000/sedes/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["sedes", "1"]
+            }
+          },
+          "description": "Elimina una sede por ID. Solo admin."
+        }
+      ]
+    },
+    {
+      "name": "Salas",
+      "item": [
+        {
+          "name": "Salas - Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Sala 1\",\n  \"id_sede\": 1,\n  \"filas\": 10,\n  \"columnas\": 12\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/salas",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["salas"]
+            }
+          },
+          "description": "Crea una nueva sala. Requiere nombre, id_sede, filas y columnas. Solo admin."
+        },
+        {
+          "name": "Salas - Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/salas",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["salas"]
+            }
+          },
+          "description": "Lista todas las salas. Público."
+        },
+        {
+          "name": "Salas - Obtener por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/salas/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["salas", "1"]
+            }
+          },
+          "description": "Obtiene una sala por su ID. Público."
+        },
+        {
+          "name": "Salas - Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Sala VIP\",\n  \"id_sede\": 1,\n  \"filas\": 8,\n  \"columnas\": 10\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/salas/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["salas", "1"]
+            }
+          },
+          "description": "Actualiza los datos de una sala. Solo admin."
+        },
+        {
+          "name": "Salas - Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:3000/salas/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["salas", "1"]
+            }
+          },
+          "description": "Elimina una sala por ID. Solo admin."
+        }
+      ]
+    },
+    {
+      "name": "Películas",
+      "item": [
+        {
+          "name": "Películas - Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Matrix\",\n  \"genero\": \"Ciencia ficción\",\n  \"clasificacion\": \"PG-13\",\n  \"duracion\": 120,\n  \"sinopsis\": \"Un hacker descubre la verdad sobre su realidad.\",\n  \"imagen_url\": \"https://ejemplo.com/matrix.jpg\",\n  \"fecha_estreno\": \"2025-09-20\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/peliculas",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["peliculas"]
+            }
+          },
+          "description": "Crea una nueva película. Requiere título, género, clasificación, duración y fecha_estreno. Solo admin."
+        },
+        {
+          "name": "Películas - Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/peliculas",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["peliculas"]
+            }
+          },
+          "description": "Lista todas las películas. Público."
+        },
+        {
+          "name": "Películas - Obtener por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/peliculas/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["peliculas", "1"]
+            }
+          },
+          "description": "Obtiene una película por su ID. Público."
+        },
+        {
+          "name": "Películas - Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Matrix Reloaded\",\n  \"genero\": \"Acción\",\n  \"clasificacion\": \"PG-13\",\n  \"duracion\": 138,\n  \"sinopsis\": \"Neo continúa su lucha contra las máquinas.\",\n  \"imagen_url\": \"https://ejemplo.com/matrix2.jpg\",\n  \"fecha_estreno\": \"2025-10-01\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/peliculas/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["peliculas", "1"]
+            }
+          },
+          "description": "Actualiza los datos de una película. Solo admin."
+        },
+        {
+          "name": "Películas - Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:3000/peliculas/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["peliculas", "1"]
+            }
+          },
+          "description": "Elimina una película por ID. Solo admin."
+        }
+      ]
+    },
+    {
+      "name": "Funciones",
+      "item": [
+        {
+          "name": "Funciones - Crear pública",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_pelicula\": 1,\n  \"id_sala\": 1,\n  \"fecha\": \"2025-09-20\",\n  \"hora\": \"20:00:00\",\n  \"es_privada\": false\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/funciones",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["funciones"]
+            }
+          },
+          "description": "Crea una función pública. Requiere id_pelicula, id_sala, fecha y hora. Solo admin."
+        },
+        {
+          "name": "Funciones - Crear privada",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_pelicula\": 1,\n  \"id_sala\": 1,\n  \"fecha\": \"2025-09-21\",\n  \"hora\": \"18:00:00\",\n  \"es_privada\": true,\n  \"precio_corporativo\": 500.00,\n  \"id_cliente_corporativo\": 2\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/funciones",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["funciones"]
+            }
+          },
+          "description": "Crea una función privada. Requiere id_pelicula, id_sala, fecha, hora, es_privada=true, precio_corporativo e id_cliente_corporativo. Solo admin."
+        },
+        {
+          "name": "Funciones - Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/funciones",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["funciones"]
+            }
+          },
+          "description": "Lista todas las funciones. Público."
+        },
+        {
+          "name": "Funciones - Obtener por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/funciones/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["funciones", "1"]
+            }
+          },
+          "description": "Obtiene una función por su ID. Público."
+        },
+        {
+          "name": "Funciones - Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fecha\": \"2025-09-22\",\n  \"hora\": \"21:00:00\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/funciones/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["funciones", "1"]
+            }
+          },
+          "description": "Actualiza los datos de una función. Solo admin."
+        },
+        {
+          "name": "Funciones - Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:3000/funciones/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["funciones", "1"]
+            }
+          },
+          "description": "Elimina una función por ID. Solo admin."
+        }
+      ]
+    },
+    {
+      "name": "Asientos de función",
+      "item": [
+        {
+          "name": "Asientos - Reservar (bloquear)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_funcion\": 1,\n  \"fila\": \"A\",\n  \"numero\": 5\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/asientos_funcion",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["asientos_funcion"]
+            }
+          },
+          "description": "Reserva (bloquea) un asiento para una función. Requiere id_funcion, fila y número. Usuario autenticado."
+        },
+        {
+          "name": "Asientos - Listar reservas",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/asientos_funcion",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["asientos_funcion"]
+            }
+          },
+          "description": "Lista los asientos reservados o bloqueados. Admin ve todos, otros solo los suyos."
+        },
+        {
+          "name": "Asientos - Eliminar reserva",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:3000/asientos_funcion/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["asientos_funcion", "1"]
+            }
+          },
+          "description": "Elimina la reserva de un asiento por ID. Solo admin o el usuario que lo reservó."
+        }
+      ]
+    },
+    {
+      "name": "Órdenes de tickets",
+      "item": [
+        {
+          "name": "Órdenes de tickets - Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_orden_compra\": 1,\n  \"id_tipo_usuario\": 1,\n  \"cantidad\": 2,\n  \"precio_unitario\": 15.00,\n  \"descuento\": 2.00\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/ordenes_tickets",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["ordenes_tickets"]
+            }
+          },
+          "description": "Crea una nueva orden de ticket. Requiere id_orden_compra, id_tipo_usuario, cantidad, precio_unitario y opcional descuento. Usuario autenticado."
+        },
+        {
+          "name": "Órdenes de tickets - Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/ordenes_tickets",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["ordenes_tickets"]
+            }
+          },
+          "description": "Lista todas las órdenes de tickets. Admin ve todas, otros solo las suyas."
+        },
+        {
+          "name": "Órdenes de tickets - Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:3000/ordenes_tickets/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["ordenes_tickets", "1"]
+            }
+          },
+          "description": "Elimina una orden de ticket por ID. Admin o dueño."
+        }
+      ]
+    },
+    {
+      "name": "Tickets",
+      "item": [
+        {
+          "name": "Tickets - Emitir",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_orden_ticket\": 1,\n  \"id_asiento\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/tickets",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["tickets"]
+            }
+          },
+          "description": "Crea un ticket para una orden y asiento específicos."
+        },
+        {
+          "name": "Tickets - Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/tickets",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["tickets"]
+            }
+          },
+          "description": "Obtiene la lista de todos los tickets."
+        },
+        {
+          "name": "Tickets - Obtener por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/tickets/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["tickets", "1"]
+            }
+          },
+          "description": "Obtiene la información de un ticket específico por su ID."
+        },
+        {
+          "name": "Tickets - Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:3000/tickets/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["tickets", "1"]
+            }
+          },
+          "description": "Elimina un ticket por su ID."
+        }
+      ]
+    },
+    {
+      "name": "Combos",
+      "item": [
+        {
+          "name": "Combos - Crear",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Combo Clásico\",\n  \"descripcion\": \"Popcorn + Gaseosa\",\n  \"precio\": 12.00,\n  \"imagen_url\": \"https://ejemplo.com/combo1.jpg\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/combos",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["combos"]
+            }
+          },
+          "description": "Crea un nuevo combo. Solo admin. Campos obligatorios: nombre y precio."
+        },
+        {
+          "name": "Combos - Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/combos",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["combos"]
+            }
+          },
+          "description": "Lista todos los combos. Público."
+        },
+        {
+          "name": "Combos - Obtener por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/combos/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["combos", "1"]
+            }
+          },
+          "description": "Obtiene un combo por su ID. Público."
+        },
+        {
+          "name": "Combos - Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Combo Familiar\",\n  \"descripcion\": \"2 Popcorn + 2 Gaseosas\",\n  \"precio\": 20.00,\n  \"imagen_url\": \"https://ejemplo.com/combo2.jpg\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/combos/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["combos", "1"]
+            }
+          },
+          "description": "Actualiza los datos de un combo. Solo admin."
+        },
+        {
+          "name": "Combos - Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:3000/combos/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["combos", "1"]
+            }
+          },
+          "description": "Elimina un combo por ID. Solo admin. No se puede eliminar si está asociado a órdenes."
+        }
+      ]
+    },
+    {
+      "name": "Pagos",
+      "item": [
+        {
+          "name": "Pagos - Registrar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_orden_compra\": 1,\n  \"id_metodo_pago\": 1,\n  \"monto_total\": 30.00\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/pagos",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["pagos"]
+            }
+          },
+          "description": "Registra un nuevo pago para una orden de compra. Requiere id_orden_compra, id_metodo_pago y monto_total. Usuario autenticado."
+        },
+        {
+          "name": "Pagos - Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/pagos",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["pagos"]
+            }
+          },
+          "description": "Lista todos los pagos. Admin ve todos, otros solo los suyos."
+        },
+        {
+          "name": "Pagos - Obtener por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/pagos/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["pagos", "1"]
+            }
+          },
+          "description": "Obtiene un pago por su ID. Admin cualquier pago, otros solo los suyos."
+        }
+      ]
+    },
+    {
+      "name": "Tipos de usuario",
+      "item": [
+        {
+          "name": "Tipos - Crear",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"adulto mayor\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/tipos_usuario",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["tipos_usuario"]
+            }
+          }
+        },
+        {
+          "name": "Tipos - Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/tipos_usuario",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["tipos_usuario"]
+            }
+          }
+        },
+        {
+          "name": "Tipos - Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:3000/tipos_usuario/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["tipos_usuario", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Métodos de pago",
+      "item": [
+        {
+          "name": "Métodos - Crear",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Tarjeta de crédito\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/metodos_pago",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["metodos_pago"]
+            }
+          },
+          "description": "Crea un nuevo método de pago. Solo admin. Campo requerido: nombre."
+        },
+        {
+          "name": "Métodos - Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/metodos_pago",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["metodos_pago"]
+            }
+          },
+          "description": "Lista todos los métodos de pago. Público."
+        },
+        {
+          "name": "Métodos - Obtener por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/metodos_pago/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["metodos_pago", "1"]
+            }
+          },
+          "description": "Obtiene un método de pago por su ID. Público."
+        },
+        {
+          "name": "Métodos - Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Yape\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/metodos_pago/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["metodos_pago", "1"]
+            }
+          },
+          "description": "Actualiza el nombre de un método de pago. Solo admin."
+        },
+        {
+          "name": "Métodos - Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:3000/metodos_pago/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["metodos_pago", "1"]
+            }
+          },
+          "description": "Elimina un método de pago por ID. Solo admin. No se puede eliminar si está en uso por algún pago."
+        }
+      ]
+    },
+    {
+      "name": "Publicidad",
+      "item": [
+        {
+          "name": "Publicidad - Crear",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente\": \"Empresa SAC\",\n  \"tipo\": \"banner\",\n  \"fecha_inicio\": \"2025-09-20\",\n  \"fecha_fin\": \"2025-10-20\",\n  \"precio\": 500.00,\n  \"descripcion\": \"Campaña de banner en lobby\",\n  \"imagen_url\": \"https://ejemplo.com/banner.jpg\",\n  \"id_sede\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/publicidad",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["publicidad"]
+            }
+          },
+          "description": "Crea una nueva campaña publicitaria. Solo corporativo. Campos obligatorios: tipo, fecha_inicio, fecha_fin, precio, id_sede."
+        },
+        {
+          "name": "Publicidad - Listar (admin)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/publicidad",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["publicidad"]
+            }
+          },
+          "description": "Lista todas las campañas (solo admin)."
+        },
+        {
+          "name": "Publicidad - Listar activas (público)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/publicidad/activas",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["publicidad", "activas"]
+            }
+          },
+          "description": "Lista campañas activas y visibles (público)."
+        },
+        {
+          "name": "Publicidad - Listar pendientes (admin)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/publicidad/pendientes",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["publicidad", "pendientes"]
+            }
+          },
+          "description": "Lista campañas pendientes de aprobación (solo admin)."
+        },
+        {
+          "name": "Publicidad - Aprobar",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "http://localhost:3000/publicidad/1/aprobar",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["publicidad", "1", "aprobar"]
+            }
+          },
+          "description": "Aprueba una campaña pendiente (solo admin)."
+        },
+        {
+          "name": "Publicidad - Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:3000/publicidad/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["publicidad", "1"]
+            }
+          },
+          "description": "Elimina una campaña (solo admin o dueño, solo si no está aprobada/activa)."
+        }
+      ]
+    },
+    {
+      "name": "Vales corporativos",
+      "item": [
+        {
+          "name": "Vales - Crear",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo\": \"VALE123\",\n  \"tipo\": \"entrada\",\n  \"valor\": 50.00,\n  \"fecha_expiracion\": \"2025-12-31\",\n  \"id_pago\": 1,\n  \"id_orden_compra\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/vales",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["vales"]
+            }
+          }
+        },
+        {
+          "name": "Vales - Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/vales",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["vales"]
+            }
+          }
+        },
+        {
+          "name": "Vales - Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:3000/vales/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["vales", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tarifas corporativas",
+      "item": [
+        {
+          "name": "Tarifas - Crear",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_cliente_corporativo\": 2,\n  \"id_tipo_usuario\": 1,\n  \"precio\": 10.00\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/tarifas_corporativas",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["tarifas_corporativas"]
+            }
+          },
+          "description": "Crea una tarifa corporativa para un cliente y tipo de usuario específicos. Solo admin puede crear."
+        },
+        {
+          "name": "Tarifas - Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/tarifas_corporativas",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["tarifas_corporativas"]
+            }
+          },
+          "description": "Lista todas las tarifas corporativas. Admin ve todas, corporativo solo las suyas."
+        },
+        {
+          "name": "Tarifas - Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:3000/tarifas_corporativas/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["tarifas_corporativas", "1"]
+            }
+          },
+          "description": "Elimina una tarifa corporativa por ID. Solo admin o dueño pueden eliminar."
+        }
+      ]
+    },
+    {
+      "name": "Combos corporativos",
+      "item": [
+        {
+          "name": "Combos - Crear",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Combo Empresa\",\n  \"descripcion\": \"Popcorn + Agua\",\n  \"precio\": 8.00\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/combos_corporativos",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["combos_corporativos"]
+            }
+          }
+        },
+        {
+          "name": "Combos - Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/combos_corporativos",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["combos_corporativos"]
+            }
+          }
+        },
+        {
+          "name": "Combos - Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:3000/combos_corporativos/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["combos_corporativos", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Alquiler de salas",
+      "item": [
+        {
+          "name": "Alquiler - Crear",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_sala\": 1,\n  \"fecha_hora\": \"2025-09-20T18:00:00\",\n  \"empresa\": \"Empresa XYZ\",\n  \"contacto\": \"contacto@xyz.com\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/alquiler_salas",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["alquiler_salas"]
+            }
+          }
+        },
+        {
+          "name": "Alquiler - Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/alquiler_salas",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["alquiler_salas"]
+            }
+          }
+        },
+        {
+          "name": "Alquiler - Eliminar",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:3000/alquiler_salas/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["alquiler_salas", "1"]
+            }
+          }
         }
       ]
     }
