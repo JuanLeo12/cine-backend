@@ -3,7 +3,7 @@ const router = express.Router();
 const { autenticarUsuario, permitirRoles } = require('../middleware/authMiddleware');
 const usuariosController = require('../controllers/usuariosController');
 
-// Registro de usuario (público)
+// Registro de usuario (público, clientes y corporativos)
 router.post('/registro', usuariosController.registrarUsuario);
 
 // Login de usuario (público)
