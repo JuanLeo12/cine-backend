@@ -336,7 +336,7 @@ exports.actualizarUsuario = async (req, res) => {
     const rucRegex = /^\d{11}$/;
     const telefonoRegex = /^\d{7,9}$/;
     const generoOpciones = ["masculino", "femenino"];
-    const emailRegex = /^[^\s@]+@[^ -\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     // Determinar rol actual o nuevo
     const rolUsuario = rol || usuario.rol || "cliente";
@@ -370,7 +370,7 @@ exports.actualizarUsuario = async (req, res) => {
       if (genero && !generoOpciones.includes(genero.toLowerCase())) {
         return res.status(400).json({ error: "El género solo puede ser masculino o femenino" });
       }
-      ruc = undefined;
+      usuario.ruc = null;
     } else if (rolUsuario === "corporativo") {
       // Obligatorios: nombre, telefono, direccion, email, ruc
       if (
@@ -526,7 +526,12 @@ exports.eliminarUsuario = async (req, res) => {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    await usuario.destroy();
+    if (usuario.estado === "inactivo") {
+      return res.status(400).json({ error: "El usuario ya está inactivo" });
+    }
+
+    usuario.estado = "inactivo";
+    await usuario.save();
 
     res.json({ mensaje: "Usuario eliminado correctamente" });
   } catch (error) {

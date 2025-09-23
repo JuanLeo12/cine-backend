@@ -47,6 +47,7 @@ const Usuario = sequelize.define(
       attributes: { exclude: ["password"] },
     },
     scopes: {
+      activos: { where: { estado: "activo" } }, //revisar esto
       withPassword: { attributes: { include: ["password"] } },
     },
   }
