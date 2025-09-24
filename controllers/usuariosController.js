@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { Usuario } = require("../models");
 
-// 📌 Registro de usuario
+// 📌 Registro de usuario - Listo
 exports.registrarUsuario = async (req, res) => {
   try {
 
@@ -166,7 +166,7 @@ exports.registrarUsuario = async (req, res) => {
   }
 };
 
-// 📌 Login de usuario
+// 📌 Login de usuario - Listo
 exports.loginUsuario = async (req, res) => {
   try {
 
@@ -229,7 +229,7 @@ exports.loginUsuario = async (req, res) => {
   }
 };
 
-// 📌 Perfil autenticado
+// 📌 Perfil autenticado - Listo
 exports.obtenerPerfil = async (req, res) => {
   try {
     const usuario = await Usuario.findByPk(req.user.id, {
@@ -262,7 +262,7 @@ exports.obtenerPerfil = async (req, res) => {
   }
 };
 
-// 📌 Listado general de usuarios (solo admin)
+// 📌 Listado general de usuarios (solo admin) - Listo
 exports.listarUsuarios = async (req, res) => {
   try {
     if (req.user.rol !== "admin") {
@@ -296,7 +296,7 @@ exports.listarUsuarios = async (req, res) => {
   }
 };
 
-// 📌 Actualizar usuario (admin o el propio usuario)
+// 📌 Actualizar usuario (admin o el propio usuario) 
 exports.actualizarUsuario = async (req, res) => {
   try {
     const { id } = req.params;
@@ -465,7 +465,7 @@ exports.actualizarUsuario = async (req, res) => {
       if (typeof password !== "string" || password.length < 8 || password.length > 16) {
         return res.status(400).json({ error: "La contraseña debe tener entre 8 y 16 caracteres" });
       }
-      usuario.password = await bcrypt.hash(password, 10);
+      usuario.password = password;
     }
 
     // Si se envía rol, solo admin puede cambiarlo
