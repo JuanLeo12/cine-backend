@@ -6,9 +6,8 @@ exports.listarCombos = async (req, res) => {
   try {
     const where = {};
 
-    // Si no es admin, filtrar por órdenes del usuario
     if (req.user.rol !== "admin") {
-      where["$OrdenCompra.id_usuario$"] = req.user.id;
+      where["$ordenCompra.id_usuario$"] = req.user.id;
     }
 
     const combos = await OrdenCombo.findAll({
@@ -24,10 +23,12 @@ exports.listarCombos = async (req, res) => {
       include: [
         {
           model: OrdenCompra,
+          as: "ordenCompra",
           attributes: ["id", "fecha_compra", "id_usuario", "estado"],
         },
         {
           model: Combo,
+          as: "combo",
           attributes: ["id", "nombre", "descripcion", "precio"],
         },
       ],
@@ -61,24 +62,18 @@ exports.crearCombo = async (req, res) => {
     });
     if (errores.length > 0) return res.status(400).json({ errores });
 
-    // Validar existencia de OrdenCompra
     const orden = await OrdenCompra.findByPk(id_orden_compra);
-    if (!orden) {
+    if (!orden)
       return res.status(404).json({ error: "Orden de compra no encontrada" });
-    }
 
-    // Si no es admin, validar que la orden sea del usuario
     if (req.user.rol !== "admin" && orden.id_usuario !== req.user.id) {
       return res
         .status(403)
         .json({ error: "No puedes agregar combos a una orden que no es tuya" });
     }
 
-    // Validar existencia de Combo
     const combo = await Combo.findByPk(id_combo);
-    if (!combo) {
-      return res.status(404).json({ error: "Combo no encontrado" });
-    }
+    if (!combo) return res.status(404).json({ error: "Combo no encontrado" });
 
     const nuevo = await OrdenCombo.create({
       id_orden_compra,
@@ -88,12 +83,10 @@ exports.crearCombo = async (req, res) => {
       descuento,
     });
 
-    res
-      .status(201)
-      .json({
-        mensaje: "Combo agregado a la orden correctamente",
-        ordenCombo: nuevo,
-      });
+    res.status(201).json({
+      mensaje: "Combo agregado a la orden correctamente",
+      ordenCombo: nuevo,
+    });
   } catch (error) {
     console.error("Error crearCombo:", error);
     res.status(500).json({ error: "Error al registrar combo de orden" });
@@ -104,17 +97,21 @@ exports.crearCombo = async (req, res) => {
 exports.eliminarCombo = async (req, res) => {
   try {
     const combo = await OrdenCombo.findByPk(req.params.id, {
-      include: [{ model: OrdenCompra, attributes: ["id_usuario", "estado"] }],
+      include: [
+        {
+          model: OrdenCompra,
+          as: "ordenCompra",
+          attributes: ["id_usuario", "estado"],
+        },
+      ],
     });
 
-    if (!combo) {
+    if (!combo)
       return res.status(404).json({ error: "Combo de orden no encontrado" });
-    }
 
-    // Si no es admin, validar que la orden sea del usuario
     if (
       req.user.rol !== "admin" &&
-      combo.OrdenCompra.id_usuario !== req.user.id
+      combo.ordenCompra.id_usuario !== req.user.id
     ) {
       return res
         .status(403)
@@ -123,8 +120,7 @@ exports.eliminarCombo = async (req, res) => {
         });
     }
 
-    // Evitar eliminar si la orden ya está pagada/procesada
-    if (["pagada", "procesada"].includes(combo.OrdenCompra.estado)) {
+    if (["pagada", "procesada"].includes(combo.ordenCompra.estado)) {
       return res.status(400).json({
         error:
           "No se puede eliminar un combo de una orden ya pagada o procesada",

@@ -6,11 +6,13 @@ exports.listarSalas = async (req, res) => {
     const salas = await Sala.findAll({
       where: { estado: "activa" },
       attributes: ["id", "nombre", "filas", "columnas", "estado"],
-      include: [{ model: Sede, attributes: ["id", "nombre", "ciudad"] }],
+      include: [
+        { model: Sede, as: "sede", attributes: ["id", "nombre", "ciudad"] },
+      ],
     });
     res.json(salas);
   } catch (error) {
-    console.error(error);
+    console.error("Error listarSalas:", error);
     res.status(500).json({ error: "Error al obtener salas" });
   }
 };
@@ -20,7 +22,9 @@ exports.obtenerSala = async (req, res) => {
   try {
     const sala = await Sala.findOne({
       where: { id: req.params.id, estado: "activa" },
-      include: [{ model: Sede, attributes: ["id", "nombre", "ciudad"] }],
+      include: [
+        { model: Sede, as: "sede", attributes: ["id", "nombre", "ciudad"] },
+      ],
     });
 
     if (!sala) {
@@ -29,7 +33,7 @@ exports.obtenerSala = async (req, res) => {
 
     res.json(sala);
   } catch (error) {
-    console.error(error);
+    console.error("Error obtenerSala:", error);
     res.status(500).json({ error: "Error al obtener sala" });
   }
 };
@@ -38,9 +42,12 @@ exports.obtenerSala = async (req, res) => {
 exports.crearSala = async (req, res) => {
   try {
     const nueva = await Sala.create({ ...req.body, estado: "activa" });
-    res.status(201).json(nueva);
+    res.status(201).json({
+      mensaje: "Sala creada correctamente",
+      sala: nueva,
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Error crearSala:", error);
     res.status(500).json({ error: "Error al registrar sala" });
   }
 };
@@ -54,9 +61,12 @@ exports.actualizarSala = async (req, res) => {
     }
 
     await sala.update(req.body);
-    res.json(sala);
+    res.json({
+      mensaje: "Sala actualizada correctamente",
+      sala,
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Error actualizarSala:", error);
     res.status(500).json({ error: "Error al actualizar sala" });
   }
 };
@@ -93,7 +103,7 @@ exports.eliminarSala = async (req, res) => {
     await sala.update({ estado: "inactiva" });
     res.json({ mensaje: "Sala inactivada correctamente" });
   } catch (error) {
-    console.error(error);
+    console.error("Error eliminarSala:", error);
     res.status(500).json({ error: "Error al eliminar sala" });
   }
 };

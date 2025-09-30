@@ -14,9 +14,10 @@ const { validarOrdenCompra } = require("../utils/validacionesOrdenCompra");
 const { Op } = require("sequelize");
 
 const ordenInclude = [
-  { model: Usuario, attributes: ["id", "nombre", "email"] },
+  { model: Usuario, as: "usuario", attributes: ["id", "nombre", "email"] },
   {
     model: Funcion,
+    as: "funcion",
     include: [
       {
         model: Usuario,
@@ -27,16 +28,21 @@ const ordenInclude = [
   },
   {
     model: OrdenTicket,
+    as: "ordenTickets",
     attributes: ["id", "cantidad", "precio_unitario", "descuento"],
-    include: [{ model: TipoUsuario }],
+    include: [
+      { model: TipoUsuario, as: "tipoUsuario", attributes: ["id", "nombre"] },
+    ],
   },
   {
     model: OrdenCombo,
+    as: "ordenCombos",
     attributes: ["id", "cantidad", "precio_unitario", "descuento"],
-    include: [{ model: Combo }],
+    include: [{ model: Combo, as: "combo", attributes: ["id", "nombre"] }],
   },
   {
     model: Pago,
+    as: "pago",
     attributes: ["id", "monto_total", "estado_pago", "fecha_pago"],
   },
 ];
@@ -69,9 +75,7 @@ exports.obtenerOrden = async (req, res) => {
       include: ordenInclude,
     });
 
-    if (!orden) {
-      return res.status(404).json({ error: "Orden no encontrada" });
-    }
+    if (!orden) return res.status(404).json({ error: "Orden no encontrada" });
 
     if (req.user.rol !== "admin" && orden.id_usuario !== req.user.id) {
       return res
@@ -94,12 +98,10 @@ exports.crearOrden = async (req, res) => {
     const errores = validarOrdenCompra({ id_funcion, tickets });
     if (errores.length > 0) return res.status(400).json({ errores });
 
-    // Validar existencia de función
     if (id_funcion) {
       const funcion = await Funcion.findByPk(id_funcion);
-      if (!funcion) {
+      if (!funcion)
         return res.status(404).json({ error: "Función no encontrada" });
-      }
 
       const fechaHoraFuncion = new Date(`${funcion.fecha}T${funcion.hora}`);
       if (fechaHoraFuncion <= new Date()) {
@@ -132,15 +134,20 @@ exports.cancelarOrden = async (req, res) => {
       include: [
         {
           model: OrdenTicket,
-          include: [{ model: Ticket, include: [AsientoFuncion] }],
+          as: "ordenTickets",
+          include: [
+            {
+              model: Ticket,
+              as: "tickets",
+              include: [{ model: AsientoFuncion, as: "asientoFuncion" }],
+            },
+          ],
         },
-        Pago,
+        { model: Pago, as: "pago" },
       ],
     });
 
-    if (!orden) {
-      return res.status(404).json({ error: "Orden no encontrada" });
-    }
+    if (!orden) return res.status(404).json({ error: "Orden no encontrada" });
 
     if (req.user.rol !== "admin" && orden.id_usuario !== req.user.id) {
       return res
@@ -150,19 +157,19 @@ exports.cancelarOrden = async (req, res) => {
 
     // Si ya está pagada o procesada, no se puede cancelar
     if (
-      orden.Pago &&
-      ["pagada", "procesada"].includes(orden.Pago.estado_pago)
+      orden.pago &&
+      ["pagada", "procesada"].includes(orden.pago.estado_pago)
     ) {
       return res
         .status(400)
         .json({ error: "No se puede cancelar una orden ya pagada/procesada" });
     }
 
-    // 🔓 Liberar todos los asientos asociados a esta orden
-    for (const ordenTicket of orden.OrdenTickets) {
-      for (const ticket of ordenTicket.Tickets || []) {
-        if (ticket.AsientoFuncion) {
-          await ticket.AsientoFuncion.update({
+    // Liberar asientos asociados
+    for (const ordenTicket of orden.ordenTickets || []) {
+      for (const ticket of ordenTicket.tickets || []) {
+        if (ticket.asientoFuncion) {
+          await ticket.asientoFuncion.update({
             estado: "libre",
             id_usuario_bloqueo: null,
             bloqueo_expira_en: null,

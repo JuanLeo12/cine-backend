@@ -7,6 +7,10 @@ exports.listarSedes = async (req, res) => {
     const sedes = await Sede.findAll({
       attributes: ["id", "nombre", "direccion", "ciudad"],
       order: [["nombre", "ASC"]],
+      include: [
+        { model: Sala, as: "salas", attributes: ["id", "nombre"] },
+        { model: Publicidad, as: "publicidades", attributes: ["id", "tipo"] },
+      ],
     });
     res.json(sedes);
   } catch (error) {
@@ -18,7 +22,13 @@ exports.listarSedes = async (req, res) => {
 // 📌 Obtener una sede por ID
 exports.obtenerSede = async (req, res) => {
   try {
-    const sede = await Sede.findByPk(req.params.id);
+    const sede = await Sede.findByPk(req.params.id, {
+      include: [
+        { model: Sala, as: "salas", attributes: ["id", "nombre"] },
+        { model: Publicidad, as: "publicidades", attributes: ["id", "tipo"] },
+      ],
+    });
+
     if (!sede) return res.status(404).json({ error: "Sede no encontrada" });
     res.json(sede);
   } catch (error) {
@@ -102,6 +112,7 @@ exports.eliminarSede = async (req, res) => {
     const sede = await Sede.findByPk(req.params.id);
     if (!sede) return res.status(404).json({ error: "Sede no encontrada" });
 
+    // 🔗 Validar dependencias usando asociaciones
     const asociadaSala = await Sala.findOne({ where: { id_sede: sede.id } });
     if (asociadaSala) {
       return res.status(400).json({

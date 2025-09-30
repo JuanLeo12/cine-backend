@@ -6,19 +6,27 @@ exports.listarFunciones = async (req, res) => {
     const funciones = await Funcion.findAll({
       where: { estado: "activa" },
       include: [
-        { model: Pelicula, attributes: ["id", "titulo", "genero"] },
-        { model: Sala, attributes: ["id", "nombre"] },
+        {
+          model: Pelicula,
+          as: "pelicula",
+          attributes: ["id", "titulo", "genero"],
+        },
+        { model: Sala, as: "sala", attributes: ["id", "nombre"] },
         {
           model: Usuario,
           as: "clienteCorporativo",
           attributes: ["id", "nombre"],
         },
-        { model: Pago, attributes: ["id", "monto_total", "estado_pago"] },
+        {
+          model: Pago,
+          as: "pago",
+          attributes: ["id", "monto_total", "estado_pago"],
+        },
       ],
     });
     res.json(funciones);
   } catch (error) {
-    console.error(error);
+    console.error("Error listarFunciones:", error);
     res.status(500).json({ error: "Error al obtener funciones" });
   }
 };
@@ -29,10 +37,14 @@ exports.obtenerFuncion = async (req, res) => {
     const funcion = await Funcion.findOne({
       where: { id: req.params.id, estado: "activa" },
       include: [
-        { model: Pelicula },
-        { model: Sala },
+        { model: Pelicula, as: "pelicula" },
+        { model: Sala, as: "sala" },
         { model: Usuario, as: "clienteCorporativo" },
-        { model: Pago, attributes: ["id", "monto_total", "estado_pago"] },
+        {
+          model: Pago,
+          as: "pago",
+          attributes: ["id", "monto_total", "estado_pago"],
+        },
       ],
     });
 
@@ -42,7 +54,7 @@ exports.obtenerFuncion = async (req, res) => {
 
     res.json(funcion);
   } catch (error) {
-    console.error(error);
+    console.error("Error obtenerFuncion:", error);
     res.status(500).json({ error: "Error al obtener función" });
   }
 };
@@ -57,7 +69,7 @@ exports.crearFuncion = async (req, res) => {
     const nueva = await Funcion.create(req.body);
     res.status(201).json(nueva);
   } catch (error) {
-    console.error(error);
+    console.error("Error crearFuncion:", error);
     if (error.name === "SequelizeUniqueConstraintError") {
       return res
         .status(409)
@@ -82,7 +94,7 @@ exports.actualizarFuncion = async (req, res) => {
     await funcion.update(req.body);
     res.json(funcion);
   } catch (error) {
-    console.error(error);
+    console.error("Error actualizarFuncion:", error);
     res.status(500).json({ error: "Error al actualizar función" });
   }
 };
@@ -102,7 +114,7 @@ exports.eliminarFuncion = async (req, res) => {
     await funcion.update({ estado: "inactiva" });
     res.json({ mensaje: "Función eliminada (inactivada) correctamente" });
   } catch (error) {
-    console.error(error);
+    console.error("Error eliminarFuncion:", error);
     res.status(500).json({ error: "Error al eliminar función" });
   }
 };

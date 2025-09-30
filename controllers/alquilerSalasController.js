@@ -3,10 +3,11 @@ const { Op } = require("sequelize");
 const { validarAlquiler } = require("../utils/validacionesAlquiler");
 
 const alquilerInclude = [
-  { model: Sala, attributes: ["id", "nombre"] },
-  { model: Usuario, attributes: ["id", "nombre", "email"] },
-  { model: Pago, attributes: ["id", "monto_total", "estado_pago"] },
+  { model: Sala, as: "sala", attributes: ["id", "nombre"] },
+  { model: Usuario, as: "usuario", attributes: ["id", "nombre", "email"] },
+  { model: Pago, as: "pago", attributes: ["id", "monto_total", "estado_pago"] },
 ];
+
 
 // 📌 Listar alquileres
 exports.listarAlquileres = async (req, res) => {

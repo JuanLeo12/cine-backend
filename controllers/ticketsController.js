@@ -1,21 +1,32 @@
-const { Ticket, OrdenTicket, AsientoFuncion, Funcion } = require("../models");
+const {
+  Ticket,
+  OrdenTicket,
+  AsientoFuncion,
+  Funcion,
+  OrdenCompra,
+} = require("../models");
 const { validarTicket } = require("../utils/validacionesTickets");
 
 const ticketInclude = [
   {
     model: OrdenTicket,
+    as: "ordenTicket",
     attributes: ["id", "cantidad", "precio_unitario"],
     include: [
       {
-        association: "OrdenCompra",
+        model: OrdenCompra,
+        as: "orden",
         attributes: ["id", "id_usuario", "estado"],
       },
     ],
   },
   {
     model: AsientoFuncion,
-    attributes: ["id", "fila", "numero", "estado"],
-    include: [{ model: Funcion, attributes: ["id", "fecha", "hora"] }],
+    as: "asientoFuncion",
+    attributes: ["id", "fila", "numero", "estado", "id_usuario_bloqueo"],
+    include: [
+      { model: Funcion, as: "funcion", attributes: ["id", "fecha", "hora"] },
+    ],
   },
 ];
 
@@ -24,7 +35,7 @@ exports.listarTickets = async (req, res) => {
   try {
     const where = {};
     if (req.user.rol !== "admin") {
-      where["$OrdenTicket.OrdenCompra.id_usuario$"] = req.user.id;
+      where["$ordenTicket.orden.id_usuario$"] = req.user.id;
     }
 
     const tickets = await Ticket.findAll({ where, include: ticketInclude });
@@ -45,7 +56,7 @@ exports.obtenerTicket = async (req, res) => {
 
     if (
       req.user.rol !== "admin" &&
-      ticket.OrdenTicket?.OrdenCompra?.id_usuario !== req.user.id
+      ticket.ordenTicket?.orden?.id_usuario !== req.user.id
     ) {
       return res
         .status(403)
@@ -69,7 +80,7 @@ exports.crearTicket = async (req, res) => {
 
     const ordenTicket = await OrdenTicket.findByPk(id_orden_ticket, {
       include: [
-        { association: "OrdenCompra", attributes: ["id", "id_usuario"] },
+        { model: OrdenCompra, as: "orden", attributes: ["id", "id_usuario"] },
       ],
     });
     if (!ordenTicket)
@@ -77,7 +88,7 @@ exports.crearTicket = async (req, res) => {
 
     if (
       req.user.rol !== "admin" &&
-      ordenTicket.OrdenCompra.id_usuario !== req.user.id
+      ordenTicket.orden.id_usuario !== req.user.id
     ) {
       return res
         .status(403)
@@ -110,8 +121,12 @@ exports.crearTicket = async (req, res) => {
 
     const nuevo = await Ticket.create({ id_orden_ticket, id_asiento });
 
-    // 🔧 CORREGIDO → cambiar asiento a "ocupado"
-    await asiento.update({ estado: "ocupado" });
+    // marcar asiento como ocupado y limpiar bloqueo
+    await asiento.update({
+      estado: "ocupado",
+      id_usuario_bloqueo: null,
+      bloqueo_expira_en: null,
+    });
 
     res.status(201).json({ mensaje: "Ticket creado con éxito", ticket: nuevo });
   } catch (error) {
@@ -130,31 +145,34 @@ exports.eliminarTicket = async (req, res) => {
 
     if (
       req.user.rol !== "admin" &&
-      ticket.OrdenTicket?.OrdenCompra?.id_usuario !== req.user.id
+      ticket.ordenTicket?.orden?.id_usuario !== req.user.id
     ) {
       return res
         .status(403)
         .json({ error: "No tienes permiso para eliminar este ticket" });
     }
 
-    // 🔧 CORREGIDO → "usado" → "ocupado"
-    if (ticket.AsientoFuncion?.estado === "ocupado") {
+    // si el asiento ya está ocupado (confirmado), no permitir eliminar
+    if (ticket.asientoFuncion?.estado === "ocupado") {
       return res
         .status(400)
         .json({ error: "No se puede eliminar un ticket ya ocupado" });
     }
 
-    if (
-      ["pagada", "procesada"].includes(ticket.OrdenTicket?.OrdenCompra?.estado)
-    ) {
+    if (["pagada", "procesada"].includes(ticket.ordenTicket?.orden?.estado)) {
       return res.status(400).json({
         error:
           "No se puede eliminar un ticket de una orden ya pagada o procesada",
       });
     }
 
-    if (ticket.AsientoFuncion)
-      await ticket.AsientoFuncion.update({ estado: "libre" });
+    if (ticket.asientoFuncion) {
+      await ticket.asientoFuncion.update({
+        estado: "libre",
+        id_usuario_bloqueo: null,
+        bloqueo_expira_en: null,
+      });
+    }
 
     await ticket.destroy();
     res.json({ mensaje: "Ticket eliminado correctamente" });

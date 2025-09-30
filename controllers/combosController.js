@@ -19,9 +19,7 @@ exports.listarCombos = async (req, res) => {
 exports.obtenerCombo = async (req, res) => {
   try {
     const combo = await Combo.findByPk(req.params.id);
-    if (!combo) {
-      return res.status(404).json({ error: "Combo no encontrado" });
-    }
+    if (!combo) return res.status(404).json({ error: "Combo no encontrado" });
     res.json(combo);
   } catch (error) {
     console.error("Error obtenerCombo:", error);
@@ -37,12 +35,8 @@ exports.crearCombo = async (req, res) => {
     const errores = validarCombo({ nombre, precio });
     if (errores.length > 0) return res.status(400).json({ errores });
 
-    const existe = await Combo.findOne({
-      where: { nombre: nombre.trim() },
-    });
-    if (existe) {
-      return res.status(409).json({ error: "El combo ya existe" });
-    }
+    const existe = await Combo.findOne({ where: { nombre: nombre.trim() } });
+    if (existe) return res.status(409).json({ error: "El combo ya existe" });
 
     const nuevo = await Combo.create({
       nombre: nombre.trim(),
@@ -51,10 +45,9 @@ exports.crearCombo = async (req, res) => {
       imagen_url: imagen_url?.trim() || null,
     });
 
-    res.status(201).json({
-      mensaje: "Combo creado correctamente",
-      combo: nuevo,
-    });
+    res
+      .status(201)
+      .json({ mensaje: "Combo creado correctamente", combo: nuevo });
   } catch (error) {
     console.error("Error crearCombo:", error);
     res.status(500).json({ error: "Error al registrar combo" });
@@ -65,18 +58,14 @@ exports.crearCombo = async (req, res) => {
 exports.actualizarCombo = async (req, res) => {
   try {
     const combo = await Combo.findByPk(req.params.id);
-    if (!combo) {
-      return res.status(404).json({ error: "Combo no encontrado" });
-    }
+    if (!combo) return res.status(404).json({ error: "Combo no encontrado" });
 
     const { nombre, precio } = req.body;
     const errores = validarCombo({ nombre, precio }, true);
     if (errores.length > 0) return res.status(400).json({ errores });
 
     if (nombre) {
-      const existe = await Combo.findOne({
-        where: { nombre: nombre.trim() },
-      });
+      const existe = await Combo.findOne({ where: { nombre: nombre.trim() } });
       if (existe && existe.id !== combo.id) {
         return res
           .status(409)
@@ -100,9 +89,7 @@ exports.actualizarCombo = async (req, res) => {
 exports.eliminarCombo = async (req, res) => {
   try {
     const combo = await Combo.findByPk(req.params.id);
-    if (!combo) {
-      return res.status(404).json({ error: "Combo no encontrado" });
-    }
+    if (!combo) return res.status(404).json({ error: "Combo no encontrado" });
 
     const asociado = await OrdenCombo.findOne({
       where: { id_combo: combo.id },

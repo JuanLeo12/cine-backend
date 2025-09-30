@@ -2,9 +2,10 @@ const { AsientoFuncion, Funcion, Usuario } = require("../models");
 const { validarAsiento } = require("../utils/validacionesAsientos");
 
 const asientoInclude = [
-  { model: Funcion, attributes: ["id", "fecha", "hora"] },
+  { model: Funcion, as: "funcion", attributes: ["id", "fecha", "hora"] },
   { model: Usuario, as: "usuarioBloqueo", attributes: ["id", "nombre"] },
 ];
+
 
 // 📌 Listar asientos
 exports.listarAsientos = async (req, res) => {

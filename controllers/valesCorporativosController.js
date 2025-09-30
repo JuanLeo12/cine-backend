@@ -1,9 +1,14 @@
 const { ValeCorporativo, Pago, OrdenCompra } = require("../models");
 const { validarVale } = require("../utils/validacionesValesCorporativos");
 
+// 👇 Incluyendo con alias
 const valeInclude = [
-  { model: Pago, attributes: ["id", "monto_total", "estado_pago"] },
-  { model: OrdenCompra, attributes: ["id", "fecha_compra", "id_usuario"] },
+  { model: Pago, as: "pago", attributes: ["id", "monto_total", "estado_pago"] },
+  {
+    model: OrdenCompra,
+    as: "ordenCompra",
+    attributes: ["id", "fecha_compra", "id_usuario"],
+  },
 ];
 
 // 📌 Listar vales
@@ -11,7 +16,7 @@ exports.listarVales = async (req, res) => {
   try {
     const where = {};
     if (req.user.rol !== "admin") {
-      where["$OrdenCompra.id_usuario$"] = req.user.id;
+      where["$ordenCompra.id_usuario$"] = req.user.id;
     }
 
     const vales = await ValeCorporativo.findAll({
@@ -39,19 +44,19 @@ exports.crearVale = async (req, res) => {
 
     if (id_pago) {
       const pago = await Pago.findByPk(id_pago, {
-        include: [{ model: OrdenCompra, attributes: ["id_usuario"] }],
+        include: [
+          { model: OrdenCompra, as: "ordenCompra", attributes: ["id_usuario"] },
+        ],
       });
       if (!pago) return res.status(404).json({ error: "Pago no encontrado" });
 
       if (
         req.user.rol !== "admin" &&
-        pago.OrdenCompra?.id_usuario !== req.user.id
+        pago.ordenCompra?.id_usuario !== req.user.id
       ) {
-        return res
-          .status(403)
-          .json({
-            error: "No puedes asociar un vale a un pago que no es tuyo",
-          });
+        return res.status(403).json({
+          error: "No puedes asociar un vale a un pago que no es tuyo",
+        });
       }
     }
 
@@ -61,11 +66,9 @@ exports.crearVale = async (req, res) => {
         return res.status(404).json({ error: "Orden de compra no encontrada" });
 
       if (req.user.rol !== "admin" && orden.id_usuario !== req.user.id) {
-        return res
-          .status(403)
-          .json({
-            error: "No puedes asociar un vale a una orden que no es tuya",
-          });
+        return res.status(403).json({
+          error: "No puedes asociar un vale a una orden que no es tuya",
+        });
       }
     }
 
@@ -92,13 +95,15 @@ exports.crearVale = async (req, res) => {
 exports.eliminarVale = async (req, res) => {
   try {
     const vale = await ValeCorporativo.findByPk(req.params.id, {
-      include: [{ model: OrdenCompra, attributes: ["id_usuario"] }],
+      include: [
+        { model: OrdenCompra, as: "ordenCompra", attributes: ["id_usuario"] },
+      ],
     });
     if (!vale) return res.status(404).json({ error: "Vale no encontrado" });
 
     if (
       req.user.rol !== "admin" &&
-      vale.OrdenCompra?.id_usuario !== req.user.id
+      vale.ordenCompra?.id_usuario !== req.user.id
     ) {
       return res
         .status(403)

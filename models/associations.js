@@ -148,10 +148,6 @@ AsientoFuncion.belongsTo(Usuario, {
   as: "usuarioBloqueo",
 });
 
-// 🔗 Función ↔ Pago
-Pago.hasOne(Funcion, { foreignKey: "id_pago", as: "funcion" });
-Funcion.belongsTo(Pago, { foreignKey: "id_pago", as: "pago" });
-
 // 🔗 Orden de compra
 Usuario.hasMany(OrdenCompra, { foreignKey: "id_usuario", as: "ordenesCompra" });
 OrdenCompra.belongsTo(Usuario, { foreignKey: "id_usuario", as: "usuario" });

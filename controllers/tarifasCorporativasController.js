@@ -2,8 +2,16 @@ const { TarifaCorporativa, Usuario, TipoUsuario } = require("../models");
 const { validarTarifa } = require("../utils/validacionesTarifas");
 
 const tarifaInclude = [
-  { model: Usuario, attributes: ["id", "nombre", "email"] },
-  { model: TipoUsuario, attributes: ["id", "nombre"] },
+  {
+    model: Usuario,
+    as: "clienteCorporativo",
+    attributes: ["id", "nombre", "email"],
+  },
+  {
+    model: TipoUsuario,
+    as: "tipoUsuario",
+    attributes: ["id", "nombre"],
+  },
 ];
 
 // 📌 Listar tarifas (admin ve todas, corporativo solo las suyas)
@@ -63,11 +71,9 @@ exports.crearTarifa = async (req, res) => {
       where: { id_cliente_corporativo, id_tipo_usuario },
     });
     if (existe) {
-      return res
-        .status(409)
-        .json({
-          error: "Ya existe una tarifa para este cliente y tipo de usuario",
-        });
+      return res.status(409).json({
+        error: "Ya existe una tarifa para este cliente y tipo de usuario",
+      });
     }
 
     const nueva = await TarifaCorporativa.create({

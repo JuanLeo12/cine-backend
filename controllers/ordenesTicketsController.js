@@ -6,7 +6,7 @@ exports.listarTickets = async (req, res) => {
   try {
     const where = {};
     if (req.user.rol !== "admin") {
-      where["$OrdenCompra.id_usuario$"] = req.user.id;
+      where["$ordenCompra.id_usuario$"] = req.user.id;
     }
 
     const tickets = await OrdenTicket.findAll({
@@ -22,9 +22,10 @@ exports.listarTickets = async (req, res) => {
       include: [
         {
           model: OrdenCompra,
-          attributes: ["id", "fecha_compra", "id_usuario"],
+          as: "ordenCompra",
+          attributes: ["id", "fecha_compra", "id_usuario", "estado"],
         },
-        { model: TipoUsuario, attributes: ["id", "nombre"] },
+        { model: TipoUsuario, as: "tipoUsuario", attributes: ["id", "nombre"] },
       ],
       order: [["id", "DESC"]],
     });
@@ -56,12 +57,10 @@ exports.crearTicket = async (req, res) => {
     });
     if (errores.length > 0) return res.status(400).json({ errores });
 
-    // Validar existencia de orden
     const orden = await OrdenCompra.findByPk(id_orden_compra);
     if (!orden)
       return res.status(404).json({ error: "Orden de compra no encontrada" });
 
-    // Verificar propiedad si no es admin
     if (req.user.rol !== "admin" && orden.id_usuario !== req.user.id) {
       return res
         .status(403)
@@ -70,7 +69,6 @@ exports.crearTicket = async (req, res) => {
         });
     }
 
-    // Validar existencia de TipoUsuario
     const tipo = await TipoUsuario.findByPk(id_tipo_usuario);
     if (!tipo)
       return res.status(404).json({ error: "Tipo de usuario no encontrado" });
@@ -97,14 +95,20 @@ exports.crearTicket = async (req, res) => {
 exports.eliminarTicket = async (req, res) => {
   try {
     const ticket = await OrdenTicket.findByPk(req.params.id, {
-      include: [{ model: OrdenCompra, attributes: ["id_usuario", "estado"] }],
+      include: [
+        {
+          model: OrdenCompra,
+          as: "ordenCompra",
+          attributes: ["id_usuario", "estado"],
+        },
+      ],
     });
 
     if (!ticket) return res.status(404).json({ error: "Ticket no encontrado" });
 
     if (
       req.user.rol !== "admin" &&
-      ticket.OrdenCompra.id_usuario !== req.user.id
+      ticket.ordenCompra.id_usuario !== req.user.id
     ) {
       return res
         .status(403)
@@ -113,7 +117,7 @@ exports.eliminarTicket = async (req, res) => {
         });
     }
 
-    if (["pagada", "procesada"].includes(ticket.OrdenCompra.estado)) {
+    if (["pagada", "procesada"].includes(ticket.ordenCompra.estado)) {
       return res.status(400).json({
         error:
           "No se puede eliminar un ticket de una orden ya pagada o procesada",

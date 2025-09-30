@@ -11,10 +11,12 @@ const { Op } = require("sequelize");
 const pagoInclude = [
   {
     model: OrdenCompra,
+    as: "ordenCompra", // ✅ alias correcto
     include: [{ model: Usuario, attributes: ["id", "nombre", "email"] }],
   },
   {
     model: Funcion,
+    as: "funcion", // ✅ alias correcto
     attributes: ["id", "fecha", "hora", "es_privada", "id_cliente_corporativo"],
     include: [
       {
@@ -24,7 +26,11 @@ const pagoInclude = [
       },
     ],
   },
-  { model: MetodoPago, attributes: ["id", "nombre"] },
+  {
+    model: MetodoPago,
+    as: "metodoPago", // ✅ alias correcto
+    attributes: ["id", "nombre"],
+  },
 ];
 
 // 📌 Listar pagos
@@ -33,8 +39,8 @@ exports.listarPagos = async (req, res) => {
     const where = {};
     if (req.user.rol !== "admin") {
       where[Op.or] = [
-        { "$OrdenCompra.id_usuario$": req.user.id },
-        { "$Funcion.id_cliente_corporativo$": req.user.id },
+        { "$ordenCompra.id_usuario$": req.user.id }, // ✅ usa el alias ordenCompra
+        { "$funcion.id_cliente_corporativo$": req.user.id }, // ✅ usa el alias funcion
       ];
     }
 
@@ -58,9 +64,9 @@ exports.obtenerPago = async (req, res) => {
     if (!pago) return res.status(404).json({ error: "Pago no encontrado" });
 
     const esPropietarioOrden =
-      pago.OrdenCompra && pago.OrdenCompra.id_usuario === req.user.id;
+      pago.ordenCompra && pago.ordenCompra.id_usuario === req.user.id;
     const esPropietarioFuncion =
-      pago.Funcion && pago.Funcion.id_cliente_corporativo === req.user.id;
+      pago.funcion && pago.funcion.id_cliente_corporativo === req.user.id;
 
     if (
       req.user.rol !== "admin" &&

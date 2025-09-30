@@ -6,6 +6,13 @@ exports.listarMetodos = async (req, res) => {
   try {
     const metodos = await MetodoPago.findAll({
       attributes: ["id", "nombre"],
+      include: [
+        {
+          model: Pago,
+          as: "pagos", // ✅ alias correcto
+          attributes: ["id", "monto_total", "estado_pago"],
+        },
+      ],
       order: [["nombre", "ASC"]],
     });
     res.json(metodos);
@@ -18,7 +25,16 @@ exports.listarMetodos = async (req, res) => {
 // 📌 Obtener método de pago por ID
 exports.obtenerMetodo = async (req, res) => {
   try {
-    const metodo = await MetodoPago.findByPk(req.params.id);
+    const metodo = await MetodoPago.findByPk(req.params.id, {
+      include: [
+        {
+          model: Pago,
+          as: "pagos", // ✅ alias correcto
+          attributes: ["id", "monto_total", "estado_pago"],
+        },
+      ],
+    });
+
     if (!metodo) {
       return res.status(404).json({ error: "Método de pago no encontrado" });
     }

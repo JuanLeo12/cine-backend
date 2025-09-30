@@ -17,6 +17,13 @@ exports.listarPeliculas = async (req, res) => {
         "fecha_estreno",
       ],
       order: [["fecha_estreno", "DESC"]],
+      include: [
+        {
+          model: Funcion,
+          as: "funciones", // ✅ alias correcto
+          attributes: ["id", "fecha", "hora", "estado"],
+        },
+      ],
     });
     res.json(peliculas);
   } catch (error) {
@@ -30,7 +37,15 @@ exports.obtenerPelicula = async (req, res) => {
   try {
     const pelicula = await Pelicula.findOne({
       where: { id: req.params.id, estado: "activa" },
+      include: [
+        {
+          model: Funcion,
+          as: "funciones", // ✅ alias correcto
+          attributes: ["id", "fecha", "hora", "estado"],
+        },
+      ],
     });
+
     if (!pelicula) {
       return res
         .status(404)

@@ -1,13 +1,27 @@
-const { Publicidad, Usuario, Sede, Pago } = require("../models");
+const { Publicidad, Usuario, Sede, Pago, OrdenCompra } = require("../models");
 const { validarPublicidad } = require("../utils/validacionesPublicidad");
 const { Op } = require("sequelize");
 
 const publicidadInclude = [
-  { model: Usuario, attributes: ["id", "nombre", "email"] },
-  { model: Sede, attributes: ["id", "nombre", "ciudad"] },
+  { model: Usuario, as: "usuario", attributes: ["id", "nombre", "email"] },
+  { model: Sede, as: "sede", attributes: ["id", "nombre", "ciudad"] },
   {
     model: Pago,
+    as: "pago",
     attributes: ["id", "monto_total", "estado_pago", "fecha_pago"],
+    include: [
+      {
+        model: OrdenCompra,
+        as: "ordenCompra",
+        include: [
+          {
+            model: Usuario,
+            as: "usuario",
+            attributes: ["id", "nombre", "email"],
+          },
+        ],
+      },
+    ],
   },
 ];
 
@@ -61,12 +75,27 @@ exports.crearPublicidad = async (req, res) => {
 
     // Validar pago si se envía
     if (id_pago) {
-      const pago = await Pago.findByPk(id_pago);
+      const pago = await Pago.findByPk(id_pago, {
+        include: [
+          {
+            model: OrdenCompra,
+            as: "ordenCompra",
+            include: [{ model: Usuario, as: "usuario", attributes: ["id"] }],
+          },
+        ],
+      });
+
       if (!pago) return res.status(404).json({ error: "Pago no encontrado" });
-      if (req.user.rol !== "admin" && pago.id_usuario !== req.user.id) {
-        return res
-          .status(403)
-          .json({ error: "No puedes asociar un pago que no es tuyo" });
+
+      if (req.user.rol !== "admin") {
+        const esPropietario =
+          pago.ordenCompra && pago.ordenCompra.usuario.id === req.user.id;
+
+        if (!esPropietario) {
+          return res
+            .status(403)
+            .json({ error: "No puedes asociar un pago que no es tuyo" });
+        }
       }
     }
 
@@ -81,7 +110,7 @@ exports.crearPublicidad = async (req, res) => {
       visible: visible ?? true,
       id_usuario: req.user.id,
       id_sede,
-      id_pago,
+      id_pago: id_pago || null,
     });
 
     res
@@ -97,6 +126,7 @@ exports.crearPublicidad = async (req, res) => {
 exports.eliminarPublicidad = async (req, res) => {
   try {
     const publicidad = await Publicidad.findByPk(req.params.id);
+
     if (!publicidad)
       return res.status(404).json({ error: "Campaña no encontrada" });
 
@@ -158,8 +188,8 @@ exports.listarPublicidadActiva = async (req, res) => {
         fecha_fin: { [Op.gte]: hoy },
       },
       include: [
-        { model: Usuario, attributes: ["id", "nombre"] },
-        { model: Sede, attributes: ["id", "nombre"] },
+        { model: Usuario, as: "usuario", attributes: ["id", "nombre"] },
+        { model: Sede, as: "sede", attributes: ["id", "nombre"] },
       ],
     });
 
@@ -176,8 +206,12 @@ exports.listarPublicidadPendiente = async (req, res) => {
     const pendientes = await Publicidad.findAll({
       where: { estado: "pendiente" },
       include: [
-        { model: Usuario, attributes: ["id", "nombre", "email"] },
-        { model: Sede, attributes: ["id", "nombre"] },
+        {
+          model: Usuario,
+          as: "usuario",
+          attributes: ["id", "nombre", "email"],
+        },
+        { model: Sede, as: "sede", attributes: ["id", "nombre"] },
       ],
     });
 
