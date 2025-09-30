@@ -1,44 +1,38 @@
 const { Publicidad, Usuario, Sede, Pago } = require("../models");
+const { validarPublicidad } = require("../utils/validacionesPublicidad");
 const { Op } = require("sequelize");
 
-// 📌 Obtener todas las campañas publicitarias
+const publicidadInclude = [
+  { model: Usuario, attributes: ["id", "nombre", "email"] },
+  { model: Sede, attributes: ["id", "nombre", "ciudad"] },
+  {
+    model: Pago,
+    attributes: ["id", "monto_total", "estado_pago", "fecha_pago"],
+  },
+];
+
+// 📌 Listar campañas (admin ve todas, corporativo solo propias)
 exports.listarPublicidad = async (req, res) => {
   try {
     const where = {};
-
-    // Si no es admin, solo mostrar campañas propias
-    if (req.user.rol !== "admin") {
-      where.id_usuario = req.user.id;
-    }
+    if (req.user.rol !== "admin") where.id_usuario = req.user.id;
 
     const campañas = await Publicidad.findAll({
       where,
-      include: [
-        { model: Usuario, attributes: ["id", "nombre", "email"] },
-        { model: Sede, attributes: ["id", "nombre", "ciudad"] },
-        {
-          model: Pago,
-          attributes: ["id", "monto_total", "estado_pago", "fecha_pago"],
-        },
-      ],
+      include: publicidadInclude,
+      order: [["fecha_inicio", "DESC"]],
     });
+
     res.json(campañas);
   } catch (error) {
-    console.error(error);
+    console.error("Error listarPublicidad:", error);
     res.status(500).json({ error: "Error al obtener campañas publicitarias" });
   }
 };
 
-// 📌 Crear nueva campaña publicitaria
+// 📌 Crear campaña
 exports.crearPublicidad = async (req, res) => {
   try {
-    // Solo corporativo o admin
-    if (!["corporativo", "admin"].includes(req.user.rol)) {
-      return res
-        .status(403)
-        .json({ error: "No tienes permiso para crear campañas publicitarias" });
-    }
-
     const {
       cliente,
       tipo,
@@ -52,36 +46,23 @@ exports.crearPublicidad = async (req, res) => {
       visible,
     } = req.body;
 
-    if (!tipo || !fecha_inicio || !fecha_fin || !precio || !id_sede) {
-      return res.status(400).json({ error: "Faltan campos obligatorios" });
-    }
-
-    if (precio <= 0) {
-      return res
-        .status(400)
-        .json({ error: "El precio debe ser mayor que cero" });
-    }
-
-    if (new Date(fecha_fin) < new Date(fecha_inicio)) {
-      return res
-        .status(400)
-        .json({
-          error: "La fecha de fin no puede ser anterior a la de inicio",
-        });
-    }
+    const errores = validarPublicidad({
+      tipo,
+      fecha_inicio,
+      fecha_fin,
+      precio,
+      id_sede,
+    });
+    if (errores.length > 0) return res.status(400).json({ errores });
 
     // Validar sede
     const sede = await Sede.findByPk(id_sede);
-    if (!sede) {
-      return res.status(404).json({ error: "Sede no encontrada" });
-    }
+    if (!sede) return res.status(404).json({ error: "Sede no encontrada" });
 
     // Validar pago si se envía
     if (id_pago) {
       const pago = await Pago.findByPk(id_pago);
-      if (!pago) {
-        return res.status(404).json({ error: "Pago no encontrado" });
-      }
+      if (!pago) return res.status(404).json({ error: "Pago no encontrado" });
       if (req.user.rol !== "admin" && pago.id_usuario !== req.user.id) {
         return res
           .status(403)
@@ -103,22 +84,22 @@ exports.crearPublicidad = async (req, res) => {
       id_pago,
     });
 
-    res.status(201).json(nueva);
+    res
+      .status(201)
+      .json({ mensaje: "Campaña registrada con éxito", publicidad: nueva });
   } catch (error) {
-    console.error(error);
+    console.error("Error crearPublicidad:", error);
     res.status(500).json({ error: "Error al registrar campaña publicitaria" });
   }
 };
 
-// 📌 Eliminar campaña publicitaria
+// 📌 Eliminar campaña
 exports.eliminarPublicidad = async (req, res) => {
   try {
     const publicidad = await Publicidad.findByPk(req.params.id);
-    if (!publicidad) {
+    if (!publicidad)
       return res.status(404).json({ error: "Campaña no encontrada" });
-    }
 
-    // Validar propiedad o rol admin
     if (req.user.rol !== "admin" && publicidad.id_usuario !== req.user.id) {
       return res
         .status(403)
@@ -127,34 +108,24 @@ exports.eliminarPublicidad = async (req, res) => {
 
     if (["aprobada", "activa"].includes(publicidad.estado)) {
       return res
-        .status(403)
-        .json({
-          error: "No se puede eliminar una campaña ya aprobada o activa",
-        });
+        .status(400)
+        .json({ error: "No se puede eliminar una campaña aprobada o activa" });
     }
 
     await publicidad.destroy();
-    res.json({ mensaje: "Campaña publicitaria eliminada correctamente" });
+    res.json({ mensaje: "Campaña eliminada correctamente" });
   } catch (error) {
-    console.error(error);
+    console.error("Error eliminarPublicidad:", error);
     res.status(500).json({ error: "Error al eliminar campaña publicitaria" });
   }
 };
 
-// 📌 Aprobar campaña publicitaria (solo admin)
+// 📌 Aprobar campaña (solo admin)
 exports.aprobarPublicidad = async (req, res) => {
   try {
-    if (req.user.rol !== "admin") {
-      return res
-        .status(403)
-        .json({ error: "No tienes permiso para aprobar campañas" });
-    }
-
-    const { id } = req.params;
-    const publicidad = await Publicidad.findByPk(id);
-    if (!publicidad) {
+    const publicidad = await Publicidad.findByPk(req.params.id);
+    if (!publicidad)
       return res.status(404).json({ error: "Campaña no encontrada" });
-    }
 
     if (publicidad.estado !== "pendiente") {
       return res
@@ -169,7 +140,7 @@ exports.aprobarPublicidad = async (req, res) => {
     await publicidad.save();
     res.json({ mensaje: "Campaña aprobada correctamente", publicidad });
   } catch (error) {
-    console.error(error);
+    console.error("Error aprobarPublicidad:", error);
     res.status(500).json({ error: "Error al aprobar campaña publicitaria" });
   }
 };
@@ -194,20 +165,14 @@ exports.listarPublicidadActiva = async (req, res) => {
 
     res.json(activas);
   } catch (error) {
-    console.error(error);
+    console.error("Error listarPublicidadActiva:", error);
     res.status(500).json({ error: "Error al obtener campañas activas" });
   }
 };
 
-// 📌 Listar campañas pendientes de aprobación (solo admin)
+// 📌 Listar campañas pendientes (solo admin)
 exports.listarPublicidadPendiente = async (req, res) => {
   try {
-    if (req.user.rol !== "admin") {
-      return res
-        .status(403)
-        .json({ error: "No tienes permiso para ver campañas pendientes" });
-    }
-
     const pendientes = await Publicidad.findAll({
       where: { estado: "pendiente" },
       include: [
@@ -218,7 +183,7 @@ exports.listarPublicidadPendiente = async (req, res) => {
 
     res.json(pendientes);
   } catch (error) {
-    console.error(error);
+    console.error("Error listarPublicidadPendiente:", error);
     res.status(500).json({ error: "Error al obtener campañas pendientes" });
   }
 };

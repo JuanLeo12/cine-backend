@@ -1,27 +1,35 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const publicidadController = require('../controllers/publicidadController');
-const { autenticarUsuario, soloAdmin, soloCorporativo } = require('../middleware/authMiddleware');
+const publicidadController = require("../controllers/publicidadController");
+const {
+  autenticarUsuario,
+  soloAdmin,
+  soloCorporativo,
+} = require("../middleware/authMiddleware");
 
-// 📍 Listar campañas activas y visibles (frontend web) → público
-router.get('/activas', publicidadController.listarPublicidadActiva);
+// 📍 Público: campañas activas y visibles
+router.get("/activas", publicidadController.listarPublicidadActiva);
 
-// 📌 A partir de aquí, todas requieren autenticación
+// 📍 Todas las demás requieren login
 router.use(autenticarUsuario);
 
-// 📍 Crear nueva campaña (solo cliente corporativo)
-router.post('/', soloCorporativo, publicidadController.crearPublicidad);
+// 📍 Crear (solo corporativo)
+router.post("/", soloCorporativo, publicidadController.crearPublicidad);
 
-// 📍 Obtener todas las campañas (solo admin)
-router.get('/', soloAdmin, publicidadController.listarPublicidad);
+// 📍 Listar (admin ve todas, corporativo solo las suyas)
+router.get("/", publicidadController.listarPublicidad);
 
-// 📍 Eliminar campaña (solo admin)
-router.delete('/:id', soloAdmin, publicidadController.eliminarPublicidad);
+// 📍 Eliminar (admin o dueño)
+router.delete("/:id", publicidadController.eliminarPublicidad);
 
-// 📍 Aprobar campaña (solo admin)
-router.put('/:id/aprobar', soloAdmin, publicidadController.aprobarPublicidad);
+// 📍 Aprobar (solo admin)
+router.put("/:id/aprobar", soloAdmin, publicidadController.aprobarPublicidad);
 
-// 📍 Listar campañas pendientes (solo admin)
-router.get('/pendientes', soloAdmin, publicidadController.listarPublicidadPendiente);
+// 📍 Pendientes (solo admin)
+router.get(
+  "/pendientes",
+  soloAdmin,
+  publicidadController.listarPublicidadPendiente
+);
 
 module.exports = router;

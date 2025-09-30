@@ -1,19 +1,22 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { autenticarUsuario, permitirRoles } = require('../middleware/authMiddleware');
+const {
+  autenticarUsuario,
+  permitirRoles,
+} = require("../middleware/authMiddleware");
 const {
   listarCombos,
   crearCombo,
-  eliminarCombo
-} = require('../controllers/ordenesCombosController');
+  eliminarCombo,
+} = require("../controllers/ordenesCombosController");
 
-// 📌 Listar órdenes de combos → admin (y opcionalmente corporativo)
-router.get('/', autenticarUsuario, permitirRoles('admin'), listarCombos);
+// 📌 Listar combos de orden → admin ve todos, usuarios solo los suyos
+router.get("/", autenticarUsuario, listarCombos);
 
-// 📌 Crear orden de combo → cualquier usuario autenticado
-router.post('/', autenticarUsuario, crearCombo);
+// 📌 Crear combo en orden → cualquier usuario autenticado
+router.post("/", autenticarUsuario, crearCombo);
 
-// 📌 Eliminar orden de combo → solo admin
-router.delete('/:id', autenticarUsuario, permitirRoles('admin'), eliminarCombo);
+// 📌 Eliminar combo de orden → admin o dueño de la orden (controlador valida)
+router.delete("/:id", autenticarUsuario, eliminarCombo);
 
 module.exports = router;

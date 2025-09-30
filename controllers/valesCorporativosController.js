@@ -1,75 +1,48 @@
 const { ValeCorporativo, Pago, OrdenCompra } = require("../models");
+const { validarVale } = require("../utils/validacionesValesCorporativos");
 
-// 📌 Obtener todos los vales corporativos
+const valeInclude = [
+  { model: Pago, attributes: ["id", "monto_total", "estado_pago"] },
+  { model: OrdenCompra, attributes: ["id", "fecha_compra", "id_usuario"] },
+];
+
+// 📌 Listar vales
 exports.listarVales = async (req, res) => {
   try {
     const where = {};
-
-    // Si no es admin, filtrar por vales asociados a sus pagos u órdenes
     if (req.user.rol !== "admin") {
       where["$OrdenCompra.id_usuario$"] = req.user.id;
     }
 
     const vales = await ValeCorporativo.findAll({
       where,
-      attributes: [
-        "id",
-        "codigo",
-        "tipo",
-        "valor",
-        "fecha_expiracion",
-        "usado",
-      ],
-      include: [
-        { model: Pago, attributes: ["id", "monto_total", "estado_pago"] },
-        {
-          model: OrdenCompra,
-          attributes: ["id", "fecha_compra", "id_usuario"],
-        },
-      ],
+      include: valeInclude,
     });
     res.json(vales);
   } catch (error) {
-    console.error(error);
+    console.error("Error listarVales:", error);
     res.status(500).json({ error: "Error al obtener vales corporativos" });
   }
 };
 
-// 📌 Crear nuevo vale corporativo
+// 📌 Crear vale
 exports.crearVale = async (req, res) => {
   try {
     const { codigo, tipo, valor, fecha_expiracion, id_pago, id_orden_compra } =
       req.body;
 
-    if (!codigo || !tipo || !valor || !fecha_expiracion) {
-      return res.status(400).json({ error: "Faltan campos obligatorios" });
-    }
-
-    if (valor <= 0) {
-      return res
-        .status(400)
-        .json({ error: "El valor debe ser mayor que cero" });
-    }
-
-    if (new Date(fecha_expiracion) <= new Date()) {
-      return res
-        .status(400)
-        .json({ error: "La fecha de expiración debe ser futura" });
-    }
+    const errores = validarVale({ codigo, tipo, valor, fecha_expiracion });
+    if (errores.length > 0) return res.status(400).json({ errores });
 
     const existe = await ValeCorporativo.findOne({ where: { codigo } });
-    if (existe) {
-      return res.status(409).json({ error: "El código ya existe" });
-    }
+    if (existe) return res.status(409).json({ error: "El código ya existe" });
 
-    // Validar pago si se envía
     if (id_pago) {
       const pago = await Pago.findByPk(id_pago, {
         include: [{ model: OrdenCompra, attributes: ["id_usuario"] }],
       });
-      if (!pago) {
-        return res.status(404).json({ error: "Pago no encontrado" });
-      }
+      if (!pago) return res.status(404).json({ error: "Pago no encontrado" });
+
       if (
         req.user.rol !== "admin" &&
         pago.OrdenCompra?.id_usuario !== req.user.id
@@ -82,12 +55,11 @@ exports.crearVale = async (req, res) => {
       }
     }
 
-    // Validar orden si se envía
     if (id_orden_compra) {
       const orden = await OrdenCompra.findByPk(id_orden_compra);
-      if (!orden) {
+      if (!orden)
         return res.status(404).json({ error: "Orden de compra no encontrada" });
-      }
+
       if (req.user.rol !== "admin" && orden.id_usuario !== req.user.id) {
         return res
           .status(403)
@@ -107,24 +79,23 @@ exports.crearVale = async (req, res) => {
       id_orden_compra: id_orden_compra || null,
     });
 
-    res.status(201).json(nuevo);
+    res
+      .status(201)
+      .json({ mensaje: "Vale corporativo creado con éxito", vale: nuevo });
   } catch (error) {
-    console.error(error);
+    console.error("Error crearVale:", error);
     res.status(500).json({ error: "Error al crear vale corporativo" });
   }
 };
 
-// 📌 Eliminar vale corporativo
+// 📌 Eliminar vale
 exports.eliminarVale = async (req, res) => {
   try {
     const vale = await ValeCorporativo.findByPk(req.params.id, {
       include: [{ model: OrdenCompra, attributes: ["id_usuario"] }],
     });
-    if (!vale) {
-      return res.status(404).json({ error: "Vale no encontrado" });
-    }
+    if (!vale) return res.status(404).json({ error: "Vale no encontrado" });
 
-    // Validar propiedad o rol admin
     if (
       req.user.rol !== "admin" &&
       vale.OrdenCompra?.id_usuario !== req.user.id
@@ -136,14 +107,14 @@ exports.eliminarVale = async (req, res) => {
 
     if (vale.usado) {
       return res
-        .status(403)
+        .status(400)
         .json({ error: "No se puede eliminar un vale ya usado" });
     }
 
     await vale.destroy();
     res.json({ mensaje: "Vale corporativo eliminado correctamente" });
   } catch (error) {
-    console.error(error);
+    console.error("Error eliminarVale:", error);
     res.status(500).json({ error: "Error al eliminar vale corporativo" });
   }
 };

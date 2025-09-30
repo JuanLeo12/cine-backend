@@ -9,7 +9,7 @@ const AsientoFuncion = sequelize.define(
       type: DataTypes.STRING(2),
       allowNull: false,
       set(value) {
-        this.setDataValue("fila", value.toUpperCase());
+        this.setDataValue("fila", value.toUpperCase()); // siempre en mayúsculas
       },
     },
     numero: {
@@ -21,9 +21,7 @@ const AsientoFuncion = sequelize.define(
       type: DataTypes.STRING(20),
       allowNull: false,
       defaultValue: "libre",
-      validate: {
-        isIn: [["libre", "bloqueado", "ocupado"]],
-      },
+      validate: { isIn: [["libre", "bloqueado", "ocupado"]] },
     },
     id_usuario_bloqueo: { type: DataTypes.INTEGER, allowNull: true },
     bloqueo_expira_en: { type: DataTypes.DATE, allowNull: true },

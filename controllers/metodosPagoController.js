@@ -1,19 +1,21 @@
 const { MetodoPago, Pago } = require("../models");
+const { validarMetodoPago } = require("../utils/validacionesMetodoPago");
 
-// 📌 Obtener todos los métodos de pago (público o autenticado)
+// 📌 Listar métodos de pago
 exports.listarMetodos = async (req, res) => {
   try {
     const metodos = await MetodoPago.findAll({
       attributes: ["id", "nombre"],
+      order: [["nombre", "ASC"]],
     });
     res.json(metodos);
   } catch (error) {
-    console.error(error);
+    console.error("Error listarMetodos:", error);
     res.status(500).json({ error: "Error al obtener métodos de pago" });
   }
 };
 
-// 📌 Obtener un método de pago por ID (público o autenticado)
+// 📌 Obtener método de pago por ID
 exports.obtenerMetodo = async (req, res) => {
   try {
     const metodo = await MetodoPago.findByPk(req.params.id);
@@ -22,63 +24,52 @@ exports.obtenerMetodo = async (req, res) => {
     }
     res.json(metodo);
   } catch (error) {
-    console.error(error);
+    console.error("Error obtenerMetodo:", error);
     res.status(500).json({ error: "Error al obtener método de pago" });
   }
 };
 
-// 📌 Crear nuevo método de pago (solo admin)
+// 📌 Crear método de pago
 exports.crearMetodo = async (req, res) => {
   try {
-    if (req.user?.rol !== "admin") {
-      return res
-        .status(403)
-        .json({ error: "No tienes permiso para crear métodos de pago" });
-    }
-
     const { nombre } = req.body;
+    const errores = validarMetodoPago({ nombre });
+    if (errores.length > 0) return res.status(400).json({ errores });
 
-    if (!nombre || nombre.trim() === "") {
-      return res
-        .status(400)
-        .json({ error: "El nombre del método es obligatorio" });
-    }
-
-    const existe = await MetodoPago.findOne({ where: { nombre } });
+    const existe = await MetodoPago.findOne({
+      where: { nombre: nombre.trim() },
+    });
     if (existe) {
       return res.status(409).json({ error: "El método de pago ya existe" });
     }
 
     const nuevo = await MetodoPago.create({ nombre: nombre.trim() });
-    res.status(201).json(nuevo);
+    res.status(201).json({
+      mensaje: "Método de pago registrado correctamente",
+      metodo: nuevo,
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Error crearMetodo:", error);
     res.status(500).json({ error: "Error al registrar método de pago" });
   }
 };
 
-// 📌 Actualizar método de pago (solo admin)
+// 📌 Actualizar método de pago
 exports.actualizarMetodo = async (req, res) => {
   try {
-    if (req.user?.rol !== "admin") {
-      return res
-        .status(403)
-        .json({ error: "No tienes permiso para actualizar métodos de pago" });
-    }
-
     const metodo = await MetodoPago.findByPk(req.params.id);
     if (!metodo) {
       return res.status(404).json({ error: "Método de pago no encontrado" });
     }
 
     const { nombre } = req.body;
-
-    if (nombre && nombre.trim() === "") {
-      return res.status(400).json({ error: "El nombre no puede estar vacío" });
-    }
+    const errores = validarMetodoPago({ nombre }, true);
+    if (errores.length > 0) return res.status(400).json({ errores });
 
     if (nombre) {
-      const existe = await MetodoPago.findOne({ where: { nombre } });
+      const existe = await MetodoPago.findOne({
+        where: { nombre: nombre.trim() },
+      });
       if (existe && existe.id !== metodo.id) {
         return res
           .status(409)
@@ -86,42 +77,38 @@ exports.actualizarMetodo = async (req, res) => {
       }
     }
 
-    await metodo.update(req.body);
-    res.json(metodo);
+    await metodo.update({ nombre: nombre?.trim() || metodo.nombre });
+    res.json({
+      mensaje: "Método de pago actualizado correctamente",
+      metodo,
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Error actualizarMetodo:", error);
     res.status(500).json({ error: "Error al actualizar método de pago" });
   }
 };
 
-// 📌 Eliminar método de pago (solo admin)
+// 📌 Eliminar método de pago
 exports.eliminarMetodo = async (req, res) => {
   try {
-    if (req.user?.rol !== "admin") {
-      return res
-        .status(403)
-        .json({ error: "No tienes permiso para eliminar métodos de pago" });
-    }
-
     const metodo = await MetodoPago.findByPk(req.params.id);
     if (!metodo) {
       return res.status(404).json({ error: "Método de pago no encontrado" });
     }
 
-    // Validar si está asociado a algún pago
     const asociado = await Pago.findOne({
       where: { id_metodo_pago: metodo.id },
     });
     if (asociado) {
-      return res
-        .status(400)
-        .json({ error: "No se puede eliminar un método de pago en uso" });
+      return res.status(400).json({
+        error: "No se puede eliminar un método de pago en uso",
+      });
     }
 
     await metodo.destroy();
     res.json({ mensaje: "Método de pago eliminado correctamente" });
   } catch (error) {
-    console.error(error);
+    console.error("Error eliminarMetodo:", error);
     res.status(500).json({ error: "Error al eliminar método de pago" });
   }
 };

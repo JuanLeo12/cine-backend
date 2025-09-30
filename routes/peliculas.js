@@ -1,27 +1,42 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { autenticarUsuario, permitirRoles } = require('../middleware/authMiddleware');
+const {
+  autenticarUsuario,
+  permitirRoles,
+} = require("../middleware/authMiddleware");
+const { validarPelicula } = require("../utils/validacionesPeliculas");
 const {
   listarPeliculas,
   obtenerPelicula,
   crearPelicula,
   actualizarPelicula,
+  eliminarPelicula,
+} = require("../controllers/peliculasController");
+
+// 📌 Público
+router.get("/", listarPeliculas);
+router.get("/:id", obtenerPelicula);
+
+// 📌 Admin
+router.post(
+  "/",
+  autenticarUsuario,
+  permitirRoles("admin"),
+  validarPelicula,
+  crearPelicula
+);
+router.patch(
+  "/:id",
+  autenticarUsuario,
+  permitirRoles("admin"),
+  validarPelicula,
+  actualizarPelicula
+);
+router.delete(
+  "/:id",
+  autenticarUsuario,
+  permitirRoles("admin"),
   eliminarPelicula
-} = require('../controllers/peliculasController');
-
-// 📌 Listar películas → público
-router.get('/', listarPeliculas);
-
-// 📌 Obtener película por ID → público
-router.get('/:id', obtenerPelicula);
-
-// 📌 Crear película → solo admin
-router.post('/', autenticarUsuario, permitirRoles('admin'), crearPelicula);
-
-// 📌 Actualizar película → solo admin
-router.put('/:id', autenticarUsuario, permitirRoles('admin'), actualizarPelicula);
-
-// 📌 Eliminar película → solo admin
-router.delete('/:id', autenticarUsuario, permitirRoles('admin'), eliminarPelicula);
+);
 
 module.exports = router;

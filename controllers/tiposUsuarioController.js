@@ -1,4 +1,5 @@
 const { TipoUsuario, Usuario, TarifaCorporativa } = require("../models");
+const { validarTipoUsuario } = require("../utils/validacionesTipoUsuario");
 
 // 📌 Obtener todos los tipos de usuario (público o autenticado)
 exports.listarTipos = async (req, res) => {
@@ -8,7 +9,7 @@ exports.listarTipos = async (req, res) => {
     });
     res.json(tipos);
   } catch (error) {
-    console.error(error);
+    console.error("Error listarTipos:", error);
     res.status(500).json({ error: "Error al obtener tipos de usuario" });
   }
 };
@@ -22,7 +23,7 @@ exports.obtenerTipo = async (req, res) => {
     }
     res.json(tipo);
   } catch (error) {
-    console.error(error);
+    console.error("Error obtenerTipo:", error);
     res.status(500).json({ error: "Error al obtener tipo de usuario" });
   }
 };
@@ -37,26 +38,21 @@ exports.crearTipo = async (req, res) => {
     }
 
     const { nombre } = req.body;
-
-    if (!nombre) {
-      return res
-        .status(400)
-        .json({ error: "El nombre es obligatorio" });
-    }
+    const { errores, nombreNormalizado } = validarTipoUsuario({ nombre });
+    if (errores.length > 0) return res.status(400).json({ errores });
 
     const existe = await TipoUsuario.findOne({
-      where: { nombre: nombre.trim() },
+      where: { nombre: nombreNormalizado },
     });
-    if (existe) {
+    if (existe)
       return res.status(409).json({ error: "El tipo de usuario ya existe" });
-    }
 
-    const nuevo = await TipoUsuario.create({
-      nombre: nombre.trim(),
-    });
-    res.status(201).json(nuevo);
+    const nuevo = await TipoUsuario.create({ nombre: nombreNormalizado });
+    res
+      .status(201)
+      .json({ mensaje: "Tipo de usuario creado correctamente", tipo: nuevo });
   } catch (error) {
-    console.error(error);
+    console.error("Error crearTipo:", error);
     res.status(500).json({ error: "Error al registrar tipo de usuario" });
   }
 };
@@ -71,28 +67,29 @@ exports.actualizarTipo = async (req, res) => {
     }
 
     const tipo = await TipoUsuario.findByPk(req.params.id);
-    if (!tipo) {
+    if (!tipo)
       return res.status(404).json({ error: "Tipo de usuario no encontrado" });
-    }
 
     const { nombre } = req.body;
-
     if (nombre) {
+      const { errores, nombreNormalizado } = validarTipoUsuario({ nombre });
+      if (errores.length > 0) return res.status(400).json({ errores });
+
       const existe = await TipoUsuario.findOne({
-        where: { nombre: nombre.trim() },
+        where: { nombre: nombreNormalizado },
       });
       if (existe && existe.id !== tipo.id) {
         return res
           .status(409)
           .json({ error: "Ya existe otro tipo de usuario con ese nombre" });
       }
-      tipo.nombre = nombre.trim();
+      tipo.nombre = nombreNormalizado;
     }
 
     await tipo.save();
-    res.json(tipo);
+    res.json({ mensaje: "Tipo de usuario actualizado correctamente", tipo });
   } catch (error) {
-    console.error(error);
+    console.error("Error actualizarTipo:", error);
     res.status(500).json({ error: "Error al actualizar tipo de usuario" });
   }
 };
@@ -107,9 +104,8 @@ exports.eliminarTipo = async (req, res) => {
     }
 
     const tipo = await TipoUsuario.findByPk(req.params.id);
-    if (!tipo) {
+    if (!tipo)
       return res.status(404).json({ error: "Tipo de usuario no encontrado" });
-    }
 
     const asociadoUsuario = await Usuario.findOne({
       where: { id_tipo_usuario: tipo.id },
@@ -138,7 +134,7 @@ exports.eliminarTipo = async (req, res) => {
     await tipo.destroy();
     res.json({ mensaje: "Tipo de usuario eliminado correctamente" });
   } catch (error) {
-    console.error(error);
+    console.error("Error eliminarTipo:", error);
     res.status(500).json({ error: "Error al eliminar tipo de usuario" });
   }
 };

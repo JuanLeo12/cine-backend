@@ -1,36 +1,36 @@
 const { Ticket, OrdenTicket, AsientoFuncion, Funcion } = require("../models");
+const { validarTicket } = require("../utils/validacionesTickets");
 
-// 📌 Listar todos los tickets
+const ticketInclude = [
+  {
+    model: OrdenTicket,
+    attributes: ["id", "cantidad", "precio_unitario"],
+    include: [
+      {
+        association: "OrdenCompra",
+        attributes: ["id", "id_usuario", "estado"],
+      },
+    ],
+  },
+  {
+    model: AsientoFuncion,
+    attributes: ["id", "fila", "numero", "estado"],
+    include: [{ model: Funcion, attributes: ["id", "fecha", "hora"] }],
+  },
+];
+
+// 📌 Listar tickets
 exports.listarTickets = async (req, res) => {
   try {
     const where = {};
-
-    // Si no es admin, filtrar por órdenes del usuario
     if (req.user.rol !== "admin") {
       where["$OrdenTicket.OrdenCompra.id_usuario$"] = req.user.id;
     }
 
-    const tickets = await Ticket.findAll({
-      where,
-      attributes: ["id", "id_orden_ticket", "id_asiento"],
-      include: [
-        {
-          model: OrdenTicket,
-          attributes: ["id", "cantidad", "precio_unitario"],
-          include: [
-            { association: "OrdenCompra", attributes: ["id", "id_usuario"] },
-          ],
-        },
-        {
-          model: AsientoFuncion,
-          attributes: ["id", "fila", "numero", "estado"],
-          include: [{ model: Funcion, attributes: ["id", "fecha", "hora"] }],
-        },
-      ],
-    });
+    const tickets = await Ticket.findAll({ where, include: ticketInclude });
     res.json(tickets);
   } catch (error) {
-    console.error(error);
+    console.error("Error listarTickets:", error);
     res.status(500).json({ error: "Error al obtener tickets" });
   }
 };
@@ -39,25 +39,10 @@ exports.listarTickets = async (req, res) => {
 exports.obtenerTicket = async (req, res) => {
   try {
     const ticket = await Ticket.findByPk(req.params.id, {
-      include: [
-        {
-          model: OrdenTicket,
-          include: [
-            { association: "OrdenCompra", attributes: ["id", "id_usuario"] },
-          ],
-        },
-        {
-          model: AsientoFuncion,
-          include: [{ model: Funcion, attributes: ["id", "fecha", "hora"] }],
-        },
-      ],
+      include: ticketInclude,
     });
+    if (!ticket) return res.status(404).json({ error: "Ticket no encontrado" });
 
-    if (!ticket) {
-      return res.status(404).json({ error: "Ticket no encontrado" });
-    }
-
-    // Validar propiedad si no es admin
     if (
       req.user.rol !== "admin" &&
       ticket.OrdenTicket?.OrdenCompra?.id_usuario !== req.user.id
@@ -69,31 +54,27 @@ exports.obtenerTicket = async (req, res) => {
 
     res.json(ticket);
   } catch (error) {
-    console.error(error);
+    console.error("Error obtenerTicket:", error);
     res.status(500).json({ error: "Error al obtener ticket" });
   }
 };
 
-// 📌 Crear nuevo ticket
+// 📌 Crear ticket
 exports.crearTicket = async (req, res) => {
   try {
     const { id_orden_ticket, id_asiento } = req.body;
 
-    if (!id_orden_ticket || !id_asiento) {
-      return res.status(400).json({ error: "Campos obligatorios faltantes" });
-    }
+    const errores = validarTicket({ id_orden_ticket, id_asiento });
+    if (errores.length > 0) return res.status(400).json({ errores });
 
-    // Validar existencia de OrdenTicket
     const ordenTicket = await OrdenTicket.findByPk(id_orden_ticket, {
       include: [
         { association: "OrdenCompra", attributes: ["id", "id_usuario"] },
       ],
     });
-    if (!ordenTicket) {
+    if (!ordenTicket)
       return res.status(404).json({ error: "Orden de ticket no encontrada" });
-    }
 
-    // Validar propiedad de la orden
     if (
       req.user.rol !== "admin" &&
       ordenTicket.OrdenCompra.id_usuario !== req.user.id
@@ -105,13 +86,10 @@ exports.crearTicket = async (req, res) => {
         });
     }
 
-    // Validar existencia de AsientoFuncion
     const asiento = await AsientoFuncion.findByPk(id_asiento);
-    if (!asiento) {
+    if (!asiento)
       return res.status(404).json({ error: "Asiento no encontrado" });
-    }
 
-    // Verificar que el asiento esté disponible o bloqueado por el mismo usuario
     if (
       asiento.estado === "bloqueado" &&
       asiento.id_usuario_bloqueo !== req.user.id
@@ -120,30 +98,24 @@ exports.crearTicket = async (req, res) => {
         .status(403)
         .json({ error: "El asiento está bloqueado por otro usuario" });
     }
-    if (asiento.estado !== "libre" && asiento.estado !== "bloqueado") {
-      return res
-        .status(400)
-        .json({
-          error: "El asiento no está disponible para asignar un ticket",
-        });
+    if (!["libre", "bloqueado"].includes(asiento.estado)) {
+      return res.status(400).json({ error: "El asiento no está disponible" });
     }
 
-    // Evitar duplicados
     const existente = await Ticket.findOne({ where: { id_asiento } });
-    if (existente) {
+    if (existente)
       return res
         .status(409)
         .json({ error: "El asiento ya tiene un ticket asignado" });
-    }
 
     const nuevo = await Ticket.create({ id_orden_ticket, id_asiento });
 
-    // Cambiar estado del asiento a reservado
-    await asiento.update({ estado: "reservado" });
+    // 🔧 CORREGIDO → cambiar asiento a "ocupado"
+    await asiento.update({ estado: "ocupado" });
 
-    res.status(201).json(nuevo);
+    res.status(201).json({ mensaje: "Ticket creado con éxito", ticket: nuevo });
   } catch (error) {
-    console.error(error);
+    console.error("Error crearTicket:", error);
     res.status(500).json({ error: "Error al registrar ticket" });
   }
 };
@@ -152,25 +124,10 @@ exports.crearTicket = async (req, res) => {
 exports.eliminarTicket = async (req, res) => {
   try {
     const ticket = await Ticket.findByPk(req.params.id, {
-      include: [
-        { model: AsientoFuncion },
-        {
-          model: OrdenTicket,
-          include: [
-            {
-              association: "OrdenCompra",
-              attributes: ["id", "id_usuario", "estado"],
-            },
-          ],
-        },
-      ],
+      include: ticketInclude,
     });
+    if (!ticket) return res.status(404).json({ error: "Ticket no encontrado" });
 
-    if (!ticket) {
-      return res.status(404).json({ error: "Ticket no encontrado" });
-    }
-
-    // Validar propiedad si no es admin
     if (
       req.user.rol !== "admin" &&
       ticket.OrdenTicket?.OrdenCompra?.id_usuario !== req.user.id
@@ -180,34 +137,29 @@ exports.eliminarTicket = async (req, res) => {
         .json({ error: "No tienes permiso para eliminar este ticket" });
     }
 
-    // Si el asiento está usado, no permitir eliminar
-    if (ticket.AsientoFuncion && ticket.AsientoFuncion.estado === "usado") {
+    // 🔧 CORREGIDO → "usado" → "ocupado"
+    if (ticket.AsientoFuncion?.estado === "ocupado") {
       return res
         .status(400)
-        .json({ error: "No se puede eliminar un ticket ya utilizado" });
+        .json({ error: "No se puede eliminar un ticket ya ocupado" });
     }
 
-    // Evitar eliminar si la orden ya está pagada/procesada
     if (
       ["pagada", "procesada"].includes(ticket.OrdenTicket?.OrdenCompra?.estado)
     ) {
-      return res
-        .status(400)
-        .json({
-          error:
-            "No se puede eliminar un ticket de una orden ya pagada o procesada",
-        });
+      return res.status(400).json({
+        error:
+          "No se puede eliminar un ticket de una orden ya pagada o procesada",
+      });
     }
 
-    // Liberar asiento si estaba reservado
-    if (ticket.AsientoFuncion) {
+    if (ticket.AsientoFuncion)
       await ticket.AsientoFuncion.update({ estado: "libre" });
-    }
 
     await ticket.destroy();
     res.json({ mensaje: "Ticket eliminado correctamente" });
   } catch (error) {
-    console.error(error);
+    console.error("Error eliminarTicket:", error);
     res.status(500).json({ error: "Error al eliminar ticket" });
   }
 };

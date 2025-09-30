@@ -1,25 +1,19 @@
 const { Funcion, Pelicula, Sala, Usuario, Pago } = require("../models");
-const { Op } = require("sequelize");
 
-// 📌 Obtener todas las funciones (público)
+// 📌 Obtener todas las funciones (solo activas)
 exports.listarFunciones = async (req, res) => {
   try {
     const funciones = await Funcion.findAll({
+      where: { estado: "activa" },
       include: [
-        {
-          model: Pelicula,
-          attributes: ["id", "titulo", "genero", "clasificacion"],
-        },
+        { model: Pelicula, attributes: ["id", "titulo", "genero"] },
         { model: Sala, attributes: ["id", "nombre"] },
         {
           model: Usuario,
           as: "clienteCorporativo",
-          attributes: ["id", "nombre", "email"],
+          attributes: ["id", "nombre"],
         },
-        {
-          model: Pago,
-          attributes: ["id", "monto_total", "estado_pago", "fecha_pago"],
-        },
+        { model: Pago, attributes: ["id", "monto_total", "estado_pago"] },
       ],
     });
     res.json(funciones);
@@ -29,18 +23,16 @@ exports.listarFunciones = async (req, res) => {
   }
 };
 
-// 📌 Obtener una función por ID (público)
+// 📌 Obtener una función por ID
 exports.obtenerFuncion = async (req, res) => {
   try {
-    const funcion = await Funcion.findByPk(req.params.id, {
+    const funcion = await Funcion.findOne({
+      where: { id: req.params.id, estado: "activa" },
       include: [
         { model: Pelicula },
         { model: Sala },
         { model: Usuario, as: "clienteCorporativo" },
-        {
-          model: Pago,
-          attributes: ["id", "monto_total", "estado_pago", "fecha_pago"],
-        },
+        { model: Pago, attributes: ["id", "monto_total", "estado_pago"] },
       ],
     });
 
@@ -55,122 +47,36 @@ exports.obtenerFuncion = async (req, res) => {
   }
 };
 
-// 📌 Crear nueva función (solo admin)
+// 📌 Crear nueva función
 exports.crearFuncion = async (req, res) => {
   try {
     if (req.user?.rol !== "admin") {
-      return res
-        .status(403)
-        .json({ error: "No tienes permiso para crear funciones" });
+      return res.status(403).json({ error: "No autorizado" });
     }
 
-    const {
-      id_pelicula,
-      id_sala,
-      fecha,
-      hora,
-      es_privada = false,
-      precio_corporativo,
-      id_cliente_corporativo,
-      id_pago,
-    } = req.body;
-
-    if (!id_pelicula || !id_sala || !fecha || !hora) {
-      return res
-        .status(400)
-        .json({ error: "Campos obligatorios: película, sala, fecha y hora" });
-    }
-
-    // Validar existencia de película y sala
-    const pelicula = await Pelicula.findByPk(id_pelicula);
-    if (!pelicula)
-      return res.status(404).json({ error: "Película no encontrada" });
-
-    const sala = await Sala.findByPk(id_sala);
-    if (!sala) return res.status(404).json({ error: "Sala no encontrada" });
-
-    // Validar solapamiento en la misma sala
-    const conflicto = await Funcion.findOne({
-      where: {
-        id_sala,
-        fecha,
-        hora,
-      },
-    });
-    if (conflicto) {
-      return res
-        .status(409)
-        .json({ error: "Ya existe una función en esa sala y horario" });
-    }
-
-    // Validaciones de coherencia
-    if (es_privada) {
-      if (!precio_corporativo || !id_cliente_corporativo) {
-        return res.status(400).json({
-          error:
-            "Funciones privadas requieren cliente corporativo y precio corporativo",
-        });
-      }
-    } else {
-      if (precio_corporativo || id_cliente_corporativo) {
-        return res.status(400).json({
-          error:
-            "Funciones públicas no deben tener cliente corporativo ni precio corporativo",
-        });
-      }
-    }
-
-    const nueva = await Funcion.create({
-      id_pelicula,
-      id_sala,
-      fecha,
-      hora,
-      es_privada,
-      precio_corporativo: es_privada ? precio_corporativo : null,
-      id_cliente_corporativo: es_privada ? id_cliente_corporativo : null,
-      id_pago: es_privada ? id_pago || null : null,
-    });
-
+    const nueva = await Funcion.create(req.body);
     res.status(201).json(nueva);
   } catch (error) {
     console.error(error);
+    if (error.name === "SequelizeUniqueConstraintError") {
+      return res
+        .status(409)
+        .json({ error: "Ya existe una función en esa sala, fecha y hora" });
+    }
     res.status(500).json({ error: "Error al crear función" });
   }
 };
 
-// 📌 Actualizar función (solo admin)
+// 📌 Actualizar función
 exports.actualizarFuncion = async (req, res) => {
   try {
     if (req.user?.rol !== "admin") {
-      return res
-        .status(403)
-        .json({ error: "No tienes permiso para actualizar funciones" });
+      return res.status(403).json({ error: "No autorizado" });
     }
 
     const funcion = await Funcion.findByPk(req.params.id);
-    if (!funcion) {
+    if (!funcion || funcion.estado === "inactiva") {
       return res.status(404).json({ error: "Función no encontrada" });
-    }
-
-    const { es_privada, precio_corporativo, id_cliente_corporativo } = req.body;
-
-    // Validaciones de coherencia
-    if (es_privada !== undefined) {
-      if (es_privada) {
-        if (!precio_corporativo || !id_cliente_corporativo) {
-          return res.status(400).json({
-            error:
-              "Funciones privadas requieren cliente corporativo y precio corporativo",
-          });
-        }
-      } else {
-        if (precio_corporativo || id_cliente_corporativo) {
-          return res.status(400).json({
-            error:
-              "Funciones públicas no deben tener cliente corporativo ni precio corporativo",
-          });
-        }
-      }
     }
 
     await funcion.update(req.body);
@@ -181,23 +87,20 @@ exports.actualizarFuncion = async (req, res) => {
   }
 };
 
-// 📌 Eliminar función (solo admin)
+// 📌 Eliminar función (soft delete)
 exports.eliminarFuncion = async (req, res) => {
   try {
     if (req.user?.rol !== "admin") {
-      return res
-        .status(403)
-        .json({ error: "No tienes permiso para eliminar funciones" });
+      return res.status(403).json({ error: "No autorizado" });
     }
 
     const funcion = await Funcion.findByPk(req.params.id);
-    if (!funcion) {
+    if (!funcion || funcion.estado === "inactiva") {
       return res.status(404).json({ error: "Función no encontrada" });
     }
 
-    // Aquí podrías validar si tiene ventas/reservas asociadas antes de eliminar
-    await funcion.destroy();
-    res.json({ mensaje: "Función eliminada correctamente" });
+    await funcion.update({ estado: "inactiva" });
+    res.json({ mensaje: "Función eliminada (inactivada) correctamente" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error al eliminar función" });

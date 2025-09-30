@@ -5,15 +5,34 @@ const {
   Usuario,
   Funcion,
 } = require("../models");
+const { validarPago } = require("../utils/validacionesPago");
+const { Op } = require("sequelize");
 
-// 📌 Obtener todos los pagos
+const pagoInclude = [
+  {
+    model: OrdenCompra,
+    include: [{ model: Usuario, attributes: ["id", "nombre", "email"] }],
+  },
+  {
+    model: Funcion,
+    attributes: ["id", "fecha", "hora", "es_privada", "id_cliente_corporativo"],
+    include: [
+      {
+        model: Usuario,
+        as: "clienteCorporativo",
+        attributes: ["id", "nombre"],
+      },
+    ],
+  },
+  { model: MetodoPago, attributes: ["id", "nombre"] },
+];
+
+// 📌 Listar pagos
 exports.listarPagos = async (req, res) => {
   try {
     const where = {};
-
-    // Si no es admin, filtrar por pagos de órdenes o funciones del usuario
     if (req.user.rol !== "admin") {
-      where[Symbol.for("or")] = [
+      where[Op.or] = [
         { "$OrdenCompra.id_usuario$": req.user.id },
         { "$Funcion.id_cliente_corporativo$": req.user.id },
       ];
@@ -21,74 +40,23 @@ exports.listarPagos = async (req, res) => {
 
     const pagos = await Pago.findAll({
       where,
-      include: [
-        {
-          model: OrdenCompra,
-          include: [{ model: Usuario, attributes: ["id", "nombre", "email"] }],
-        },
-        {
-          model: Funcion,
-          attributes: [
-            "id",
-            "fecha",
-            "hora",
-            "es_privada",
-            "id_cliente_corporativo",
-          ],
-          include: [
-            {
-              model: Usuario,
-              as: "clienteCorporativo",
-              attributes: ["id", "nombre"],
-            },
-          ],
-        },
-        { model: MetodoPago, attributes: ["id", "nombre"] },
-      ],
+      include: pagoInclude,
+      order: [["fecha_pago", "DESC"]],
     });
 
     res.json(pagos);
   } catch (error) {
-    console.error(error);
+    console.error("Error listarPagos:", error);
     res.status(500).json({ error: "Error al obtener pagos" });
   }
 };
 
-// 📌 Obtener un pago por ID
+// 📌 Obtener pago por ID
 exports.obtenerPago = async (req, res) => {
   try {
-    const pago = await Pago.findByPk(req.params.id, {
-      include: [
-        {
-          model: OrdenCompra,
-          include: [{ model: Usuario, attributes: ["id", "nombre", "email"] }],
-        },
-        {
-          model: Funcion,
-          attributes: [
-            "id",
-            "fecha",
-            "hora",
-            "es_privada",
-            "id_cliente_corporativo",
-          ],
-          include: [
-            {
-              model: Usuario,
-              as: "clienteCorporativo",
-              attributes: ["id", "nombre"],
-            },
-          ],
-        },
-        { model: MetodoPago, attributes: ["id", "nombre"] },
-      ],
-    });
+    const pago = await Pago.findByPk(req.params.id, { include: pagoInclude });
+    if (!pago) return res.status(404).json({ error: "Pago no encontrado" });
 
-    if (!pago) {
-      return res.status(404).json({ error: "Pago no encontrado" });
-    }
-
-    // Validar propiedad si no es admin
     const esPropietarioOrden =
       pago.OrdenCompra && pago.OrdenCompra.id_usuario === req.user.id;
     const esPropietarioFuncion =
@@ -106,12 +74,12 @@ exports.obtenerPago = async (req, res) => {
 
     res.json(pago);
   } catch (error) {
-    console.error(error);
+    console.error("Error obtenerPago:", error);
     res.status(500).json({ error: "Error al obtener pago" });
   }
 };
 
-// 📌 Registrar nuevo pago
+// 📌 Registrar pago
 exports.crearPago = async (req, res) => {
   try {
     const {
@@ -122,50 +90,44 @@ exports.crearPago = async (req, res) => {
       estado_pago = "completado",
     } = req.body;
 
-    if ((!id_orden_compra && !id_funcion) || !id_metodo_pago || !monto_total) {
-      return res.status(400).json({
-        error:
-          "Debes indicar orden de compra o función, método de pago y monto total",
-      });
-    }
+    const errores = validarPago({
+      id_orden_compra,
+      id_funcion,
+      id_metodo_pago,
+      monto_total,
+      estado_pago,
+    });
+    if (errores.length > 0) return res.status(400).json({ errores });
 
-    // Validar existencia de MetodoPago
+    // Validar método de pago
     const metodo = await MetodoPago.findByPk(id_metodo_pago);
-    if (!metodo) {
+    if (!metodo)
       return res.status(404).json({ error: "Método de pago no encontrado" });
-    }
 
-    // Validar existencia y propiedad de OrdenCompra
+    // Validar OrdenCompra
     if (id_orden_compra) {
       const orden = await OrdenCompra.findByPk(id_orden_compra);
-      if (!orden) {
+      if (!orden)
         return res.status(404).json({ error: "Orden de compra no encontrada" });
-      }
       if (req.user.rol !== "admin" && orden.id_usuario !== req.user.id) {
         return res
           .status(403)
-          .json({
-            error: "No puedes registrar un pago para una orden que no es tuya",
-          });
+          .json({ error: "No puedes pagar una orden que no es tuya" });
       }
     }
 
-    // Validar existencia y propiedad de Funcion
+    // Validar Funcion (corporativo)
     if (id_funcion) {
       const funcion = await Funcion.findByPk(id_funcion);
-      if (!funcion) {
+      if (!funcion)
         return res.status(404).json({ error: "Función no encontrada" });
-      }
       if (
         req.user.rol !== "admin" &&
         funcion.id_cliente_corporativo !== req.user.id
       ) {
         return res
           .status(403)
-          .json({
-            error:
-              "No puedes registrar un pago para una función que no es tuya",
-          });
+          .json({ error: "No puedes pagar una función que no es tuya" });
       }
     }
 
@@ -178,9 +140,9 @@ exports.crearPago = async (req, res) => {
       fecha_pago: new Date(),
     });
 
-    res.status(201).json(nuevo);
+    res.status(201).json({ mensaje: "Pago registrado con éxito", pago: nuevo });
   } catch (error) {
-    console.error(error);
+    console.error("Error crearPago:", error);
     res.status(500).json({ error: "Error al registrar pago" });
   }
 };

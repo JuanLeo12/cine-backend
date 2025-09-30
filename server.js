@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const sequelize = require("./config/db");
 require("dotenv").config();
+require("./utils/liberarAsientos");
 
 const app = express();
 app.use(cors());

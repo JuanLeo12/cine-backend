@@ -1,48 +1,39 @@
 const { Sede, Sala, Publicidad } = require("../models");
+const { validarCamposSede } = require("../utils/validacionesSede");
 
-// 📌 Obtener todas las sedes (público o autenticado)
+// 📌 Listar todas las sedes
 exports.listarSedes = async (req, res) => {
   try {
     const sedes = await Sede.findAll({
       attributes: ["id", "nombre", "direccion", "ciudad"],
+      order: [["nombre", "ASC"]],
     });
     res.json(sedes);
   } catch (error) {
-    console.error(error);
+    console.error("Error en listarSedes:", error);
     res.status(500).json({ error: "Error al obtener sedes" });
   }
 };
 
-// 📌 Obtener una sede por ID (público o autenticado)
+// 📌 Obtener una sede por ID
 exports.obtenerSede = async (req, res) => {
   try {
     const sede = await Sede.findByPk(req.params.id);
-    if (!sede) {
-      return res.status(404).json({ error: "Sede no encontrada" });
-    }
+    if (!sede) return res.status(404).json({ error: "Sede no encontrada" });
     res.json(sede);
   } catch (error) {
-    console.error(error);
+    console.error("Error en obtenerSede:", error);
     res.status(500).json({ error: "Error al obtener sede" });
   }
 };
 
-// 📌 Crear nueva sede (solo admin)
+// 📌 Crear nueva sede
 exports.crearSede = async (req, res) => {
   try {
-    if (req.user?.rol !== "admin") {
-      return res
-        .status(403)
-        .json({ error: "No tienes permiso para crear sedes" });
-    }
-
     const { nombre, direccion, ciudad } = req.body;
 
-    if (!nombre || !direccion || !ciudad) {
-      return res
-        .status(400)
-        .json({ error: "Todos los campos son obligatorios" });
-    }
+    const errores = validarCamposSede({ nombre, direccion, ciudad });
+    if (errores.length > 0) return res.status(400).json({ errores });
 
     const existe = await Sede.findOne({
       where: { nombre: nombre.trim(), ciudad: ciudad.trim() },
@@ -59,90 +50,79 @@ exports.crearSede = async (req, res) => {
       ciudad: ciudad.trim(),
     });
 
-    res.status(201).json(nueva);
+    res.status(201).json({
+      mensaje: "Sede creada correctamente",
+      sede: nueva,
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Error en crearSede:", error);
     res.status(500).json({ error: "Error al registrar sede" });
   }
 };
 
-// 📌 Actualizar sede (solo admin)
+// 📌 Actualizar sede
 exports.actualizarSede = async (req, res) => {
   try {
-    if (req.user?.rol !== "admin") {
-      return res
-        .status(403)
-        .json({ error: "No tienes permiso para actualizar sedes" });
-    }
-
     const sede = await Sede.findByPk(req.params.id);
-    if (!sede) {
-      return res.status(404).json({ error: "Sede no encontrada" });
-    }
+    if (!sede) return res.status(404).json({ error: "Sede no encontrada" });
 
-    const { nombre, ciudad } = req.body;
+    const { nombre, direccion, ciudad } = req.body;
+
+    const errores = validarCamposSede({ nombre, direccion, ciudad }, true);
+    if (errores.length > 0) return res.status(400).json({ errores });
 
     if (nombre && ciudad) {
       const existe = await Sede.findOne({
         where: { nombre: nombre.trim(), ciudad: ciudad.trim() },
       });
       if (existe && existe.id !== sede.id) {
-        return res
-          .status(409)
-          .json({ error: "Ya existe otra sede con ese nombre en esta ciudad" });
+        return res.status(409).json({
+          error: "Ya existe otra sede con ese nombre en esta ciudad",
+        });
       }
     }
 
     await sede.update({
       ...req.body,
       nombre: nombre?.trim() || sede.nombre,
+      direccion: direccion?.trim() || sede.direccion,
       ciudad: ciudad?.trim() || sede.ciudad,
     });
 
-    res.json(sede);
+    res.json({ mensaje: "Sede actualizada correctamente", sede });
   } catch (error) {
-    console.error(error);
+    console.error("Error en actualizarSede:", error);
     res.status(500).json({ error: "Error al actualizar sede" });
   }
 };
 
-// 📌 Eliminar sede (solo admin)
+// 📌 Eliminar sede
 exports.eliminarSede = async (req, res) => {
   try {
-    if (req.user?.rol !== "admin") {
-      return res
-        .status(403)
-        .json({ error: "No tienes permiso para eliminar sedes" });
-    }
-
     const sede = await Sede.findByPk(req.params.id);
-    if (!sede) {
-      return res.status(404).json({ error: "Sede no encontrada" });
-    }
+    if (!sede) return res.status(404).json({ error: "Sede no encontrada" });
 
     const asociadaSala = await Sala.findOne({ where: { id_sede: sede.id } });
     if (asociadaSala) {
-      return res
-        .status(400)
-        .json({ error: "No se puede eliminar una sede con salas asociadas" });
+      return res.status(400).json({
+        error: "No se puede eliminar una sede con salas asociadas",
+      });
     }
 
     const asociadaPublicidad = await Publicidad.findOne({
       where: { id_sede: sede.id },
     });
     if (asociadaPublicidad) {
-      return res
-        .status(400)
-        .json({
-          error:
-            "No se puede eliminar una sede con campañas publicitarias asociadas",
-        });
+      return res.status(400).json({
+        error:
+          "No se puede eliminar una sede con campañas publicitarias asociadas",
+      });
     }
 
     await sede.destroy();
     res.json({ mensaje: "Sede eliminada correctamente" });
   } catch (error) {
-    console.error(error);
+    console.error("Error en eliminarSede:", error);
     res.status(500).json({ error: "Error al eliminar sede" });
   }
 };

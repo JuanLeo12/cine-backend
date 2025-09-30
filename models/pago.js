@@ -7,7 +7,11 @@ const Pago = sequelize.define(
     id_orden_compra: { type: DataTypes.INTEGER, allowNull: false },
     id_metodo_pago: { type: DataTypes.INTEGER, allowNull: false },
 
-    monto_total: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
+    monto_total: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      validate: { min: 0.01 },
+    },
 
     estado_pago: {
       type: DataTypes.STRING(20),
@@ -18,14 +22,11 @@ const Pago = sequelize.define(
       },
     },
 
-    fecha_pago: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
+    fecha_pago: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
 
-    // 🔧 Campos agregados para simular lógica de pago según método
-    numero_tarjeta: { type: DataTypes.STRING(20), allowNull: true }, // Últimos dígitos
-    codigo_aprobacion: { type: DataTypes.STRING(20), allowNull: true }, // Código Yape
+    // 🔧 Simulación de datos adicionales según método
+    numero_tarjeta: { type: DataTypes.STRING(20), allowNull: true },
+    codigo_aprobacion: { type: DataTypes.STRING(20), allowNull: true },
   },
   {
     tableName: "pagos",

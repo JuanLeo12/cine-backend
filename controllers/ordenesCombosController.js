@@ -1,6 +1,7 @@
 const { OrdenCombo, OrdenCompra, Combo } = require("../models");
+const { validarOrdenCombo } = require("../utils/validacionesOrdenCombo");
 
-// 📌 Obtener combos de orden
+// 📌 Listar combos de orden
 exports.listarCombos = async (req, res) => {
   try {
     const where = {};
@@ -23,15 +24,19 @@ exports.listarCombos = async (req, res) => {
       include: [
         {
           model: OrdenCompra,
-          attributes: ["id", "fecha_compra", "id_usuario"],
+          attributes: ["id", "fecha_compra", "id_usuario", "estado"],
         },
-        { model: Combo, attributes: ["id", "nombre", "descripcion", "precio"] },
+        {
+          model: Combo,
+          attributes: ["id", "nombre", "descripcion", "precio"],
+        },
       ],
+      order: [["id", "ASC"]],
     });
 
     res.json(combos);
   } catch (error) {
-    console.error(error);
+    console.error("Error listarCombos:", error);
     res.status(500).json({ error: "Error al obtener combos de orden" });
   }
 };
@@ -47,19 +52,14 @@ exports.crearCombo = async (req, res) => {
       descuento = 0,
     } = req.body;
 
-    if (!id_orden_compra || !id_combo || !cantidad || !precio_unitario) {
-      return res.status(400).json({
-        error:
-          "id_orden_compra, id_combo, cantidad y precio_unitario son obligatorios",
-      });
-    }
-
-    if (descuento < 0 || parseFloat(descuento) > parseFloat(precio_unitario)) {
-      return res.status(400).json({
-        error:
-          "El descuento no puede ser negativo ni mayor que el precio unitario",
-      });
-    }
+    const errores = validarOrdenCombo({
+      id_orden_compra,
+      id_combo,
+      cantidad,
+      precio_unitario,
+      descuento,
+    });
+    if (errores.length > 0) return res.status(400).json({ errores });
 
     // Validar existencia de OrdenCompra
     const orden = await OrdenCompra.findByPk(id_orden_compra);
@@ -88,9 +88,14 @@ exports.crearCombo = async (req, res) => {
       descuento,
     });
 
-    res.status(201).json(nuevo);
+    res
+      .status(201)
+      .json({
+        mensaje: "Combo agregado a la orden correctamente",
+        ordenCombo: nuevo,
+      });
   } catch (error) {
-    console.error(error);
+    console.error("Error crearCombo:", error);
     res.status(500).json({ error: "Error al registrar combo de orden" });
   }
 };
@@ -103,7 +108,7 @@ exports.eliminarCombo = async (req, res) => {
     });
 
     if (!combo) {
-      return res.status(404).json({ error: "Combo no encontrado" });
+      return res.status(404).json({ error: "Combo de orden no encontrado" });
     }
 
     // Si no es admin, validar que la orden sea del usuario
@@ -119,22 +124,17 @@ exports.eliminarCombo = async (req, res) => {
     }
 
     // Evitar eliminar si la orden ya está pagada/procesada
-    if (
-      combo.OrdenCompra.estado === "pagada" ||
-      combo.OrdenCompra.estado === "procesada"
-    ) {
-      return res
-        .status(400)
-        .json({
-          error:
-            "No se puede eliminar un combo de una orden ya pagada o procesada",
-        });
+    if (["pagada", "procesada"].includes(combo.OrdenCompra.estado)) {
+      return res.status(400).json({
+        error:
+          "No se puede eliminar un combo de una orden ya pagada o procesada",
+      });
     }
 
     await combo.destroy();
     res.json({ mensaje: "Combo de orden eliminado correctamente" });
   } catch (error) {
-    console.error(error);
+    console.error("Error eliminarCombo:", error);
     res.status(500).json({ error: "Error al eliminar combo de orden" });
   }
 };

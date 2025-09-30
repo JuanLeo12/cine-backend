@@ -1,19 +1,21 @@
 const { Combo, OrdenCombo } = require("../models");
+const { validarCombo } = require("../utils/validacionesCombo");
 
-// 📌 Obtener todos los combos (público)
+// 📌 Listar combos
 exports.listarCombos = async (req, res) => {
   try {
     const combos = await Combo.findAll({
-      attributes: ["id", "nombre", "descripcion", "precio"],
+      attributes: ["id", "nombre", "descripcion", "precio", "imagen_url"],
+      order: [["nombre", "ASC"]],
     });
     res.json(combos);
   } catch (error) {
-    console.error(error);
+    console.error("Error listarCombos:", error);
     res.status(500).json({ error: "Error al obtener combos" });
   }
 };
 
-// 📌 Obtener un combo por ID (público)
+// 📌 Obtener combo por ID
 exports.obtenerCombo = async (req, res) => {
   try {
     const combo = await Combo.findByPk(req.params.id);
@@ -22,71 +24,59 @@ exports.obtenerCombo = async (req, res) => {
     }
     res.json(combo);
   } catch (error) {
-    console.error(error);
+    console.error("Error obtenerCombo:", error);
     res.status(500).json({ error: "Error al obtener combo" });
   }
 };
 
-// 📌 Crear nuevo combo (solo admin)
+// 📌 Crear combo
 exports.crearCombo = async (req, res) => {
   try {
-    if (req.user?.rol !== "admin") {
-      return res
-        .status(403)
-        .json({ error: "No tienes permiso para crear combos" });
-    }
+    const { nombre, descripcion, precio, imagen_url } = req.body;
 
-    const { nombre, descripcion, precio } = req.body;
+    const errores = validarCombo({ nombre, precio });
+    if (errores.length > 0) return res.status(400).json({ errores });
 
-    if (!nombre || precio == null) {
-      return res
-        .status(400)
-        .json({ error: "Nombre y precio son obligatorios" });
-    }
-
-    if (precio <= 0) {
-      return res
-        .status(400)
-        .json({ error: "El precio debe ser mayor que cero" });
-    }
-
-    const existe = await Combo.findOne({ where: { nombre } });
+    const existe = await Combo.findOne({
+      where: { nombre: nombre.trim() },
+    });
     if (existe) {
       return res.status(409).json({ error: "El combo ya existe" });
     }
 
-    const nuevo = await Combo.create({ nombre, descripcion, precio });
-    res.status(201).json(nuevo);
+    const nuevo = await Combo.create({
+      nombre: nombre.trim(),
+      descripcion: descripcion?.trim() || null,
+      precio,
+      imagen_url: imagen_url?.trim() || null,
+    });
+
+    res.status(201).json({
+      mensaje: "Combo creado correctamente",
+      combo: nuevo,
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Error crearCombo:", error);
     res.status(500).json({ error: "Error al registrar combo" });
   }
 };
 
-// 📌 Actualizar combo (solo admin)
+// 📌 Actualizar combo
 exports.actualizarCombo = async (req, res) => {
   try {
-    if (req.user?.rol !== "admin") {
-      return res
-        .status(403)
-        .json({ error: "No tienes permiso para actualizar combos" });
-    }
-
     const combo = await Combo.findByPk(req.params.id);
     if (!combo) {
       return res.status(404).json({ error: "Combo no encontrado" });
     }
 
     const { nombre, precio } = req.body;
-
-    if (precio != null && precio <= 0) {
-      return res
-        .status(400)
-        .json({ error: "El precio debe ser mayor que cero" });
-    }
+    const errores = validarCombo({ nombre, precio }, true);
+    if (errores.length > 0) return res.status(400).json({ errores });
 
     if (nombre) {
-      const existe = await Combo.findOne({ where: { nombre } });
+      const existe = await Combo.findOne({
+        where: { nombre: nombre.trim() },
+      });
       if (existe && existe.id !== combo.id) {
         return res
           .status(409)
@@ -94,29 +84,26 @@ exports.actualizarCombo = async (req, res) => {
       }
     }
 
-    await combo.update(req.body);
-    res.json(combo);
+    await combo.update({
+      ...req.body,
+      nombre: nombre?.trim() || combo.nombre,
+    });
+
+    res.json({ mensaje: "Combo actualizado correctamente", combo });
   } catch (error) {
-    console.error(error);
+    console.error("Error actualizarCombo:", error);
     res.status(500).json({ error: "Error al actualizar combo" });
   }
 };
 
-// 📌 Eliminar combo (solo admin)
+// 📌 Eliminar combo
 exports.eliminarCombo = async (req, res) => {
   try {
-    if (req.user?.rol !== "admin") {
-      return res
-        .status(403)
-        .json({ error: "No tienes permiso para eliminar combos" });
-    }
-
     const combo = await Combo.findByPk(req.params.id);
     if (!combo) {
       return res.status(404).json({ error: "Combo no encontrado" });
     }
 
-    // Validar si está asociado a alguna orden
     const asociado = await OrdenCombo.findOne({
       where: { id_combo: combo.id },
     });
@@ -129,7 +116,7 @@ exports.eliminarCombo = async (req, res) => {
     await combo.destroy();
     res.json({ mensaje: "Combo eliminado correctamente" });
   } catch (error) {
-    console.error(error);
+    console.error("Error eliminarCombo:", error);
     res.status(500).json({ error: "Error al eliminar combo" });
   }
 };

@@ -1,15 +1,18 @@
 const { AlquilerSala, Sala, Usuario, Pago } = require("../models");
 const { Op } = require("sequelize");
+const { validarAlquiler } = require("../utils/validacionesAlquiler");
 
-// 📌 Obtener todos los alquileres de salas
+const alquilerInclude = [
+  { model: Sala, attributes: ["id", "nombre"] },
+  { model: Usuario, attributes: ["id", "nombre", "email"] },
+  { model: Pago, attributes: ["id", "monto_total", "estado_pago"] },
+];
+
+// 📌 Listar alquileres
 exports.listarAlquileres = async (req, res) => {
   try {
     const where = {};
-
-    // Si no es admin, solo ve sus propios alquileres
-    if (req.user.rol !== "admin") {
-      where.id_usuario = req.user.id;
-    }
+    if (req.user.rol !== "admin") where.id_usuario = req.user.id;
 
     const alquileres = await AlquilerSala.findAll({
       where,
@@ -21,21 +24,17 @@ exports.listarAlquileres = async (req, res) => {
         "descripcion_evento",
         "precio",
       ],
-      include: [
-        { model: Sala, attributes: ["id", "nombre"] },
-        { model: Usuario, attributes: ["id", "nombre", "email"] },
-        { model: Pago, attributes: ["id", "monto_total", "estado_pago"] },
-      ],
+      include: alquilerInclude,
     });
 
     res.json(alquileres);
   } catch (error) {
-    console.error(error);
+    console.error("Error listarAlquileres:", error);
     res.status(500).json({ error: "Error al obtener alquileres de salas" });
   }
 };
 
-// 📌 Crear nuevo alquiler de sala
+// 📌 Crear alquiler
 exports.crearAlquiler = async (req, res) => {
   try {
     const {
@@ -48,62 +47,42 @@ exports.crearAlquiler = async (req, res) => {
       id_pago,
     } = req.body;
 
-    // Validaciones básicas
-    if (
-      !id_sala ||
-      !fecha ||
-      !hora_inicio ||
-      !hora_fin ||
-      !descripcion_evento ||
-      precio == null
-    ) {
-      return res
-        .status(400)
-        .json({ error: "Todos los campos son obligatorios" });
-    }
+    const errores = validarAlquiler({
+      id_sala,
+      fecha,
+      hora_inicio,
+      hora_fin,
+      precio,
+    });
+    if (errores.length > 0) return res.status(400).json({ errores });
 
-    if (precio <= 0) {
-      return res
-        .status(400)
-        .json({ error: "El precio debe ser mayor que cero" });
-    }
-
-    if (hora_fin <= hora_inicio) {
-      return res.status(400).json({
-        error: "La hora de fin debe ser posterior a la hora de inicio",
-      });
-    }
-
-    // Validar existencia de sala
     const sala = await Sala.findByPk(id_sala);
-    if (!sala) {
-      return res.status(404).json({ error: "Sala no encontrada" });
-    }
+    if (!sala) return res.status(404).json({ error: "Sala no encontrada" });
 
-    // Validar solapamiento
+    // Validar solapamiento de horarios en la misma fecha y sala
     const conflicto = await AlquilerSala.findOne({
       where: {
         id_sala,
         fecha,
         [Op.or]: [
-          { hora_inicio: { [Op.between]: [hora_inicio, hora_fin] } },
-          { hora_fin: { [Op.between]: [hora_inicio, hora_fin] } },
+          {
+            hora_inicio: { [Op.lt]: hora_fin },
+            hora_fin: { [Op.gt]: hora_inicio },
+          },
         ],
       },
     });
     if (conflicto) {
       return res
         .status(409)
-        .json({ error: "Ya existe un alquiler para esta sala en ese horario" });
+        .json({ error: "Ya existe un alquiler en ese horario para esta sala" });
     }
 
     // Validar pago si se envía
     if (id_pago) {
       const pago = await Pago.findByPk(id_pago);
-      if (!pago) {
-        return res.status(404).json({ error: "Pago no encontrado" });
-      }
-      // Si no es admin, el pago debe ser suyo
+      if (!pago) return res.status(404).json({ error: "Pago no encontrado" });
+
       if (req.user.rol !== "admin" && pago.id_usuario !== req.user.id) {
         return res
           .status(403)
@@ -122,30 +101,29 @@ exports.crearAlquiler = async (req, res) => {
       id_pago: id_pago || null,
     });
 
-    res.status(201).json(nuevo);
+    res
+      .status(201)
+      .json({ mensaje: "Alquiler registrado correctamente", alquiler: nuevo });
   } catch (error) {
-    console.error(error);
+    console.error("Error crearAlquiler:", error);
     res.status(500).json({ error: "Error al registrar alquiler de sala" });
   }
 };
 
-// 📌 Eliminar alquiler de sala
+// 📌 Eliminar alquiler
 exports.eliminarAlquiler = async (req, res) => {
   try {
     const alquiler = await AlquilerSala.findByPk(req.params.id);
 
-    if (!alquiler) {
+    if (!alquiler)
       return res.status(404).json({ error: "Alquiler no encontrado" });
-    }
 
-    // Validar propiedad o rol
     if (req.user.rol !== "admin" && alquiler.id_usuario !== req.user.id) {
       return res
         .status(403)
         .json({ error: "No tienes permiso para eliminar este alquiler" });
     }
 
-    // Evitar eliminar si ya está pagado
     if (alquiler.id_pago) {
       return res
         .status(400)
@@ -155,7 +133,7 @@ exports.eliminarAlquiler = async (req, res) => {
     await alquiler.destroy();
     res.json({ mensaje: "Alquiler de sala eliminado correctamente" });
   } catch (error) {
-    console.error(error);
+    console.error("Error eliminarAlquiler:", error);
     res.status(500).json({ error: "Error al eliminar alquiler de sala" });
   }
 };

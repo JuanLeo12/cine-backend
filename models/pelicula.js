@@ -1,29 +1,50 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 
-// 📌 Modelo ajustado según script SQL original (tabla: peliculas)
 const Pelicula = sequelize.define(
   "Pelicula",
   {
-    titulo: { type: DataTypes.STRING(100), allowNull: false }, // 📌 Título de la película
-    genero: { type: DataTypes.STRING(50) }, // 📌 Género (Ej: Acción, Drama)
-    clasificacion: { type: DataTypes.STRING(10) }, // 📌 Clasificación (Ej: PG-13)
-    sinopsis: { type: DataTypes.TEXT }, // 📌 Descripción larga
-    imagen_url: { type: DataTypes.STRING(255) }, // 📌 URL de imagen
-    fecha_estreno: { type: DataTypes.DATE }, // 📌 Fecha de estreno
+    titulo: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      validate: { notEmpty: { msg: "El título es obligatorio" } },
+    },
+    genero: { type: DataTypes.STRING(50) },
+    clasificacion: { type: DataTypes.STRING(10) },
+    sinopsis: { type: DataTypes.TEXT },
+    imagen_url: { type: DataTypes.STRING(255) },
+    fecha_estreno: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: { isDate: { msg: "La fecha de estreno no es válida" } },
+    },
     duracion: {
       type: DataTypes.INTEGER,
-      validate: { min: 1 },
+      allowNull: false,
+      validate: {
+        min: { args: [1], msg: "La duración debe ser mayor que 0" },
+      },
     },
     estado: {
       type: DataTypes.STRING(20),
       defaultValue: "activa",
-      validate: { isIn: [["activa", "inactiva"]] },
+      validate: {
+        isIn: {
+          args: [["activa", "inactiva"]],
+          msg: "El estado debe ser 'activa' o 'inactiva'",
+        },
+      },
     },
   },
   {
     tableName: "peliculas",
     timestamps: false,
+    indexes: [
+      {
+        unique: true,
+        fields: ["titulo", "fecha_estreno"], // 📌 evita duplicados
+      },
+    ],
   }
 );
 

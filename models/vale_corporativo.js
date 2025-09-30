@@ -4,7 +4,7 @@ const sequelize = require("../config/db");
 const ValeCorporativo = sequelize.define(
   "ValeCorporativo",
   {
-    codigo: { type: DataTypes.STRING(50), allowNull: false, unique: true },
+    codigo: { type: DataTypes.STRING(50), allowNull: false, unique: true }, // 🔒 único
     tipo: {
       type: DataTypes.STRING(20),
       allowNull: false,

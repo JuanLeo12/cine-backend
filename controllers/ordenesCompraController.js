@@ -4,10 +4,13 @@ const {
   Funcion,
   OrdenTicket,
   OrdenCombo,
+  Ticket,
+  AsientoFuncion,
   Pago,
   TipoUsuario,
   Combo,
 } = require("../models");
+const { validarOrdenCompra } = require("../utils/validacionesOrdenCompra");
 const { Op } = require("sequelize");
 
 const ordenInclude = [
@@ -38,24 +41,23 @@ const ordenInclude = [
   },
 ];
 
-// 📌 Obtener todas las órdenes de compra
+// 📌 Listar órdenes
 exports.listarOrdenes = async (req, res) => {
   try {
     const where = {};
-
-    // Si no es admin, solo mostrar órdenes propias
-    if (req.user.rol !== 'admin') {
+    if (req.user.rol !== "admin") {
       where.id_usuario = req.user.id;
     }
 
     const ordenes = await OrdenCompra.findAll({
       where,
       include: ordenInclude,
+      order: [["fecha_compra", "DESC"]],
     });
 
     res.json(ordenes);
   } catch (error) {
-    console.error(error);
+    console.error("Error listarOrdenes:", error);
     res.status(500).json({ error: "Error al obtener órdenes de compra" });
   }
 };
@@ -71,14 +73,15 @@ exports.obtenerOrden = async (req, res) => {
       return res.status(404).json({ error: "Orden no encontrada" });
     }
 
-    // Validar propiedad si no es admin
-    if (req.user.rol !== 'admin' && orden.id_usuario !== req.user.id) {
-      return res.status(403).json({ error: "No tienes permiso para ver esta orden" });
+    if (req.user.rol !== "admin" && orden.id_usuario !== req.user.id) {
+      return res
+        .status(403)
+        .json({ error: "No tienes permiso para ver esta orden" });
     }
 
     res.json(orden);
   } catch (error) {
-    console.error(error);
+    console.error("Error obtenerOrden:", error);
     res.status(500).json({ error: "Error al obtener orden de compra" });
   }
 };
@@ -88,24 +91,22 @@ exports.crearOrden = async (req, res) => {
   try {
     const { id_funcion, tickets = [], combos = [] } = req.body;
 
-    // Validación condicional
-    if (tickets.length > 0 && !id_funcion) {
-      return res.status(400).json({
-        error: "La función es obligatoria si la orden incluye tickets",
-      });
-    }
+    const errores = validarOrdenCompra({ id_funcion, tickets });
+    if (errores.length > 0) return res.status(400).json({ errores });
 
-    // Validar existencia de función si se envía
+    // Validar existencia de función
     if (id_funcion) {
       const funcion = await Funcion.findByPk(id_funcion);
       if (!funcion) {
         return res.status(404).json({ error: "Función no encontrada" });
       }
 
-      // Validar que la función no haya comenzado
       const fechaHoraFuncion = new Date(`${funcion.fecha}T${funcion.hora}`);
       if (fechaHoraFuncion <= new Date()) {
-        return res.status(400).json({ error: "No se puede crear una orden para una función ya iniciada o pasada" });
+        return res.status(400).json({
+          error:
+            "No se puede crear una orden para una función ya iniciada o pasada",
+        });
       }
     }
 
@@ -114,9 +115,66 @@ exports.crearOrden = async (req, res) => {
       id_funcion: id_funcion || null,
     });
 
-    res.status(201).json(nueva);
+    res.status(201).json({
+      mensaje: "Orden creada correctamente",
+      orden: nueva,
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Error crearOrden:", error);
     res.status(500).json({ error: "Error al crear orden de compra" });
+  }
+};
+
+// 📌 Cancelar orden de compra
+exports.cancelarOrden = async (req, res) => {
+  try {
+    const orden = await OrdenCompra.findByPk(req.params.id, {
+      include: [
+        {
+          model: OrdenTicket,
+          include: [{ model: Ticket, include: [AsientoFuncion] }],
+        },
+        Pago,
+      ],
+    });
+
+    if (!orden) {
+      return res.status(404).json({ error: "Orden no encontrada" });
+    }
+
+    if (req.user.rol !== "admin" && orden.id_usuario !== req.user.id) {
+      return res
+        .status(403)
+        .json({ error: "No tienes permiso para cancelar esta orden" });
+    }
+
+    // Si ya está pagada o procesada, no se puede cancelar
+    if (
+      orden.Pago &&
+      ["pagada", "procesada"].includes(orden.Pago.estado_pago)
+    ) {
+      return res
+        .status(400)
+        .json({ error: "No se puede cancelar una orden ya pagada/procesada" });
+    }
+
+    // 🔓 Liberar todos los asientos asociados a esta orden
+    for (const ordenTicket of orden.OrdenTickets) {
+      for (const ticket of ordenTicket.Tickets || []) {
+        if (ticket.AsientoFuncion) {
+          await ticket.AsientoFuncion.update({
+            estado: "libre",
+            id_usuario_bloqueo: null,
+            bloqueo_expira_en: null,
+          });
+        }
+      }
+    }
+
+    await orden.destroy();
+    res.json({ mensaje: "Orden cancelada y asientos liberados correctamente" });
+  } catch (error) {
+    console.error("Error cancelarOrden:", error);
+    res.status(500).json({ error: "Error al cancelar orden de compra" });
   }
 };

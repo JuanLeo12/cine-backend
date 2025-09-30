@@ -7,30 +7,31 @@ const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "10", 10);
 const Usuario = sequelize.define(
   "Usuario",
   {
-  nombre: { type: DataTypes.STRING(100), allowNull: false },
-  dni: { type: DataTypes.STRING(8), unique: true, allowNull: true },
-  ruc: { type: DataTypes.STRING(11), unique: true, allowNull: true },
-  apellido: { type: DataTypes.STRING(100) },
-  telefono: { type: DataTypes.STRING(20) },
-  direccion: { type: DataTypes.STRING(255) },
-  fecha_nacimiento: { type: DataTypes.DATEONLY },
-  genero: { type: DataTypes.STRING(20) },
-  foto_perfil: { type: DataTypes.STRING(255) },
-  estado: { type: DataTypes.STRING(20), defaultValue: "activo" },
-  ultimo_acceso: { type: DataTypes.DATE },
-  email: {
+    nombre: { type: DataTypes.STRING(100), allowNull: false },
+    apellido: { type: DataTypes.STRING(100) },
+    dni: { type: DataTypes.STRING(8), unique: true, allowNull: true },
+    ruc: { type: DataTypes.STRING(11), unique: true, allowNull: true },
+    telefono: { type: DataTypes.STRING(20) },
+    direccion: { type: DataTypes.STRING(255) },
+    fecha_nacimiento: { type: DataTypes.DATEONLY },
+    genero: { type: DataTypes.STRING(20) },
+    foto_perfil: { type: DataTypes.STRING(255) },
+    estado: { type: DataTypes.STRING(20), defaultValue: "activo" },
+    ultimo_acceso: { type: DataTypes.DATE },
+    email: {
       type: DataTypes.STRING(100),
       allowNull: false,
       unique: true,
       validate: { isEmail: true },
     },
-  password: { type: DataTypes.STRING(255), allowNull: false },
-  rol: { type: DataTypes.STRING(20), defaultValue: "cliente" },
-  fecha_registro: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    password: { type: DataTypes.STRING(255), allowNull: false },
+    rol: { type: DataTypes.STRING(20), defaultValue: "cliente" },
+    fecha_registro: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    token_version: { type: DataTypes.INTEGER, defaultValue: 0 }, // 🔑 invalida tokens viejos
   },
   {
     tableName: "usuarios",
-    timestamps: false, // para evitar conflicto con createdAt/updatedAt
+    timestamps: false,
     hooks: {
       beforeCreate: async (user) => {
         if (user.password) {
@@ -47,12 +48,17 @@ const Usuario = sequelize.define(
       attributes: { exclude: ["password"] },
     },
     scopes: {
-      activos: { where: { estado: "activo" } }, //revisar esto
       withPassword: { attributes: { include: ["password"] } },
     },
   }
 );
 
+// 🔒 Método de comparación
+Usuario.prototype.validarPassword = function (passwordPlano) {
+  return bcrypt.compare(passwordPlano, this.password);
+};
+
+// Ocultar password en JSON
 Usuario.prototype.toJSON = function () {
   const values = { ...this.get() };
   delete values.password;

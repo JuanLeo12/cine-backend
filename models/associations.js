@@ -20,67 +20,112 @@ const {
 } = require("./index");
 
 // 🔗 Publicidad
-Usuario.hasMany(Publicidad, { foreignKey: "id_usuario" });
-Publicidad.belongsTo(Usuario, { foreignKey: "id_usuario" });
+Usuario.hasMany(Publicidad, { foreignKey: "id_usuario", as: "publicidades" });
+Publicidad.belongsTo(Usuario, { foreignKey: "id_usuario", as: "usuario" });
 
-Sede.hasMany(Publicidad, { foreignKey: "id_sede" });
-Publicidad.belongsTo(Sede, { foreignKey: "id_sede" });
+Sede.hasMany(Publicidad, { foreignKey: "id_sede", as: "publicidades" });
+Publicidad.belongsTo(Sede, { foreignKey: "id_sede", as: "sede" });
 
-Pago.hasOne(Publicidad, { foreignKey: "id_pago" });
-Publicidad.belongsTo(Pago, { foreignKey: "id_pago" });
+Pago.hasOne(Publicidad, { foreignKey: "id_pago", as: "publicidad" });
+Publicidad.belongsTo(Pago, { foreignKey: "id_pago", as: "pago" });
 
 // 🔗 Alquiler de salas
-Usuario.hasMany(AlquilerSala, { foreignKey: "id_usuario" });
-AlquilerSala.belongsTo(Usuario, { foreignKey: "id_usuario" });
+Usuario.hasMany(AlquilerSala, { foreignKey: "id_usuario", as: "alquileres" });
+AlquilerSala.belongsTo(Usuario, { foreignKey: "id_usuario", as: "usuario" });
 
-Sala.hasMany(AlquilerSala, { foreignKey: "id_sala" });
-AlquilerSala.belongsTo(Sala, { foreignKey: "id_sala" });
+Sala.hasMany(AlquilerSala, { foreignKey: "id_sala", as: "alquileres" });
+AlquilerSala.belongsTo(Sala, { foreignKey: "id_sala", as: "sala" });
 
-Pago.hasOne(AlquilerSala, { foreignKey: "id_pago" });
-AlquilerSala.belongsTo(Pago, { foreignKey: "id_pago" });
+Pago.hasOne(AlquilerSala, { foreignKey: "id_pago", as: "alquiler" });
+AlquilerSala.belongsTo(Pago, { foreignKey: "id_pago", as: "pago" });
 
 // 🔗 Vales corporativos
-Pago.hasMany(ValeCorporativo, { foreignKey: "id_pago" });
-ValeCorporativo.belongsTo(Pago, { foreignKey: "id_pago" });
+Pago.hasMany(ValeCorporativo, {
+  foreignKey: "id_pago",
+  as: "valesCorporativos",
+});
+ValeCorporativo.belongsTo(Pago, { foreignKey: "id_pago", as: "pago" });
 
-OrdenCompra.hasMany(ValeCorporativo, { foreignKey: "id_orden_compra" });
-ValeCorporativo.belongsTo(OrdenCompra, { foreignKey: "id_orden_compra" });
+OrdenCompra.hasMany(ValeCorporativo, {
+  foreignKey: "id_orden_compra",
+  as: "valesCorporativos",
+});
+ValeCorporativo.belongsTo(OrdenCompra, {
+  foreignKey: "id_orden_compra",
+  as: "ordenCompra",
+});
 
 // 🔗 Tarifas corporativas
-Usuario.hasMany(TarifaCorporativa, { foreignKey: "id_cliente_corporativo" });
-TarifaCorporativa.belongsTo(Usuario, { foreignKey: "id_cliente_corporativo" });
+Usuario.hasMany(TarifaCorporativa, {
+  foreignKey: "id_cliente_corporativo",
+  as: "tarifasCorporativas",
+});
+TarifaCorporativa.belongsTo(Usuario, {
+  foreignKey: "id_cliente_corporativo",
+  as: "clienteCorporativo",
+});
 
-TipoUsuario.hasMany(TarifaCorporativa, { foreignKey: "id_tipo_usuario" });
-TarifaCorporativa.belongsTo(TipoUsuario, { foreignKey: "id_tipo_usuario" });
+TipoUsuario.hasMany(TarifaCorporativa, {
+  foreignKey: "id_tipo_usuario",
+  as: "tarifasCorporativas",
+});
+TarifaCorporativa.belongsTo(TipoUsuario, {
+  foreignKey: "id_tipo_usuario",
+  as: "tipoUsuario",
+});
 
 // 🔗 Ordenes y detalles
-OrdenCompra.hasMany(OrdenCombo, { foreignKey: "id_orden_compra" });
-OrdenCombo.belongsTo(OrdenCompra, { foreignKey: "id_orden_compra" });
+OrdenCompra.hasMany(OrdenCombo, {
+  foreignKey: "id_orden_compra",
+  as: "ordenCombos",
+});
+OrdenCombo.belongsTo(OrdenCompra, {
+  foreignKey: "id_orden_compra",
+  as: "ordenCompra",
+});
 
-Combo.hasMany(OrdenCombo, { foreignKey: "id_combo" });
-OrdenCombo.belongsTo(Combo, { foreignKey: "id_combo" });
+Combo.hasMany(OrdenCombo, { foreignKey: "id_combo", as: "ordenCombos" });
+OrdenCombo.belongsTo(Combo, { foreignKey: "id_combo", as: "combo" });
 
-OrdenCompra.hasMany(OrdenTicket, { foreignKey: "id_orden_compra" });
-OrdenTicket.belongsTo(OrdenCompra, { foreignKey: "id_orden_compra" });
+OrdenCompra.hasMany(OrdenTicket, {
+  foreignKey: "id_orden_compra",
+  as: "ordenTickets",
+});
+OrdenTicket.belongsTo(OrdenCompra, {
+  foreignKey: "id_orden_compra",
+  as: "ordenCompra",
+});
 
-TipoUsuario.hasMany(OrdenTicket, { foreignKey: "id_tipo_usuario" });
-OrdenTicket.belongsTo(TipoUsuario, { foreignKey: "id_tipo_usuario" });
+TipoUsuario.hasMany(OrdenTicket, {
+  foreignKey: "id_tipo_usuario",
+  as: "ordenTickets",
+});
+OrdenTicket.belongsTo(TipoUsuario, {
+  foreignKey: "id_tipo_usuario",
+  as: "tipoUsuario",
+});
 
-OrdenTicket.hasMany(Ticket, { foreignKey: "id_orden_ticket" });
-Ticket.belongsTo(OrdenTicket, { foreignKey: "id_orden_ticket" });
+OrdenTicket.hasMany(Ticket, { foreignKey: "id_orden_ticket", as: "tickets" });
+Ticket.belongsTo(OrdenTicket, {
+  foreignKey: "id_orden_ticket",
+  as: "ordenTicket",
+});
 
-AsientoFuncion.hasOne(Ticket, { foreignKey: "id_asiento" });
-Ticket.belongsTo(AsientoFuncion, { foreignKey: "id_asiento" });
+AsientoFuncion.hasOne(Ticket, { foreignKey: "id_asiento", as: "ticket" });
+Ticket.belongsTo(AsientoFuncion, {
+  foreignKey: "id_asiento",
+  as: "asientoFuncion",
+});
 
 // 🔗 Infraestructura y funciones
-Sede.hasMany(Sala, { foreignKey: "id_sede" });
-Sala.belongsTo(Sede, { foreignKey: "id_sede" });
+Sede.hasMany(Sala, { foreignKey: "id_sede", as: "salas" });
+Sala.belongsTo(Sede, { foreignKey: "id_sede", as: "sede" });
 
-Sala.hasMany(Funcion, { foreignKey: "id_sala" });
-Funcion.belongsTo(Sala, { foreignKey: "id_sala" });
+Sala.hasMany(Funcion, { foreignKey: "id_sala", as: "funciones" });
+Funcion.belongsTo(Sala, { foreignKey: "id_sala", as: "sala" });
 
-Pelicula.hasMany(Funcion, { foreignKey: "id_pelicula" });
-Funcion.belongsTo(Pelicula, { foreignKey: "id_pelicula" });
+Pelicula.hasMany(Funcion, { foreignKey: "id_pelicula", as: "funciones" });
+Funcion.belongsTo(Pelicula, { foreignKey: "id_pelicula", as: "pelicula" });
 
 Usuario.hasMany(Funcion, {
   as: "funcionesCorporativas",
@@ -91,29 +136,38 @@ Funcion.belongsTo(Usuario, {
   foreignKey: "id_cliente_corporativo",
 });
 
-Funcion.hasMany(AsientoFuncion, { foreignKey: "id_funcion" });
-AsientoFuncion.belongsTo(Funcion, { foreignKey: "id_funcion" });
+Funcion.hasMany(AsientoFuncion, { foreignKey: "id_funcion", as: "asientos" });
+AsientoFuncion.belongsTo(Funcion, { foreignKey: "id_funcion", as: "funcion" });
 
-Usuario.hasMany(AsientoFuncion, { foreignKey: "id_usuario_bloqueo" });
-AsientoFuncion.belongsTo(Usuario, { foreignKey: "id_usuario_bloqueo" });
+Usuario.hasMany(AsientoFuncion, {
+  foreignKey: "id_usuario_bloqueo",
+  as: "asientosBloqueados",
+});
+AsientoFuncion.belongsTo(Usuario, {
+  foreignKey: "id_usuario_bloqueo",
+  as: "usuarioBloqueo",
+});
 
-// 🔗 Función ↔ Pago (nuevo)
-Pago.hasOne(Funcion, { foreignKey: "id_pago" });
-Funcion.belongsTo(Pago, { foreignKey: "id_pago" });
+// 🔗 Función ↔ Pago
+Pago.hasOne(Funcion, { foreignKey: "id_pago", as: "funcion" });
+Funcion.belongsTo(Pago, { foreignKey: "id_pago", as: "pago" });
 
 // 🔗 Orden de compra
-Usuario.hasMany(OrdenCompra, { foreignKey: "id_usuario" });
-OrdenCompra.belongsTo(Usuario, { foreignKey: "id_usuario" });
+Usuario.hasMany(OrdenCompra, { foreignKey: "id_usuario", as: "ordenesCompra" });
+OrdenCompra.belongsTo(Usuario, { foreignKey: "id_usuario", as: "usuario" });
 
-Funcion.hasMany(OrdenCompra, { foreignKey: "id_funcion" });
-OrdenCompra.belongsTo(Funcion, { foreignKey: "id_funcion" });
+Funcion.hasMany(OrdenCompra, { foreignKey: "id_funcion", as: "ordenesCompra" });
+OrdenCompra.belongsTo(Funcion, { foreignKey: "id_funcion", as: "funcion" });
 
 // 🔗 Pagos
-OrdenCompra.hasOne(Pago, { foreignKey: "id_orden_compra" });
-Pago.belongsTo(OrdenCompra, { foreignKey: "id_orden_compra" });
+OrdenCompra.hasOne(Pago, { foreignKey: "id_orden_compra", as: "pago" });
+Pago.belongsTo(OrdenCompra, {
+  foreignKey: "id_orden_compra",
+  as: "ordenCompra",
+});
 
-MetodoPago.hasMany(Pago, { foreignKey: "id_metodo_pago" });
-Pago.belongsTo(MetodoPago, { foreignKey: "id_metodo_pago" });
+MetodoPago.hasMany(Pago, { foreignKey: "id_metodo_pago", as: "pagos" });
+Pago.belongsTo(MetodoPago, { foreignKey: "id_metodo_pago", as: "metodoPago" });
 
 module.exports = {
   Usuario,
