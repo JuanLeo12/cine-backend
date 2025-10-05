@@ -1,21 +1,23 @@
+// tests/usuarios.test.js
 const request = require("supertest");
-const app = require("../app");
+const app = require("../app"); // tu express app (exportada en app.js)
 const sequelize = require("../config/db");
 const { Usuario } = require("../models");
 
 beforeAll(async () => {
   console.log("\n🧩 Iniciando entorno de pruebas de usuarios...");
 
+  // Aseguramos DB limpia para tests (si ya lo haces en jest.setup.js, no hace daño)
   await sequelize.authenticate();
   await sequelize.sync({ force: true });
-  console.log("🗑️ Base de datos limpia y sincronizada.");
+  console.log("🗑️ Base de datos de test sincronizada (force: true).");
 
-  // Crear admin directo (para probar endpoints protegidos)
+  // Crear admin directo (evita la restricción al registrar admin vía endpoint)
   const admin = await Usuario.create({
     nombre: "Admin",
     apellido: "Test",
     email: "admin@test.local",
-    password: "AdminPass123",
+    password: "AdminPass123", // hook beforeCreate lo hashea
     rol: "admin",
   });
   console.log("👑 Admin creado:", admin.email);
@@ -26,7 +28,7 @@ afterAll(async () => {
   console.log("\n✅ Conexión cerrada. Fin de pruebas de usuarios.\n");
 });
 
-describe("🧪 Usuarios API - flujo completo", () => {
+describe("🧪 Usuarios API - flujo completo (registro, login, perfil, update, delete)", () => {
   let tokenCliente = null;
   let tokenAdmin = null;
   let clienteId = null;
@@ -44,7 +46,7 @@ describe("🧪 Usuarios API - flujo completo", () => {
     rol: "cliente",
   };
 
-  it("📌 (1) Login del admin para obtener token", async () => {
+  it("📌 (1) Login del admin y obtención de token", async () => {
     console.log("\n➡️ Intentando login de admin...");
     const res = await request(app).post("/usuarios/login").send({
       email: "admin@test.local",
@@ -54,7 +56,6 @@ describe("🧪 Usuarios API - flujo completo", () => {
     console.log("⬅️ Respuesta login admin:", res.statusCode, res.body);
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty("token");
-
     tokenAdmin = res.body.token;
   });
 
@@ -80,7 +81,6 @@ describe("🧪 Usuarios API - flujo completo", () => {
     console.log("⬅️ Respuesta login cliente:", res.statusCode, res.body);
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty("token");
-
     tokenCliente = res.body.token;
   });
 
@@ -113,19 +113,78 @@ describe("🧪 Usuarios API - flujo completo", () => {
       .get("/usuarios")
       .set("Authorization", `Bearer ${tokenAdmin}`);
 
-    console.log("⬅️ Listado recibido:", res.statusCode, res.body.length, "usuarios");
+    console.log(
+      "⬅️ Listado recibido:",
+      res.statusCode,
+      "cantidad:",
+      res.body.length
+    );
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
     expect(res.body.length).toBeGreaterThanOrEqual(2); // admin + cliente
   });
 
-  it("🚫 (7) Cliente no puede listar usuarios", async () => {
+  it("🚫 (7) Cliente no puede listar usuarios (403)", async () => {
     console.log("\n➡️ Intentando listar usuarios con token cliente...");
     const res = await request(app)
       .get("/usuarios")
       .set("Authorization", `Bearer ${tokenCliente}`);
 
-    console.log("⬅️ Respuesta:", res.statusCode, res.body);
+    console.log(
+      "⬅️ Respuesta (cliente intenta listar):",
+      res.statusCode,
+      res.body
+    );
     expect(res.statusCode).toBe(403);
+  });
+
+  // ----- CASOS ADICIONALES: update y delete -----
+
+  it("🔧 (8) Cliente (dueño) actualiza su teléfono", async () => {
+    console.log("\n➡️ Cliente actualiza su teléfono...");
+    const nuevoTelefono = "999111222";
+
+    const res = await request(app)
+      .put(`/usuarios/${clienteId}`)
+      .set("Authorization", `Bearer ${tokenCliente}`)
+      .send({ telefono: nuevoTelefono });
+
+    console.log("⬅️ Respuesta update (dueño):", res.statusCode, res.body);
+    expect(res.statusCode).toBe(200);
+    // controlador devuelve { mensaje, usuario }
+    expect(res.body.usuario).toBeDefined();
+    expect(res.body.usuario.telefono).toBe(nuevoTelefono);
+  });
+
+  it("🔧 (9) Admin puede cambiar el rol del usuario", async () => {
+    console.log("\n➡️ Admin cambia el rol del cliente a 'corporativo'...");
+    const res = await request(app)
+      .put(`/usuarios/${clienteId}`)
+      .set("Authorization", `Bearer ${tokenAdmin}`)
+      .send({ rol: "corporativo" });
+
+    console.log(
+      "⬅️ Respuesta update (admin cambia rol):",
+      res.statusCode,
+      res.body
+    );
+    expect(res.statusCode).toBe(200);
+    expect(res.body.usuario).toBeDefined();
+    expect(res.body.usuario.rol).toBe("corporativo");
+  });
+
+  it("🗑️ (10) Cliente (dueño) elimina su cuenta (soft delete)", async () => {
+    console.log("\n➡️ Cliente (dueño) solicita eliminación de su cuenta...");
+    const res = await request(app)
+      .delete(`/usuarios/${clienteId}`)
+      .set("Authorization", `Bearer ${tokenCliente}`);
+
+    console.log("⬅️ Respuesta delete:", res.statusCode, res.body);
+    expect(res.statusCode).toBe(200);
+
+    // Verificar en BD que quedó inactivo
+    const usuarioBD = await Usuario.findByPk(clienteId, { paranoid: false });
+    expect(usuarioBD).toBeDefined();
+    expect(usuarioBD.estado).toBe("inactivo");
   });
 });
