@@ -1,5 +1,10 @@
-const { Sequelize } = require('sequelize');
-require('dotenv').config();
+const { Sequelize } = require("sequelize");
+const dotenv = require("dotenv");
+
+// 📌 Carga .env normal o .env.test según el entorno
+dotenv.config({
+  path: process.env.NODE_ENV === "test" ? ".env.test" : ".env",
+});
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,
@@ -8,8 +13,8 @@ const sequelize = new Sequelize(
   {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    dialect: 'postgres',
-    logging: false, // activar para ver las queries
+    dialect: "postgres",
+    logging: process.env.NODE_ENV === "test" ? false : console.log, // menos ruido en test
   }
 );
 
