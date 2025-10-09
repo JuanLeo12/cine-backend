@@ -13,32 +13,14 @@ const {
   eliminarPelicula,
 } = require("../controllers/peliculasController");
 
-/**
- * 🎬 Rutas de Películas
- *
- * 🔹 Rutas públicas:
- *   GET /peliculas               → Lista todas las películas activas
- *     Parámetros opcionales (query):
- *       - tipo: "cartelera" | "proxEstreno"
- *       - genero: string (búsqueda parcial, insensible a mayúsculas)
- *       - clasificacion: string (ej: "PG-13", "R")
- *
- *   GET /peliculas/:id           → Obtener una película por ID
- *
- * 🔹 Rutas solo para administrador:
- *   POST   /peliculas            → Crear nueva película
- *   PATCH  /peliculas/:id        → Actualizar película
- *   DELETE /peliculas/:id        → Inactivar película (soft delete)
- */
-
 // -------------------------------
-// 📌 Rutas públicas
+// Rutas públicas
 // -------------------------------
-router.get("/", listarPeliculas); // Soporta filtros dinámicos por query
+router.get("/", listarPeliculas); // Soporta filtros: ?tipo=cartelera&genero=Acción&clasificacion=PG-13
 router.get("/:id", obtenerPelicula);
 
 // -------------------------------
-// 🔒 Rutas para administrador
+// Rutas protegidas (solo admin)
 // -------------------------------
 router.post(
   "/",
