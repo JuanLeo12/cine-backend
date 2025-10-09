@@ -12,7 +12,7 @@ const Pelicula = sequelize.define(
     genero: { type: DataTypes.STRING(50) },
     clasificacion: { type: DataTypes.STRING(10) },
     sinopsis: { type: DataTypes.TEXT },
-    imagen_url: { type: DataTypes.STRING(255) },
+    imagen_url: { type: DataTypes.STRING(550) },
     fecha_estreno: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -32,6 +32,18 @@ const Pelicula = sequelize.define(
         isIn: {
           args: [["activa", "inactiva"]],
           msg: "El estado debe ser 'activa' o 'inactiva'",
+        },
+      },
+    },
+    // 🔹 Nuevo campo para distinguir cartelera vs. estrenos
+    tipo: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+      defaultValue: "cartelera",
+      validate: {
+        isIn: {
+          args: [["cartelera", "proxEstreno"]],
+          msg: "El tipo debe ser 'cartelera' o 'proxEstreno'",
         },
       },
     },

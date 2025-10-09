@@ -1,10 +1,31 @@
 const { Pelicula, Funcion } = require("../models");
+const { Op } = require("sequelize");
 
-// 📌 Listar películas activas
+// 📌 Listar películas activas (con filtros dinámicos)
 exports.listarPeliculas = async (req, res) => {
   try {
+    const { tipo, genero, clasificacion } = req.query;
+
+    // 🔹 Base: solo películas activas
+    const where = { estado: "activa" };
+
+    // 🔹 Filtro por tipo (cartelera o proxEstreno)
+    if (tipo) {
+      where.tipo = tipo;
+    }
+
+    // 🔹 Filtro por género (case-insensitive)
+    if (genero) {
+      where.genero = { [Op.iLike]: `%${genero}%` }; // usa LIKE parcial
+    }
+
+    // 🔹 Filtro por clasificación exacta
+    if (clasificacion) {
+      where.clasificacion = clasificacion;
+    }
+
     const peliculas = await Pelicula.findAll({
-      where: { estado: "activa" },
+      where,
       attributes: [
         "id",
         "titulo",
@@ -15,16 +36,18 @@ exports.listarPeliculas = async (req, res) => {
         "imagen_url",
         "estado",
         "fecha_estreno",
+        "tipo",
       ],
       order: [["fecha_estreno", "DESC"]],
       include: [
         {
           model: Funcion,
-          as: "funciones", // ✅ alias correcto
+          as: "funciones",
           attributes: ["id", "fecha", "hora", "estado"],
         },
       ],
     });
+
     res.json(peliculas);
   } catch (error) {
     console.error("Error al listar películas:", error);
@@ -40,7 +63,7 @@ exports.obtenerPelicula = async (req, res) => {
       include: [
         {
           model: Funcion,
-          as: "funciones", // ✅ alias correcto
+          as: "funciones",
           attributes: ["id", "fecha", "hora", "estado"],
         },
       ],
@@ -51,6 +74,7 @@ exports.obtenerPelicula = async (req, res) => {
         .status(404)
         .json({ error: "Película no encontrada o inactiva" });
     }
+
     res.json(pelicula);
   } catch (error) {
     console.error("Error al obtener película:", error);
@@ -61,7 +85,12 @@ exports.obtenerPelicula = async (req, res) => {
 // 📌 Crear película (solo admin)
 exports.crearPelicula = async (req, res) => {
   try {
-    const nueva = await Pelicula.create({ ...req.body, estado: "activa" });
+    const nueva = await Pelicula.create({
+      ...req.body,
+      estado: "activa",
+      tipo: req.body.tipo || "cartelera",
+    });
+
     res
       .status(201)
       .json({ mensaje: "Película creada correctamente", pelicula: nueva });
@@ -99,10 +128,10 @@ exports.eliminarPelicula = async (req, res) => {
         .json({ error: "Película no encontrada o ya inactiva" });
     }
 
-    // Validar que no tenga funciones asociadas
     const asociada = await Funcion.findOne({
       where: { id_pelicula: pelicula.id },
     });
+
     if (asociada) {
       return res.status(400).json({
         error: "No se puede eliminar una película con funciones asociadas",
