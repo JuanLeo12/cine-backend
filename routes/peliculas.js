@@ -30,7 +30,7 @@ router.post(
   crearPelicula
 );
 
-router.patch(
+router.put(
   "/:id",
   autenticarUsuario,
   permitirRoles("admin"),
