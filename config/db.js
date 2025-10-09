@@ -5,7 +5,7 @@ dotenv.config({
   path: process.env.NODE_ENV === "test" ? ".env.test" : ".env",
 });
 
-// 🧠 Control del logging
+// Control del logging
 const shouldLogSQL =
   process.env.NODE_ENV === "test" && process.env.SHOW_SQL === "true";
 

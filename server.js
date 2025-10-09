@@ -1,8 +1,7 @@
-// server.js
 const sequelize = require("./config/db");
 const app = require("./app");
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 if (process.env.NODE_ENV !== "test") {
   sequelize
@@ -10,7 +9,7 @@ if (process.env.NODE_ENV !== "test") {
     .then(() => {
       console.log("✅ Conexión a PostgreSQL exitosa");
 
-      return sequelize.sync({ alter: true }); // ⚠️ solo en dev/prod
+      return sequelize.sync({ alter: true }); // Sincroniza modelos con la base de datos
     })
     .then(() => {
       console.log("📦 Tablas sincronizadas");
