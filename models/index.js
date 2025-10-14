@@ -16,6 +16,7 @@ const ValeCorporativo = require("./vale_corporativo");
 const TarifaCorporativa = require("./tarifa_corporativa");
 const Publicidad = require("./publicidad");
 const AlquilerSala = require("./alquiler_sala");
+const sequelize = require("../config/db"); 
 
 module.exports = {
   Usuario,
@@ -36,4 +37,5 @@ module.exports = {
   TarifaCorporativa,
   Publicidad,
   AlquilerSala,
+  sequelize
 };

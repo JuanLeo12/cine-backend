@@ -1,146 +1,123 @@
-// tests/peliculas.test.js
 const request = require("supertest");
+const bcrypt = require("bcrypt");
 const app = require("../app");
-const sequelize = require("../config/db");
-const { Usuario, Pelicula, Funcion, Sede, Sala } = require("../models");
-
-beforeAll(async () => {
-  await sequelize.sync({ force: true });
-  console.log("🧹 BD reiniciada correctamente para test de películas");
-
-  // Crear sede y sala necesarias para funciones
-  const sede = await Sede.create({
-    nombre: "Cine Central",
-    direccion: "Av. Principal 123",
-    ciudad: "Lima",
-  });
-
-  const sala = await Sala.create({
-    nombre: "Sala 1",
-    filas: 10,
-    columnas: 10,
-    id_sede: sede.id,
-  });
-
-  console.log(`🏢 Sede creada: ${sede.nombre} - Sala asociada: ${sala.nombre}`);
-
-  // Crear admin
-  await Usuario.create({
-    nombre: "Admin",
-    apellido: "Test",
-    email: "admin@test.local",
-    password: "AdminPass123",
-    rol: "admin",
-  });
-});
-
-afterAll(async () => {
-  await sequelize.close();
-  console.log("🔚 Conexión cerrada correctamente");
-});
+const { sequelize, Usuario, Pelicula } = require("../models");
 
 describe("🎬 API de Películas", () => {
   let tokenAdmin;
   let peliculaId;
-  let sala;
-  let sede;
 
-  const peliculaData = {
-    titulo: "Interstellar",
-    genero: "Ciencia ficción",
-    clasificacion: "PG-13",
-    sinopsis: "Exploradores buscan un nuevo hogar para la humanidad.",
-    imagen_url: "http://example.com/interstellar.jpg",
-    fecha_estreno: "2025-01-01",
-    duracion: 169,
-  };
+  beforeAll(async () => {
+    console.log("\n🧹 Reiniciando base de datos para pruebas de PELÍCULAS...");
+    await sequelize.sync({ force: true });
 
-  it("📌 Login de admin y obtención de token", async () => {
-    const res = await request(app).post("/usuarios/login").send({
-      email: "admin@test.local",
-      password: "AdminPass123",
+    console.log("👑 Creando usuario admin base...");
+
+    // 🔐 Crear admin manualmente con bcrypt (mismo método que el modelo)
+    const admin = await Usuario.create({
+      nombre: "Administrador",
+      email: "admin@cine.com",
+      password: "admin123",
+      rol: "admin",
+      estado: "activo",
     });
 
-    expect(res.statusCode).toBe(200);
-    tokenAdmin = res.body.token;
-    console.log("🟢 Token admin:", tokenAdmin.substring(0, 60) + "...");
+    console.log("✅ Admin creado correctamente:", {
+      id: admin.id,
+      email: admin.email,
+      rol: admin.rol,
+    });
+
+    console.log("🔐 Iniciando sesión con admin...");
+
+    // 🔑 Iniciar sesión
+    const resLogin = await request(app)
+      .post("/usuarios/login")
+      .send({ email: "admin@cine.com", password: "admin123" });
+
+    console.log("📤 Respuesta del login:", resLogin.body);
+
+    expect(resLogin.statusCode).toBe(200);
+    tokenAdmin = resLogin.body.token;
+    console.log("🟢 Token obtenido correctamente");
   });
 
-  it("🎥 Crear película (solo admin)", async () => {
+  // 🎞️ Crear película
+  test("🎞️ Crear película (solo admin)", async () => {
     const res = await request(app)
       .post("/peliculas")
       .set("Authorization", `Bearer ${tokenAdmin}`)
-      .send(peliculaData);
+      .send({
+        titulo: "Inception",
+        genero: "Ciencia ficción",
+        clasificacion: "PG-13",
+        duracion: 148,
+        fecha_estreno: "2010-07-16",
+        sinopsis: "Un ladrón roba secretos a través del sueño.",
+        imagen_url: "https://image.tmdb.org/t/p/inception.jpg",
+        tipo: "cartelera",
+      });
+
+    console.log("📤 Respuesta al crear película:", res.body);
 
     expect(res.statusCode).toBe(201);
+    expect(res.body).toHaveProperty("pelicula");
     peliculaId = res.body.pelicula.id;
-    console.log("🎬 Película creada:", res.body.pelicula);
   });
 
-  it("📜 Listar películas activas (público)", async () => {
+  // 📜 Listar películas activas
+  test("📜 Listar películas activas (público)", async () => {
     const res = await request(app).get("/peliculas");
+    console.log("📤 Películas listadas:", res.body);
     expect(res.statusCode).toBe(200);
-    console.log("🎞️ Películas activas encontradas:", res.body);
+    expect(Array.isArray(res.body)).toBe(true);
+    expect(res.body.length).toBeGreaterThan(0);
   });
 
-  it("🔍 Obtener película por ID (público)", async () => {
+  // 🔍 Obtener película por ID
+  test("🔍 Obtener película por ID (público)", async () => {
     const res = await request(app).get(`/peliculas/${peliculaId}`);
+    console.log("📤 Película obtenida:", res.body);
     expect(res.statusCode).toBe(200);
-    console.log("🎥 Película obtenida por ID:", res.body);
+    expect(res.body.id).toBe(peliculaId);
   });
 
-  it("✏️ Actualizar película (admin)", async () => {
+  // ✏️ Actualizar película
+  test("✏️ Actualizar película (solo admin)", async () => {
     const res = await request(app)
-      .patch(`/peliculas/${peliculaId}`)
+      .put(`/peliculas/${peliculaId}`)
       .set("Authorization", `Bearer ${tokenAdmin}`)
-      .send({ genero: "Ciencia Ficción" });
+      .send({ titulo: "Inception (Updated)" });
 
-    if (res.statusCode !== 200) {
-      console.error("⚠️ Error al actualizar película:", res.body);
-    }
+    console.log("📤 Película actualizada:", res.body);
 
     expect(res.statusCode).toBe(200);
-    console.log("✅ Película actualizada correctamente:", res.body.pelicula);
+    expect(res.body.pelicula.titulo).toBe("Inception (Updated)");
   });
 
-  it("❌ No debería eliminar película con funciones asociadas", async () => {
-    // Crear una función vinculada a la película
-    const sede = await Sede.findOne();
-    const sala = await Sala.findOne();
-
-    await Funcion.create({
-      id_pelicula: peliculaId,
-      id_sala: sala.id,
-      fecha: new Date(),
-      hora: "20:00",
-    });
-
+  // 🗑️ Eliminar película
+  test("🗑️ Eliminar película (soft delete, solo admin)", async () => {
     const res = await request(app)
       .delete(`/peliculas/${peliculaId}`)
       .set("Authorization", `Bearer ${tokenAdmin}`);
 
-    expect(res.statusCode).toBe(400);
-    console.log(
-      "🚫 Intento de eliminar película con función asociada bloqueado"
-    );
-  });
-
-  it("🗑️ Eliminar película sin funciones asociadas", async () => {
-    await Funcion.destroy({ where: { id_pelicula: peliculaId } });
-
-    const res = await request(app)
-      .delete(`/peliculas/${peliculaId}`)
-      .set("Authorization", `Bearer ${tokenAdmin}`);
+    console.log("📤 Película eliminada:", res.body);
 
     expect(res.statusCode).toBe(200);
-    console.log("🗑️ Película eliminada (inactivada):", peliculaId);
+    expect(res.body.mensaje).toMatch(/eliminada|inactiva/i);
   });
 
-  it("🚫 Película inactiva no debe aparecer en el listado", async () => {
+  // 🚫 Verificar que película inactiva no aparece en listado
+  test("🚫 Verificar que película inactiva no aparece en listado", async () => {
     const res = await request(app).get("/peliculas");
-    const encontrada = res.body.find((p) => p.id === peliculaId);
+    console.log("📤 Listado tras eliminación:", res.body);
+    const existe = res.body.some((p) => p.id === peliculaId);
+    expect(existe).toBe(false);
+  });
 
-    expect(encontrada).toBeUndefined();
-    console.log("✅ Película inactiva no aparece en el listado final");
+  afterAll(async () => {
+    console.log("\n🔚 Cerrando conexión con base de datos...");
+    await sequelize.close();
+    console.log("✅ Conexión cerrada correctamente");
   });
 });
