@@ -1,141 +1,131 @@
 const request = require("supertest");
-const app = require("../server");
-const { sequelize, Sede, Sala, Usuario } = require("../models");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
+const app = require("../app");
+const { sequelize, Usuario, Sala, Sede } = require("../models");
 
-describe("🎭 API de Salas", () => {
+describe("🏟️ API de Salas", () => {
   let tokenAdmin;
-  let sedeBase;
-  let salaBase;
+  let salaId;
+  let sedeId;
 
   beforeAll(async () => {
-    console.log("🧹 Reiniciando base de datos para pruebas de SALAS...");
+    console.log("\n🧹 Reiniciando base de datos para pruebas de SALAS...");
     await sequelize.sync({ force: true });
 
-    // Crear usuario admin base si no existe
-    const passwordHash = await bcrypt.hash("admin123", 10);
+    console.log("👑 Creando usuario admin base...");
     const admin = await Usuario.create({
-      nombre: "Admin Test",
+      nombre: "Administrador",
       email: "admin@cine.com",
-      password: passwordHash,
+      password: "admin123",
       rol: "admin",
       estado: "activo",
     });
 
-    // Login del admin
-    const loginRes = await request(app).post("/usuarios/login").send({
+    console.log("✅ Admin creado:", admin.email);
+
+    console.log("🏢 Creando sede base...");
+    const sede = await Sede.create({
+      nombre: "Sede Central",
+      ciudad: "Lima",
+      direccion: "Av. Principal 123",
+      telefono: "999888777",
+      estado: "activa",
+    });
+
+    sedeId = sede.id;
+    console.log("✅ Sede creada:", sede.nombre);
+
+    console.log("🔐 Iniciando sesión con admin...");
+    const resLogin = await request(app).post("/usuarios/login").send({
       email: "admin@cine.com",
       password: "admin123",
     });
 
-    console.log("📤 Respuesta login admin:", loginRes.status, loginRes.body);
+    console.log("📤 Respuesta del login:", resLogin.body);
+    expect(resLogin.statusCode).toBe(200);
+    expect(resLogin.body).toHaveProperty("token");
 
-    if (!loginRes.body?.token) {
-      throw new Error(
-        "❌ No se obtuvo token de admin en el login. Revisa el endpoint /usuarios/login."
-      );
-    }
-
-    tokenAdmin = loginRes.body.token;
-    console.log("🟢 Token admin obtenido correctamente.");
-
-    // Crear sede base
-    sedeBase = await Sede.create({
-      nombre: "Sede Central",
-      direccion: "Av. Principal 123",
-      ciudad: "Lima",
-      estado: "activo",
-    });
+    tokenAdmin = resLogin.body.token;
+    console.log("🟢 Token obtenido correctamente\n");
   });
 
   afterAll(async () => {
+    console.log("\n🔚 Cerrando conexión con base de datos...");
     await sequelize.close();
-    console.log("🔚 Conexión cerrada correctamente");
+    console.log("✅ Conexión cerrada correctamente\n");
   });
 
-  // ---------------------------------------------------------------
-  test("🎬 Crear sala (solo admin)", async () => {
+  // -------------------- TESTS --------------------
+
+  it("🏟️ Crear sala (solo admin)", async () => {
     const res = await request(app)
       .post("/salas")
       .set("Authorization", `Bearer ${tokenAdmin}`)
       .send({
         nombre: "Sala 1",
-        capacidad: 120,
-        estado: "activo",
-        sedeId: sedeBase.id,
+        filas: 10,
+        columnas: 15,
+        id_sede: sedeId,
       });
 
-    expect(res.status).toBe(201);
+    console.log("📤 Respuesta al crear sala:", res.body);
+
+    expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty("sala");
-    salaBase = res.body.sala;
-    console.log("✅ Sala creada:", salaBase.nombre);
+    expect(res.body.sala.nombre).toBe("Sala 1");
+
+    salaId = res.body.sala.id;
   });
 
-  test("📜 Listar salas activas (público)", async () => {
+  it("📜 Listar salas activas (público)", async () => {
     const res = await request(app).get("/salas");
-    expect(res.status).toBe(200);
+    console.log("📤 Salas listadas:", res.body);
+
+    expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
-    console.log("📋 Salas listadas:", res.body.length);
+    expect(res.body.length).toBeGreaterThan(0);
   });
 
-  test("🔍 Obtener sala por ID (público)", async () => {
-    const res = await request(app).get(`/salas/${salaBase.id}`);
-    expect(res.status).toBe(200);
-    expect(res.body).toHaveProperty("nombre", salaBase.nombre);
-    console.log("🔎 Sala obtenida:", res.body.nombre);
+  it("🔍 Obtener sala por ID (público)", async () => {
+    const res = await request(app).get(`/salas/${salaId}`);
+    console.log("📤 Sala obtenida:", res.body);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty("id", salaId);
   });
 
-  test("✏️ Actualizar sala (admin)", async () => {
+  it("✏️ Actualizar sala (solo admin)", async () => {
     const res = await request(app)
-      .put(`/salas/${salaBase.id}`)
+      .patch(`/salas/${salaId}`)
       .set("Authorization", `Bearer ${tokenAdmin}`)
-      .send({ nombre: "Sala 1 Actualizada" });
+      .send({
+        nombre: "Sala 1 Actualizada",
+        filas: 12,
+        columnas: 18,
+        id_sede: sedeId,
+      });
 
-    expect(res.status).toBe(200);
+    console.log("📤 Sala actualizada:", res.body);
+    expect(res.statusCode).toBe(200);
     expect(res.body.sala.nombre).toBe("Sala 1 Actualizada");
-    console.log("🛠️ Sala actualizada:", res.body.sala.nombre);
   });
 
-  test("❌ No debería eliminar sala con funciones asociadas", async () => {
-    // Simulación: crea una función que dependa de la sala (si tienes modelo Funcion)
-    // Si no, simplemente valida que devuelva 400/409 en ese caso.
+  it("🗑️ Eliminar sala (soft delete, solo admin)", async () => {
     const res = await request(app)
-      .delete(`/salas/${salaBase.id}`)
+      .delete(`/salas/${salaId}`)
       .set("Authorization", `Bearer ${tokenAdmin}`);
 
-    // Puedes ajustar este código según tu lógica real
-    expect([400, 409, 500]).toContain(res.status);
-    console.log("🚫 Intento de eliminación con dependencias:", res.status);
+    console.log("📤 Sala eliminada:", res.body);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.mensaje).toMatch(/inactivada/i);
   });
 
-  test("🗑️ Eliminar sala sin dependencias (soft delete)", async () => {
-    const nuevaSala = await Sala.create({
-      nombre: "Sala Temporal",
-      capacidad: 80,
-      estado: "activo",
-      sedeId: sedeBase.id,
-    });
-
-    const res = await request(app)
-      .delete(`/salas/${nuevaSala.id}`)
-      .set("Authorization", `Bearer ${tokenAdmin}`);
-
-    expect(res.status).toBe(200);
-    console.log("🧾 Sala eliminada:", nuevaSala.nombre);
-  });
-
-  test("🚫 Sala inactiva no debe aparecer en listado", async () => {
-    const inactiva = await Sala.create({
-      nombre: "Sala Oculta",
-      capacidad: 50,
-      estado: "inactivo",
-      sedeId: sedeBase.id,
-    });
-
+  it("🚫 Verificar que sala inactiva no aparece en listado", async () => {
     const res = await request(app).get("/salas");
-    expect(res.status).toBe(200);
-    const nombres = res.body.map((s) => s.nombre);
-    expect(nombres).not.toContain("Sala Oculta");
-    console.log("🚷 Sala inactiva filtrada correctamente");
+    console.log("📤 Listado tras eliminación:", res.body);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.find((s) => s.id === salaId)).toBeUndefined();
   });
 });

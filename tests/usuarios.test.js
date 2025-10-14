@@ -1,6 +1,6 @@
 // tests/usuarios.test.js
 const request = require("supertest");
-const app = require("../app"); // tu express app (exportada en app.js)
+const app = require("../app");
 const sequelize = require("../config/db");
 const { Usuario } = require("../models");
 
