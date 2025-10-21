@@ -1,16 +1,16 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 
-// 📌 Modelo: Tipos de usuario (Ej: Niño, Adulto, Adulto Mayor y Conadis)
-const TipoUsuario = sequelize.define(
-  "TipoUsuario",
+// 📌 Modelo: Tipos de ticket (Ej: Niño, Adulto, Adulto Mayor y Conadis)
+const TipoTicket = sequelize.define(
+  "TipoTicket",
   {
     nombre: { type: DataTypes.STRING(50), allowNull: false },
   },
   {
-    tableName: "tipos_usuario",
+    tableName: "tipo_ticket",
     timestamps: false,
   }
 );
 
-module.exports = TipoUsuario;
+module.exports = TipoTicket;

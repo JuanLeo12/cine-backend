@@ -58,19 +58,37 @@ const validarCamposPorRol = (rol, data, esActualizacion = false) => {
   }
 
   if (rol === "corporativo") {
-    const { nombre, telefono, direccion, email, password, ruc } = data;
+    const {
+      nombre,
+      telefono,
+      direccion,
+      email,
+      password,
+      ruc,
+      representante,
+      cargo,
+    } = data;
 
     if (
       !esActualizacion &&
-      (!nombre || !telefono || !direccion || !email || !password || !ruc)
+      (!nombre ||
+        !telefono ||
+        !direccion ||
+        !email ||
+        !password ||
+        !ruc ||
+        !representante ||
+        !cargo)
     ) {
       errores.push(
-        "Todos los campos son obligatorios para corporativo excepto foto_perfil"
+        "Todos los campos son obligatorios para corporativo (nombre, telefono, direccion, email, password, ruc, representante, cargo)"
       );
     }
 
     if (nombre && !soloLetrasRegex.test(nombre))
       errores.push("El nombre solo debe contener letras");
+    if (representante && !soloLetrasRegex.test(representante))
+      errores.push("El representante solo debe contener letras");
     if (ruc && !rucRegex.test(ruc))
       errores.push("El RUC debe tener exactamente 11 dígitos numéricos");
     if (telefono && !telefonoRegex.test(telefono))

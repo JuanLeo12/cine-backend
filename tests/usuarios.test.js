@@ -161,7 +161,11 @@ describe("🧪 Usuarios API - flujo completo (registro, login, perfil, update, d
     const res = await request(app)
       .put(`/usuarios/${clienteId}`)
       .set("Authorization", `Bearer ${tokenAdmin}`)
-      .send({ rol: "corporativo" });
+      .send({
+        rol: "corporativo",
+        representante: "Carlos Gómez",
+        cargo: "Gerente Comercial",
+      });
 
     console.log(
       "⬅️ Respuesta update (admin cambia rol):",

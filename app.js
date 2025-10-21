@@ -26,7 +26,7 @@ app.use('/sedes', require('./routes/sedes'));
 app.use('/alquileres', require('./routes/alquiler_salas'));
 app.use('/asientos', require('./routes/asientos_funcion'));
 app.use('/metodos_pago', require('./routes/metodos_pago'));
-app.use('/tipos_usuario', require('./routes/tipos_usuario'));
+app.use('/tipos_ticket', require('./routes/tipos_ticket'));
 app.use('/combos', require('./routes/combos'));
 app.use('/ordenes_tickets', require('./routes/ordenes_tickets'));
 app.use('/ordenes_combos', require('./routes/ordenes_combos'));

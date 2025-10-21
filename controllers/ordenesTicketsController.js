@@ -1,4 +1,4 @@
-const { OrdenTicket, OrdenCompra, TipoUsuario } = require("../models");
+const { OrdenTicket, OrdenCompra, TipoTicket } = require("../models");
 const { validarOrdenTicket } = require("../utils/validacionesOrdenTicket");
 
 // 📌 Listar tickets de orden
@@ -25,7 +25,7 @@ exports.listarTickets = async (req, res) => {
           as: "ordenCompra",
           attributes: ["id", "fecha_compra", "id_usuario", "estado"],
         },
-        { model: TipoUsuario, as: "tipoUsuario", attributes: ["id", "nombre"] },
+        { model: TipoTicket, as: "tipoTicket", attributes: ["id", "nombre"] },
       ],
       order: [["id", "DESC"]],
     });
@@ -69,9 +69,9 @@ exports.crearTicket = async (req, res) => {
         });
     }
 
-    const tipo = await TipoUsuario.findByPk(id_tipo_usuario);
+    const tipo = await TipoTicket.findByPk(id_tipo_usuario);
     if (!tipo)
-      return res.status(404).json({ error: "Tipo de usuario no encontrado" });
+      return res.status(404).json({ error: "Tipo de ticket no encontrado" });
 
     const nuevo = await OrdenTicket.create({
       id_orden_compra,

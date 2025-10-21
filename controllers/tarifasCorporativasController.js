@@ -1,4 +1,4 @@
-const { TarifaCorporativa, Usuario, TipoUsuario } = require("../models");
+const { TarifaCorporativa, Usuario, TipoTicket } = require("../models");
 const { validarTarifa } = require("../utils/validacionesTarifas");
 
 const tarifaInclude = [
@@ -8,8 +8,8 @@ const tarifaInclude = [
     attributes: ["id", "nombre", "email"],
   },
   {
-    model: TipoUsuario,
-    as: "tipoUsuario",
+    model: TipoTicket,
+    as: "tipoTicket",
     attributes: ["id", "nombre"],
   },
 ];
@@ -61,10 +61,10 @@ exports.crearTarifa = async (req, res) => {
         .status(404)
         .json({ error: "Cliente corporativo no encontrado" });
 
-    // Validar existencia de tipo de usuario
-    const tipo = await TipoUsuario.findByPk(id_tipo_usuario);
+    // Validar existencia de tipo de ticket
+    const tipo = await TipoTicket.findByPk(id_tipo_usuario);
     if (!tipo)
-      return res.status(404).json({ error: "Tipo de usuario no encontrado" });
+      return res.status(404).json({ error: "Tipo de ticket no encontrado" });
 
     // Evitar duplicados
     const existe = await TarifaCorporativa.findOne({
@@ -72,7 +72,7 @@ exports.crearTarifa = async (req, res) => {
     });
     if (existe) {
       return res.status(409).json({
-        error: "Ya existe una tarifa para este cliente y tipo de usuario",
+        error: "Ya existe una tarifa para este cliente y tipo de ticket",
       });
     }
 

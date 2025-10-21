@@ -5,7 +5,7 @@ const Funcion = require("./funcion");
 const Pago = require("./pago");
 const Sede = require("./sede");
 const MetodoPago = require("./metodo_pago");
-const TipoUsuario = require("./tipo_usuario");
+const TipoTicket = require("./tipo_ticket");
 const AsientoFuncion = require("./asiento_funcion");
 const Ticket = require("./ticket");
 const OrdenTicket = require("./orden_ticket");
@@ -26,7 +26,7 @@ module.exports = {
   Pago,
   Sede,
   MetodoPago,
-  TipoUsuario,
+  TipoTicket,
   OrdenCompra,
   OrdenTicket,
   OrdenCombo,

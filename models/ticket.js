@@ -12,7 +12,7 @@ const Ticket = sequelize.define(
     tableName: "tickets",
     timestamps: false,
     indexes: [
-      { unique: true, fields: ["id_asiento"] }, // Un asiento no puede tener más de un ticket
+      { unique: true, fields: ["id_asiento"] }, // Un asiento no puede tener más de un ticket 
     ],
   }
 );

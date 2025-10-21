@@ -7,7 +7,7 @@ const {
   Ticket,
   AsientoFuncion,
   Pago,
-  TipoUsuario,
+  TipoTicket,
   Combo,
 } = require("../models");
 const { validarOrdenCompra } = require("../utils/validacionesOrdenCompra");
@@ -31,7 +31,7 @@ const ordenInclude = [
     as: "ordenTickets",
     attributes: ["id", "cantidad", "precio_unitario", "descuento"],
     include: [
-      { model: TipoUsuario, as: "tipoUsuario", attributes: ["id", "nombre"] },
+      { model: TipoTicket, as: "tipoTicket", attributes: ["id", "nombre"] },
     ],
   },
   {

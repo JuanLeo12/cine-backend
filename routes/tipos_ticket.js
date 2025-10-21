@@ -10,7 +10,7 @@ const {
   crearTipo,
   actualizarTipo,
   eliminarTipo,
-} = require("../controllers/tiposUsuarioController");
+} = require("../controllers/tiposTicketController");
 
 // 📍 Públicos
 router.get("/", listarTipos);

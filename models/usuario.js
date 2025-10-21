@@ -11,6 +11,8 @@ const Usuario = sequelize.define(
     apellido: { type: DataTypes.STRING(100) },
     dni: { type: DataTypes.STRING(8), unique: true, allowNull: true },
     ruc: { type: DataTypes.STRING(11), unique: true, allowNull: true },
+    representante: { type: DataTypes.STRING(100), allowNull: true },
+    cargo: { type: DataTypes.STRING(100), allowNull: true },
     telefono: { type: DataTypes.STRING(20) },
     direccion: { type: DataTypes.STRING(255) },
     fecha_nacimiento: { type: DataTypes.DATEONLY },

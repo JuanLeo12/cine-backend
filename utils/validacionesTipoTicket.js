@@ -1,4 +1,4 @@
-// ✅ Tipos de usuario permitidos
+// ✅ Tipos de ticket permitidos
 const TIPOS_VALIDOS = ["Niño", "Adulto", "Adulto Mayor", "Conadis"];
 
 // ✅ Normaliza el texto recibido: quita espacios y convierte a minúsculas
@@ -17,8 +17,8 @@ function capitalizar(nombreNormalizado) {
   return mapping[nombreNormalizado] || nombreNormalizado;
 }
 
-// 📌 Valida que el tipo de usuario esté permitido
-function validarTipoUsuario({ nombre }) {
+// 📌 Valida que el tipo de ticket esté permitido
+function validarTipoTicket({ nombre }) {
   const errores = [];
 
   if (!nombre || typeof nombre !== "string") {
@@ -30,11 +30,11 @@ function validarTipoUsuario({ nombre }) {
 
   if (!TIPOS_VALIDOS.includes(nombreNormalizado)) {
     errores.push(
-      `Tipo de usuario inválido. Solo se permiten: ${TIPOS_VALIDOS.join(", ")}`
+      `Tipo de ticket inválido. Solo se permiten: ${TIPOS_VALIDOS.join(", ")}`
     );
   }
 
   return { errores, nombreNormalizado };
 }
 
-module.exports = { validarTipoUsuario, TIPOS_VALIDOS };
+module.exports = { validarTipoTicket, TIPOS_VALIDOS };

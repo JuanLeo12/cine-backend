@@ -6,7 +6,7 @@ const {
   Pago,
   Sede,
   MetodoPago,
-  TipoUsuario,
+  TipoTicket,
   OrdenCompra,
   OrdenTicket,
   OrdenCombo,
@@ -65,13 +65,13 @@ TarifaCorporativa.belongsTo(Usuario, {
   as: "clienteCorporativo",
 });
 
-TipoUsuario.hasMany(TarifaCorporativa, {
+TipoTicket.hasMany(TarifaCorporativa, {
   foreignKey: "id_tipo_usuario",
   as: "tarifasCorporativas",
 });
-TarifaCorporativa.belongsTo(TipoUsuario, {
+TarifaCorporativa.belongsTo(TipoTicket, {
   foreignKey: "id_tipo_usuario",
-  as: "tipoUsuario",
+  as: "tipoTicket",
 });
 
 // 🔗 Ordenes y detalles
@@ -96,13 +96,13 @@ OrdenTicket.belongsTo(OrdenCompra, {
   as: "ordenCompra",
 });
 
-TipoUsuario.hasMany(OrdenTicket, {
+TipoTicket.hasMany(OrdenTicket, {
   foreignKey: "id_tipo_usuario",
   as: "ordenTickets",
 });
-OrdenTicket.belongsTo(TipoUsuario, {
+OrdenTicket.belongsTo(TipoTicket, {
   foreignKey: "id_tipo_usuario",
-  as: "tipoUsuario",
+  as: "tipoTicket",
 });
 
 OrdenTicket.hasMany(Ticket, { foreignKey: "id_orden_ticket", as: "tickets" });
@@ -173,7 +173,7 @@ module.exports = {
   Pago,
   Sede,
   MetodoPago,
-  TipoUsuario,
+  TipoTicket,
   OrdenCompra,
   OrdenTicket,
   OrdenCombo,
