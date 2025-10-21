@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 
-// 📌 Modelo: Tipos de usuario (Ej: Niño, Adulto, Conadis)
+// 📌 Modelo: Tipos de usuario (Ej: Niño, Adulto, Adulto Mayor y Conadis)
 const TipoUsuario = sequelize.define(
   "TipoUsuario",
   {

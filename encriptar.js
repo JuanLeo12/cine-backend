@@ -1,10 +1,10 @@
-const { Usuario } = require("./models"); // Ajusta según tu proyecto
+const { Usuario } = require("./models");
 
 async function actualizarYListarPasswords() {
   try {
     const usuarios = await Usuario.findAll({ scope: "withPassword" });
 
-    const passwordsAsignados = []; // Aquí guardaremos los passwords en texto plano
+    const passwordsAsignados = []; // Aquí se guardan los passwords en texto plano
 
     for (const usuario of usuarios) {
       if (!usuario.password) {

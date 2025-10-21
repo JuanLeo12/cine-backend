@@ -53,7 +53,7 @@ const Usuario = sequelize.define(
   }
 );
 
-// 🔒 Método de comparación
+// Método de comparación
 Usuario.prototype.validarPassword = function (passwordPlano) {
   return bcrypt.compare(passwordPlano, this.password);
 };
