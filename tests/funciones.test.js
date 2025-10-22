@@ -43,7 +43,6 @@ describe("🎥 API de Funciones", () => {
       ciudad: "Lima",
       direccion: "Av. Norte 456",
       telefono: "987654321",
-      estado: "activa",
     });
 
     const sala = await Sala.create({
@@ -118,6 +117,9 @@ describe("🎥 API de Funciones", () => {
       .put(`/funciones/${funcionId}`)
       .set("Authorization", `Bearer ${tokenAdmin}`)
       .send({
+        id_pelicula: peliculaId,
+        id_sala: salaId,
+        fecha: "2025-10-28",
         hora: "20:00:00",
       });
 

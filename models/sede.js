@@ -7,6 +7,13 @@ const Sede = sequelize.define(
     nombre: { type: DataTypes.STRING(100), allowNull: false },
     direccion: { type: DataTypes.STRING(255), allowNull: false },
     ciudad: { type: DataTypes.STRING(100), allowNull: false },
+    estado: {
+      type: DataTypes.STRING(20),
+      defaultValue: "activo",
+      validate: {
+        isIn: [["activo", "inactivo"]],
+      },
+    },
   },
   {
     tableName: "sedes",

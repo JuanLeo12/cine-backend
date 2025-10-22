@@ -19,6 +19,9 @@ router.post("/", soloCorporativo, publicidadController.crearPublicidad);
 // 📍 Listar (admin ve todas, corporativo solo las suyas)
 router.get("/", publicidadController.listarPublicidad);
 
+// 📍 Obtener por ID (admin o dueño)
+router.get("/:id", publicidadController.obtenerPublicidad);
+
 // 📍 Eliminar (admin o dueño)
 router.delete("/:id", publicidadController.eliminarPublicidad);
 

@@ -62,7 +62,6 @@ describe("🛒 API de Órdenes de Compra", () => {
       ciudad: "Lima",
       direccion: "Av. Sur 789",
       telefono: "999000111",
-      estado: "activa",
     });
 
     const sala = await Sala.create({
@@ -112,7 +111,7 @@ describe("🛒 API de Órdenes de Compra", () => {
 
   it("🛒 Crear orden de compra (cliente autenticado)", async () => {
     const res = await request(app)
-      .post("/ordenes_compra")
+      .post("/ordenes")
       .set("Authorization", `Bearer ${tokenCliente}`)
       .send({
         id_funcion: funcionId,
@@ -129,7 +128,7 @@ describe("🛒 API de Órdenes de Compra", () => {
 
   it("📜 Listar órdenes del cliente autenticado", async () => {
     const res = await request(app)
-      .get("/ordenes_compra")
+      .get("/ordenes")
       .set("Authorization", `Bearer ${tokenCliente}`);
 
     console.log("📤 Órdenes listadas:", res.body);
@@ -141,7 +140,7 @@ describe("🛒 API de Órdenes de Compra", () => {
 
   it("🔍 Obtener orden por ID (dueño o admin)", async () => {
     const res = await request(app)
-      .get(`/ordenes_compra/${ordenId}`)
+      .get(`/ordenes/${ordenId}`)
       .set("Authorization", `Bearer ${tokenCliente}`);
 
     console.log("📤 Orden obtenida:", res.body);
@@ -152,7 +151,7 @@ describe("🛒 API de Órdenes de Compra", () => {
 
   it("🗑️ Cancelar orden (cliente dueño)", async () => {
     const res = await request(app)
-      .delete(`/ordenes_compra/${ordenId}`)
+      .delete(`/ordenes/${ordenId}`)
       .set("Authorization", `Bearer ${tokenCliente}`);
 
     console.log("📤 Orden cancelada:", res.body);

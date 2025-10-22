@@ -1,4 +1,4 @@
-const { Funcion, Pelicula, Sala, Usuario, Pago } = require("../models");
+const { Funcion, Pelicula, Sala, Usuario } = require("../models");
 
 // 📌 Obtener todas las funciones (solo activas)
 exports.listarFunciones = async (req, res) => {
@@ -16,11 +16,6 @@ exports.listarFunciones = async (req, res) => {
           model: Usuario,
           as: "clienteCorporativo",
           attributes: ["id", "nombre"],
-        },
-        {
-          model: Pago,
-          as: "pago",
-          attributes: ["id", "monto_total", "estado_pago"],
         },
       ],
     });
@@ -40,11 +35,6 @@ exports.obtenerFuncion = async (req, res) => {
         { model: Pelicula, as: "pelicula" },
         { model: Sala, as: "sala" },
         { model: Usuario, as: "clienteCorporativo" },
-        {
-          model: Pago,
-          as: "pago",
-          attributes: ["id", "monto_total", "estado_pago"],
-        },
       ],
     });
 
@@ -66,8 +56,16 @@ exports.crearFuncion = async (req, res) => {
       return res.status(403).json({ error: "No autorizado" });
     }
 
+    const { fecha, hora, id_pelicula, id_sala } = req.body;
+
+    if (!fecha || !hora || !id_pelicula || !id_sala) {
+      return res
+        .status(400)
+        .json({ error: "Campos obligatorios: película, sala, fecha y hora" });
+    }
+
     const nueva = await Funcion.create(req.body);
-    res.status(201).json(nueva);
+    res.status(201).json({ mensaje: "Función creada correctamente", funcion: nueva });
   } catch (error) {
     console.error("Error crearFuncion:", error);
     if (error.name === "SequelizeUniqueConstraintError") {
@@ -86,13 +84,21 @@ exports.actualizarFuncion = async (req, res) => {
       return res.status(403).json({ error: "No autorizado" });
     }
 
+    const { fecha, hora, id_pelicula, id_sala } = req.body;
+
+    if (!fecha || !hora || !id_pelicula || !id_sala) {
+      return res
+        .status(400)
+        .json({ error: "Campos obligatorios: película, sala, fecha y hora" });
+    }
+
     const funcion = await Funcion.findByPk(req.params.id);
     if (!funcion || funcion.estado === "inactiva") {
       return res.status(404).json({ error: "Función no encontrada" });
     }
 
     await funcion.update(req.body);
-    res.json(funcion);
+    res.json({ mensaje: "Función actualizada correctamente", funcion });
   } catch (error) {
     console.error("Error actualizarFuncion:", error);
     res.status(500).json({ error: "Error al actualizar función" });
@@ -112,7 +118,7 @@ exports.eliminarFuncion = async (req, res) => {
     }
 
     await funcion.update({ estado: "inactiva" });
-    res.json({ mensaje: "Función eliminada (inactivada) correctamente" });
+    res.json({ mensaje: "Función cancelada correctamente" });
   } catch (error) {
     console.error("Error eliminarFuncion:", error);
     res.status(500).json({ error: "Error al eliminar función" });

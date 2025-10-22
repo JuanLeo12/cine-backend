@@ -9,6 +9,11 @@ const MetodoPago = sequelize.define(
       type: DataTypes.STRING(50),
       allowNull: false, // Ej: Yape, Tarjeta, Efectivo
     },
+    estado: {
+      type: DataTypes.STRING(20),
+      defaultValue: "activo",
+      validate: { isIn: [["activo", "inactivo"]] },
+    },
   },
   {
     tableName: "metodos_pago",

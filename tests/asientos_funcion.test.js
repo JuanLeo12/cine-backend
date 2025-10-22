@@ -51,7 +51,6 @@ describe("💺 API de Asientos de Función", () => {
       ciudad: "Lima",
       direccion: "Av. Asientos 999",
       telefono: "966555444",
-      estado: "activa",
     });
 
     const sala = await Sala.create({
@@ -92,7 +91,7 @@ describe("💺 API de Asientos de Función", () => {
   });
 
   it("📜 Listar asientos de una función (público)", async () => {
-    const res = await request(app).get(`/asientos?id_funcion=${funcionId}`);
+    const res = await request(app).get(`/asientos/funcion/${funcionId}`);
 
     console.log("📤 Asientos listados:", res.body);
 
@@ -107,7 +106,7 @@ describe("💺 API de Asientos de Función", () => {
       .send({
         id_funcion: funcionId,
         fila: "A",
-        columna: 5,
+        numero: 5,
       });
 
     console.log("📤 Respuesta al bloquear asiento:", res.body);
@@ -123,7 +122,7 @@ describe("💺 API de Asientos de Función", () => {
       .send({
         id_funcion: funcionId,
         fila: "A",
-        columna: 5,
+        numero: 5,
       });
 
     console.log("📤 Respuesta al liberar asiento:", res.body);

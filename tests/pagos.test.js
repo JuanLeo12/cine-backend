@@ -70,7 +70,6 @@ describe("💰 API de Pagos", () => {
       ciudad: "Lima",
       direccion: "Av. Este 333",
       telefono: "999444555",
-      estado: "activa",
     });
 
     const sala = await Sala.create({

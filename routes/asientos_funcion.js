@@ -2,18 +2,18 @@ const express = require("express");
 const router = express.Router();
 const { autenticarUsuario } = require("../middleware/authMiddleware");
 const {
-  listarAsientos,
-  reservarAsiento,
-  eliminarAsiento,
+  listarAsientosPorFuncion,
+  bloquearAsiento,
+  liberarAsiento,
 } = require("../controllers/asientosFuncionController");
 
-// 📍 Listar asientos → admin ve todos, otros solo los suyos
-router.get("/", autenticarUsuario, listarAsientos);
+// 📍 Listar asientos de una función → público
+router.get("/funcion/:id_funcion", listarAsientosPorFuncion);
 
-// 📍 Reservar asiento → cualquier usuario autenticado
-router.post("/", autenticarUsuario, reservarAsiento);
+// 📍 Bloquear asiento → usuario autenticado
+router.post("/bloquear", autenticarUsuario, bloquearAsiento);
 
-// 📍 Eliminar asiento → admin o dueño (validación en controlador)
-router.delete("/:id", autenticarUsuario, eliminarAsiento);
+// 📍 Liberar asiento → usuario autenticado
+router.post("/liberar", autenticarUsuario, liberarAsiento);
 
 module.exports = router;

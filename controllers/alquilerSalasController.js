@@ -111,6 +111,30 @@ exports.crearAlquiler = async (req, res) => {
   }
 };
 
+// 📌 Obtener alquiler por ID
+exports.obtenerAlquiler = async (req, res) => {
+  try {
+    const alquiler = await AlquilerSala.findByPk(req.params.id, {
+      include: alquilerInclude,
+    });
+
+    if (!alquiler)
+      return res.status(404).json({ error: "Alquiler no encontrado" });
+
+    // Verificar permisos (admin ve todos, corporativo solo los suyos)
+    if (req.user.rol !== "admin" && alquiler.id_usuario !== req.user.id) {
+      return res
+        .status(403)
+        .json({ error: "No tienes permiso para ver este alquiler" });
+    }
+
+    res.json(alquiler);
+  } catch (error) {
+    console.error("Error obtenerAlquiler:", error);
+    res.status(500).json({ error: "Error al obtener alquiler" });
+  }
+};
+
 // 📌 Eliminar alquiler
 exports.eliminarAlquiler = async (req, res) => {
   try {

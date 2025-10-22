@@ -7,6 +7,8 @@ const {
 const {
   listarVales,
   crearVale,
+  obtenerVale,
+  actualizarVale,
   eliminarVale,
 } = require("../controllers/valesCorporativosController");
 
@@ -24,6 +26,17 @@ router.post(
   autenticarUsuario,
   permitirRoles("corporativo", "admin"),
   crearVale
+);
+
+// 📍 Obtener vale por ID → admin o dueño
+router.get("/:id", autenticarUsuario, obtenerVale);
+
+// 📍 Actualizar vale → corporativo o admin
+router.put(
+  "/:id",
+  autenticarUsuario,
+  permitirRoles("corporativo", "admin"),
+  actualizarVale
 );
 
 // 📍 Eliminar vale → solo admin

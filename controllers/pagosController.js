@@ -11,24 +11,19 @@ const { Op } = require("sequelize");
 const pagoInclude = [
   {
     model: OrdenCompra,
-    as: "ordenCompra", // ✅ alias correcto
-    include: [{ model: Usuario, attributes: ["id", "nombre", "email"] }],
-  },
-  {
-    model: Funcion,
-    as: "funcion", // ✅ alias correcto
-    attributes: ["id", "fecha", "hora", "es_privada", "id_cliente_corporativo"],
+    as: "ordenCompra",
     include: [
+      { model: Usuario, as: "usuario", attributes: ["id", "nombre", "email"] },
       {
-        model: Usuario,
-        as: "clienteCorporativo",
-        attributes: ["id", "nombre"],
+        model: Funcion,
+        as: "funcion",
+        attributes: ["id", "fecha", "hora", "es_privada", "id_cliente_corporativo"],
       },
     ],
   },
   {
     model: MetodoPago,
-    as: "metodoPago", // ✅ alias correcto
+    as: "metodoPago",
     attributes: ["id", "nombre"],
   },
 ];
@@ -38,10 +33,7 @@ exports.listarPagos = async (req, res) => {
   try {
     const where = {};
     if (req.user.rol !== "admin") {
-      where[Op.or] = [
-        { "$ordenCompra.id_usuario$": req.user.id }, // ✅ usa el alias ordenCompra
-        { "$funcion.id_cliente_corporativo$": req.user.id }, // ✅ usa el alias funcion
-      ];
+      where["$ordenCompra.id_usuario$"] = req.user.id;
     }
 
     const pagos = await Pago.findAll({

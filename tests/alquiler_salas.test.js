@@ -50,7 +50,6 @@ describe("🏛️ API de Alquiler de Salas", () => {
       ciudad: "Lima",
       direccion: "Av. Principal 100",
       telefono: "987123456",
-      estado: "activa",
     });
 
     const sala = await Sala.create({

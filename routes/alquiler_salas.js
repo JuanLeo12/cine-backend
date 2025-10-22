@@ -7,6 +7,7 @@ const {
 const {
   listarAlquileres,
   crearAlquiler,
+  obtenerAlquiler,
   eliminarAlquiler,
 } = require("../controllers/alquilerSalasController");
 
@@ -25,6 +26,9 @@ router.post(
   permitirRoles("corporativo", "admin"),
   crearAlquiler
 );
+
+// 📍 Obtener por ID → admin o dueño
+router.get("/:id", autenticarUsuario, obtenerAlquiler);
 
 // 📍 Eliminar → admin o dueño (validación en controlador)
 router.delete("/:id", autenticarUsuario, eliminarAlquiler);

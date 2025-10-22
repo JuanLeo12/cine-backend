@@ -69,7 +69,6 @@ describe("🎫 API de Tickets", () => {
       ciudad: "Lima",
       direccion: "Av. Premium 777",
       telefono: "955444333",
-      estado: "activa",
     });
 
     const sala = await Sala.create({
@@ -110,8 +109,8 @@ describe("🎫 API de Tickets", () => {
     const asiento = await AsientoFuncion.create({
       id_funcion: funcion.id,
       fila: "B",
-      columna: 8,
-      estado: "vendido",
+      numero: 8,
+      estado: "libre",
     });
     asientoId = asiento.id;
 

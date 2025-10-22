@@ -31,6 +31,11 @@ const OrdenCompra = sequelize.define(
         },
       },
     },
+    estado: {
+      type: DataTypes.ENUM("pendiente", "pagada", "cancelada"),
+      defaultValue: "pendiente",
+      allowNull: false,
+    },
   },
   {
     tableName: "ordenes_compra",

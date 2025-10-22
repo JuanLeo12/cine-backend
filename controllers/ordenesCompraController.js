@@ -55,6 +55,9 @@ exports.listarOrdenes = async (req, res) => {
       where.id_usuario = req.user.id;
     }
 
+    // Solo listar órdenes no canceladas
+    where.estado = { [Op.ne]: "cancelada" };
+
     const ordenes = await OrdenCompra.findAll({
       where,
       include: ordenInclude,
@@ -71,7 +74,11 @@ exports.listarOrdenes = async (req, res) => {
 // 📌 Obtener una orden por ID
 exports.obtenerOrden = async (req, res) => {
   try {
-    const orden = await OrdenCompra.findByPk(req.params.id, {
+    const orden = await OrdenCompra.findOne({
+      where: { 
+        id: req.params.id,
+        estado: { [Op.ne]: "cancelada" }
+      },
       include: ordenInclude,
     });
 
@@ -127,10 +134,14 @@ exports.crearOrden = async (req, res) => {
   }
 };
 
-// 📌 Cancelar orden de compra
+// 📌 Cancelar orden de compra (soft delete)
 exports.cancelarOrden = async (req, res) => {
   try {
-    const orden = await OrdenCompra.findByPk(req.params.id, {
+    const orden = await OrdenCompra.findOne({
+      where: {
+        id: req.params.id,
+        estado: { [Op.ne]: "cancelada" }
+      },
       include: [
         {
           model: OrdenTicket,
@@ -155,14 +166,11 @@ exports.cancelarOrden = async (req, res) => {
         .json({ error: "No tienes permiso para cancelar esta orden" });
     }
 
-    // Si ya está pagada o procesada, no se puede cancelar
-    if (
-      orden.pago &&
-      ["pagada", "procesada"].includes(orden.pago.estado_pago)
-    ) {
+    // Si ya está pagada, no se puede cancelar
+    if (orden.estado === "pagada") {
       return res
         .status(400)
-        .json({ error: "No se puede cancelar una orden ya pagada/procesada" });
+        .json({ error: "No se puede cancelar una orden ya pagada" });
     }
 
     // Liberar asientos asociados
@@ -178,7 +186,7 @@ exports.cancelarOrden = async (req, res) => {
       }
     }
 
-    await orden.destroy();
+    await orden.update({ estado: "cancelada" });
     res.json({ mensaje: "Orden cancelada y asientos liberados correctamente" });
   } catch (error) {
     console.error("Error cancelarOrden:", error);

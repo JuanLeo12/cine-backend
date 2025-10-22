@@ -122,6 +122,30 @@ exports.crearPublicidad = async (req, res) => {
   }
 };
 
+// 📌 Obtener campaña por ID
+exports.obtenerPublicidad = async (req, res) => {
+  try {
+    const publicidad = await Publicidad.findByPk(req.params.id, {
+      include: publicidadInclude,
+    });
+
+    if (!publicidad)
+      return res.status(404).json({ error: "Campaña no encontrada" });
+
+    // Verificar permisos (admin ve todas, corporativo solo las suyas)
+    if (req.user.rol !== "admin" && publicidad.id_usuario !== req.user.id) {
+      return res
+        .status(403)
+        .json({ error: "No tienes permiso para ver esta campaña" });
+    }
+
+    res.json(publicidad);
+  } catch (error) {
+    console.error("Error obtenerPublicidad:", error);
+    res.status(500).json({ error: "Error al obtener campaña" });
+  }
+};
+
 // 📌 Eliminar campaña
 exports.eliminarPublicidad = async (req, res) => {
   try {

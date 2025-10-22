@@ -15,7 +15,7 @@ const ticketInclude = [
     include: [
       {
         model: OrdenCompra,
-        as: "orden",
+        as: "ordenCompra",
         attributes: ["id", "id_usuario", "estado"],
       },
     ],
@@ -35,7 +35,7 @@ exports.listarTickets = async (req, res) => {
   try {
     const where = {};
     if (req.user.rol !== "admin") {
-      where["$ordenTicket.orden.id_usuario$"] = req.user.id;
+      where["$ordenTicket.ordenCompra.id_usuario$"] = req.user.id;
     }
 
     const tickets = await Ticket.findAll({ where, include: ticketInclude });
@@ -56,7 +56,7 @@ exports.obtenerTicket = async (req, res) => {
 
     if (
       req.user.rol !== "admin" &&
-      ticket.ordenTicket?.orden?.id_usuario !== req.user.id
+      ticket.ordenTicket?.ordenCompra?.id_usuario !== req.user.id
     ) {
       return res
         .status(403)
@@ -80,7 +80,7 @@ exports.crearTicket = async (req, res) => {
 
     const ordenTicket = await OrdenTicket.findByPk(id_orden_ticket, {
       include: [
-        { model: OrdenCompra, as: "orden", attributes: ["id", "id_usuario"] },
+        { model: OrdenCompra, as: "ordenCompra", attributes: ["id", "id_usuario"] },
       ],
     });
     if (!ordenTicket)
@@ -88,7 +88,7 @@ exports.crearTicket = async (req, res) => {
 
     if (
       req.user.rol !== "admin" &&
-      ordenTicket.orden.id_usuario !== req.user.id
+      ordenTicket.ordenCompra.id_usuario !== req.user.id
     ) {
       return res
         .status(403)
@@ -179,5 +179,28 @@ exports.eliminarTicket = async (req, res) => {
   } catch (error) {
     console.error("Error eliminarTicket:", error);
     res.status(500).json({ error: "Error al eliminar ticket" });
+  }
+};
+
+// 📌 Validar ticket (para escaneo QR)
+exports.validarTicketController = async (req, res) => {
+  try {
+    const ticket = await Ticket.findByPk(req.params.id, {
+      include: ticketInclude,
+    });
+    if (!ticket) return res.status(404).json({ error: "Ticket no encontrado" });
+
+    // Marcar el ticket como usado (esto podría ser un campo adicional)
+    res.json({ 
+      mensaje: "Ticket validado correctamente",
+      ticket: {
+        id: ticket.id,
+        estado: "usado",
+        funcion: ticket.asientoFuncion?.funcion
+      }
+    });
+  } catch (error) {
+    console.error("Error validarTicket:", error);
+    res.status(500).json({ error: "Error al validar ticket" });
   }
 };

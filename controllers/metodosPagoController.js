@@ -5,6 +5,7 @@ const { validarMetodoPago } = require("../utils/validacionesMetodoPago");
 exports.listarMetodos = async (req, res) => {
   try {
     const metodos = await MetodoPago.findAll({
+      where: { estado: "activo" },
       attributes: ["id", "nombre"],
       include: [
         {
@@ -35,7 +36,7 @@ exports.obtenerMetodo = async (req, res) => {
       ],
     });
 
-    if (!metodo) {
+    if (!metodo || metodo.estado === "inactivo") {
       return res.status(404).json({ error: "Método de pago no encontrado" });
     }
     res.json(metodo);
@@ -121,8 +122,8 @@ exports.eliminarMetodo = async (req, res) => {
       });
     }
 
-    await metodo.destroy();
-    res.json({ mensaje: "Método de pago eliminado correctamente" });
+    await metodo.update({ estado: "inactivo" });
+    res.json({ mensaje: "Método de pago inactivado correctamente" });
   } catch (error) {
     console.error("Error eliminarMetodo:", error);
     res.status(500).json({ error: "Error al eliminar método de pago" });

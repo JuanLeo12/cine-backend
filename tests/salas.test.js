@@ -29,7 +29,6 @@ describe("🏟️ API de Salas", () => {
       ciudad: "Lima",
       direccion: "Av. Principal 123",
       telefono: "999888777",
-      estado: "activa",
     });
 
     sedeId = sede.id;

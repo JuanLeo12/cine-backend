@@ -12,6 +12,11 @@ const Combo = sequelize.define(
       validate: { min: 0.01 },
     },
     imagen_url: { type: DataTypes.STRING(255), allowNull: true },
+    estado: {
+      type: DataTypes.STRING(20),
+      defaultValue: "activo",
+      validate: { isIn: [["activo", "inactivo"]] },
+    },
   },
   {
     tableName: "combos",

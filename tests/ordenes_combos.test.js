@@ -62,7 +62,6 @@ describe("🍔 API de Órdenes de Combos", () => {
       ciudad: "Lima",
       direccion: "Av. Oeste 222",
       telefono: "988333444",
-      estado: "activa",
     });
 
     const sala = await Sala.create({

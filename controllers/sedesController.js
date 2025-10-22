@@ -5,6 +5,7 @@ const { validarCamposSede } = require("../utils/validacionesSede");
 exports.listarSedes = async (req, res) => {
   try {
     const sedes = await Sede.findAll({
+      where: { estado: "activo" },
       attributes: ["id", "nombre", "direccion", "ciudad"],
       order: [["nombre", "ASC"]],
       include: [
@@ -29,7 +30,7 @@ exports.obtenerSede = async (req, res) => {
       ],
     });
 
-    if (!sede) return res.status(404).json({ error: "Sede no encontrada" });
+    if (!sede || sede.estado === "inactivo") return res.status(404).json({ error: "Sede no encontrada" });
     res.json(sede);
   } catch (error) {
     console.error("Error en obtenerSede:", error);
@@ -130,8 +131,8 @@ exports.eliminarSede = async (req, res) => {
       });
     }
 
-    await sede.destroy();
-    res.json({ mensaje: "Sede eliminada correctamente" });
+    await sede.update({ estado: "inactivo" });
+    res.json({ mensaje: "Sede inactivada correctamente" });
   } catch (error) {
     console.error("Error en eliminarSede:", error);
     res.status(500).json({ error: "Error al eliminar sede" });

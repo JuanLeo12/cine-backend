@@ -5,6 +5,7 @@ const { validarTipoTicket } = require("../utils/validacionesTipoTicket");
 exports.listarTipos = async (req, res) => {
   try {
     const tipos = await TipoTicket.findAll({
+      where: { estado: "activo" },
       attributes: ["id", "nombre"],
     });
     res.json(tipos);
@@ -18,7 +19,7 @@ exports.listarTipos = async (req, res) => {
 exports.obtenerTipo = async (req, res) => {
   try {
     const tipo = await TipoTicket.findByPk(req.params.id);
-    if (!tipo) {
+    if (!tipo || tipo.estado === "inactivo") {
       return res.status(404).json({ error: "Tipo de ticket no encontrado" });
     }
     res.json(tipo);
@@ -119,8 +120,8 @@ exports.eliminarTipo = async (req, res) => {
         });
     }
 
-    await tipo.destroy();
-    res.json({ mensaje: "Tipo de ticket eliminado correctamente" });
+    await tipo.update({ estado: "inactivo" });
+    res.json({ mensaje: "Tipo de ticket inactivado correctamente" });
   } catch (error) {
     console.error("Error eliminarTipo:", error);
     res.status(500).json({ error: "Error al eliminar tipo de ticket" });

@@ -71,7 +71,6 @@ describe("🎟️ API de Vales Corporativos", () => {
       ciudad: "Lima",
       direccion: "Av. Corporativa 555",
       telefono: "911222333",
-      estado: "activa",
     });
 
     const sala = await Sala.create({
@@ -136,15 +135,15 @@ describe("🎟️ API de Vales Corporativos", () => {
 
   it("🎟️ Crear vale corporativo (corporativo)", async () => {
     const res = await request(app)
-      .post("/vales_corporativos")
+      .post("/vales")
       .set("Authorization", `Bearer ${tokenCorporativo}`)
       .send({
         id_pago: pagoId,
         id_orden_compra: ordenCompraId,
-        codigo_vale: "VALE2024-001",
-        cantidad_tickets: 10,
-        fecha_emision: new Date().toISOString().split("T")[0],
-        fecha_vencimiento: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
+        codigo: "VALE2024-001",
+        tipo: "entrada",
+        valor: 50.00,
+        fecha_expiracion: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
           .toISOString()
           .split("T")[0],
       });
@@ -159,7 +158,7 @@ describe("🎟️ API de Vales Corporativos", () => {
 
   it("📜 Listar vales corporativos (corporativo ve solo los suyos)", async () => {
     const res = await request(app)
-      .get("/vales_corporativos")
+      .get("/vales")
       .set("Authorization", `Bearer ${tokenCorporativo}`);
 
     console.log("📤 Vales listados:", res.body);
@@ -170,7 +169,7 @@ describe("🎟️ API de Vales Corporativos", () => {
 
   it("🔍 Obtener vale por ID", async () => {
     const res = await request(app)
-      .get(`/vales_corporativos/${valeId}`)
+      .get(`/vales/${valeId}`)
       .set("Authorization", `Bearer ${tokenCorporativo}`);
 
     console.log("📤 Vale obtenido:", res.body);
@@ -181,7 +180,7 @@ describe("🎟️ API de Vales Corporativos", () => {
 
   it("✏️ Actualizar vale corporativo (corporativo dueño)", async () => {
     const res = await request(app)
-      .put(`/vales_corporativos/${valeId}`)
+      .put(`/vales/${valeId}`)
       .set("Authorization", `Bearer ${tokenCorporativo}`)
       .send({
         estado: "usado",

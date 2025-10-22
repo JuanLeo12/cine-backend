@@ -78,12 +78,12 @@ describe("💳 API de Métodos de Pago", () => {
       .put(`/metodos_pago/${metodoPagoId}`)
       .set("Authorization", `Bearer ${tokenAdmin}`)
       .send({
-        nombre: "Visa/Mastercard",
+        nombre: "Visa Mastercard",
       });
 
     console.log("📤 Método de pago actualizado:", res.body);
     expect(res.statusCode).toBe(200);
-    expect(res.body.metodo.nombre).toBe("Visa/Mastercard");
+    expect(res.body.metodo.nombre).toBe("Visa Mastercard");
   });
 
   it("🗑️ Eliminar método de pago (solo admin)", async () => {

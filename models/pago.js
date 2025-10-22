@@ -18,7 +18,7 @@ const Pago = sequelize.define(
       allowNull: false,
       defaultValue: "completado",
       validate: {
-        isIn: [["pendiente", "completado", "fallido"]],
+        isIn: [["pendiente", "completado", "fallido", "confirmado"]],
       },
     },
 

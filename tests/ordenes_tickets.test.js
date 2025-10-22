@@ -59,7 +59,6 @@ describe("🎟️ API de Órdenes de Tickets", () => {
       ciudad: "Lima",
       direccion: "Av. Test 111",
       telefono: "999111222",
-      estado: "activa",
     });
 
     const sala = await Sala.create({

@@ -95,7 +95,7 @@ describe("🎫 API de Tipos de Ticket", () => {
     console.log("📤 Tipo de ticket eliminado:", res.body);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.mensaje).toMatch(/eliminado/i);
+    expect(res.body.mensaje).toMatch(/eliminado|inactivado/i);
   });
 
   it("🚫 Verificar que el tipo de ticket no existe después de eliminar", async () => {

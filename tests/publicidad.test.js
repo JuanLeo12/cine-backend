@@ -47,7 +47,6 @@ describe("📢 API de Publicidad", () => {
       ciudad: "Lima",
       direccion: "Av. Centro 456",
       telefono: "988777666",
-      estado: "activa",
     });
     sedeId = sede.id;
 
@@ -86,13 +85,14 @@ describe("📢 API de Publicidad", () => {
       .post("/publicidad")
       .set("Authorization", `Bearer ${tokenCorporativo}`)
       .send({
+        cliente: "Empresa Corporativa XYZ",
         id_sede: sedeId,
         tipo: "banner",
         descripcion: "Campaña publicitaria de nuevo producto",
         fecha_inicio: fechaInicio.toISOString().split("T")[0],
         fecha_fin: fechaFin.toISOString().split("T")[0],
-        url_contenido: "https://example.com/banner.jpg",
-        precio_total: 2500.0,
+        imagen_url: "https://example.com/banner.jpg",
+        precio: 2500.0,
       });
 
     console.log("📤 Respuesta al crear publicidad:", res.body);

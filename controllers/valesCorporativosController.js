@@ -91,6 +91,63 @@ exports.crearVale = async (req, res) => {
   }
 };
 
+// 📌 Obtener vale por ID
+exports.obtenerVale = async (req, res) => {
+  try {
+    const vale = await ValeCorporativo.findByPk(req.params.id, {
+      include: valeInclude,
+    });
+
+    if (!vale) return res.status(404).json({ error: "Vale no encontrado" });
+
+    // Verificar permisos (admin ve todos, corporativo solo los suyos)
+    if (
+      req.user.rol !== "admin" &&
+      vale.ordenCompra?.id_usuario !== req.user.id
+    ) {
+      return res
+        .status(403)
+        .json({ error: "No tienes permiso para ver este vale" });
+    }
+
+    res.json(vale);
+  } catch (error) {
+    console.error("Error obtenerVale:", error);
+    res.status(500).json({ error: "Error al obtener vale" });
+  }
+};
+
+// 📌 Actualizar vale (marcar como usado)
+exports.actualizarVale = async (req, res) => {
+  try {
+    const vale = await ValeCorporativo.findByPk(req.params.id, {
+      include: [
+        { model: OrdenCompra, as: "ordenCompra", attributes: ["id_usuario"] },
+      ],
+    });
+    if (!vale) return res.status(404).json({ error: "Vale no encontrado" });
+
+    if (
+      req.user.rol !== "admin" &&
+      vale.ordenCompra?.id_usuario !== req.user.id
+    ) {
+      return res
+        .status(403)
+        .json({ error: "No tienes permiso para actualizar este vale" });
+    }
+
+    await vale.update({ usado: true });
+
+    res.json({
+      mensaje: "Vale actualizado correctamente",
+      vale: { ...vale.toJSON(), estado: "usado" },
+    });
+  } catch (error) {
+    console.error("Error actualizarVale:", error);
+    res.status(500).json({ error: "Error al actualizar vale" });
+  }
+};
+
 // 📌 Eliminar vale
 exports.eliminarVale = async (req, res) => {
   try {

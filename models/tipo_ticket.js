@@ -6,6 +6,13 @@ const TipoTicket = sequelize.define(
   "TipoTicket",
   {
     nombre: { type: DataTypes.STRING(50), allowNull: false },
+    estado: {
+      type: DataTypes.STRING(20),
+      defaultValue: "activo",
+      validate: {
+        isIn: [["activo", "inactivo"]],
+      },
+    },
   },
   {
     tableName: "tipo_ticket",

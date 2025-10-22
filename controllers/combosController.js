@@ -5,6 +5,7 @@ const { validarCombo } = require("../utils/validacionesCombo");
 exports.listarCombos = async (req, res) => {
   try {
     const combos = await Combo.findAll({
+      where: { estado: "activo" },
       attributes: ["id", "nombre", "descripcion", "precio", "imagen_url"],
       order: [["nombre", "ASC"]],
     });
@@ -19,7 +20,9 @@ exports.listarCombos = async (req, res) => {
 exports.obtenerCombo = async (req, res) => {
   try {
     const combo = await Combo.findByPk(req.params.id);
-    if (!combo) return res.status(404).json({ error: "Combo no encontrado" });
+    if (!combo || combo.estado === "inactivo") {
+      return res.status(404).json({ error: "Combo no encontrado" });
+    }
     res.json(combo);
   } catch (error) {
     console.error("Error obtenerCombo:", error);
@@ -100,8 +103,8 @@ exports.eliminarCombo = async (req, res) => {
         .json({ error: "No se puede eliminar un combo asociado a órdenes" });
     }
 
-    await combo.destroy();
-    res.json({ mensaje: "Combo eliminado correctamente" });
+    await combo.update({ estado: "inactivo" });
+    res.json({ mensaje: "Combo inactivado correctamente" });
   } catch (error) {
     console.error("Error eliminarCombo:", error);
     res.status(500).json({ error: "Error al eliminar combo" });
