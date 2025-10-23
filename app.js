@@ -8,8 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Importar asociaciones y modelos
-require("./models/associations");
+// Las asociaciones ahora se cargan automáticamente en models/index.js
 
 // Rutas principales
 app.use('/usuarios', require('./routes/usuarios'));

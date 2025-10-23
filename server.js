@@ -1,6 +1,9 @@
 const sequelize = require("./config/db");
 const app = require("./app");
 
+// Iniciar cron job para liberar asientos
+require("./utils/liberarAsientos");
+
 const PORT = process.env.PORT || 4000;
 
 if (process.env.NODE_ENV !== "test") {

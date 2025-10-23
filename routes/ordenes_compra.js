@@ -5,6 +5,7 @@ const {
   listarOrdenes,
   obtenerOrden,
   crearOrden,
+  confirmarOrden,
   cancelarOrden,
 } = require("../controllers/ordenesCompraController");
 
@@ -16,6 +17,9 @@ router.get("/:id", autenticarUsuario, obtenerOrden);
 
 // 📌 Crear nueva orden → cualquier usuario autenticado
 router.post("/", autenticarUsuario, crearOrden);
+
+// 📌 Confirmar orden (pago simulado) → solo el dueño
+router.post("/:id/confirmar", autenticarUsuario, confirmarOrden);
 
 // 📌 Cancelar orden → solo el dueño o admin
 router.delete("/:id", autenticarUsuario, cancelarOrden);

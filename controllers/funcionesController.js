@@ -1,4 +1,4 @@
-const { Funcion, Pelicula, Sala, Usuario } = require("../models");
+const { Funcion, Pelicula, Sala, Sede, Usuario } = require("../models");
 
 // 📌 Obtener todas las funciones (solo activas)
 exports.listarFunciones = async (req, res) => {
@@ -22,6 +22,45 @@ exports.listarFunciones = async (req, res) => {
     res.json(funciones);
   } catch (error) {
     console.error("Error listarFunciones:", error);
+    res.status(500).json({ error: "Error al obtener funciones" });
+  }
+};
+
+// 📌 Obtener funciones por película
+exports.obtenerFuncionesByPelicula = async (req, res) => {
+  try {
+    const { id_pelicula } = req.params;
+    
+    const funciones = await Funcion.findAll({
+      where: { 
+        id_pelicula,
+        estado: "activa" 
+      },
+      include: [
+        {
+          model: Sala,
+          as: "sala",
+          attributes: ["id", "nombre", "filas", "columnas"],
+          include: [
+            {
+              model: Sede,
+              as: "sede",
+              attributes: ["id", "nombre", "direccion", "ciudad"]
+            }
+          ]
+        },
+        {
+          model: Pelicula,
+          as: "pelicula",
+          attributes: ["id", "titulo", "imagen_url", "duracion", "clasificacion"]
+        }
+      ],
+      order: [['fecha', 'ASC'], ['hora', 'ASC']]
+    });
+
+    res.json(funciones);
+  } catch (error) {
+    console.error("Error obtenerFuncionesByPelicula:", error);
     res.status(500).json({ error: "Error al obtener funciones" });
   }
 };

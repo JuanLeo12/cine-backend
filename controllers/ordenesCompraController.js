@@ -122,6 +122,7 @@ exports.crearOrden = async (req, res) => {
     const nueva = await OrdenCompra.create({
       id_usuario: req.user.id,
       id_funcion: id_funcion || null,
+      estado: "pendiente",
     });
 
     res.status(201).json({
@@ -131,6 +132,160 @@ exports.crearOrden = async (req, res) => {
   } catch (error) {
     console.error("Error crearOrden:", error);
     res.status(500).json({ error: "Error al crear orden de compra" });
+  }
+};
+
+// 📌 Confirmar orden de compra (pago simulado)
+exports.confirmarOrden = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { 
+      tickets = [], 
+      combos = [], 
+      metodo_pago,
+      asientos = [] // [{ fila, numero }]
+    } = req.body;
+
+    const orden = await OrdenCompra.findOne({
+      where: { 
+        id, 
+        id_usuario: req.user.id,
+        estado: "pendiente" 
+      },
+      include: [{ model: Funcion, as: "funcion" }],
+    });
+
+    if (!orden) {
+      return res.status(404).json({ error: "Orden no encontrada o ya procesada" });
+    }
+
+    // Verificar que los asientos estén bloqueados por este usuario
+    if (orden.id_funcion && asientos.length > 0) {
+      for (const { fila, numero } of asientos) {
+        const asiento = await AsientoFuncion.findOne({
+          where: { 
+            id_funcion: orden.id_funcion, 
+            fila, 
+            numero,
+            estado: "bloqueado",
+            id_usuario_bloqueo: req.user.id
+          },
+        });
+
+        if (!asiento) {
+          return res.status(400).json({ 
+            error: `El asiento ${fila}${numero} no está disponible o el bloqueo expiró` 
+          });
+        }
+      }
+    }
+
+    // Calcular total
+    let montoTotal = 0;
+
+    // Procesar tickets
+    for (const item of tickets) {
+      const tipoTicket = await TipoTicket.findByPk(item.id_tipo_ticket);
+      if (!tipoTicket) {
+        return res.status(404).json({ error: `Tipo de ticket ${item.id_tipo_ticket} no encontrado` });
+      }
+
+      const subtotal = tipoTicket.precio_base * item.cantidad;
+      montoTotal += subtotal;
+
+      await OrdenTicket.create({
+        id_orden_compra: orden.id,
+        id_tipo_ticket: item.id_tipo_ticket,
+        cantidad: item.cantidad,
+        precio_unitario: tipoTicket.precio_base,
+        descuento: 0,
+      });
+    }
+
+    // Procesar combos
+    for (const item of combos) {
+      const combo = await Combo.findByPk(item.id_combo);
+      if (!combo) {
+        return res.status(404).json({ error: `Combo ${item.id_combo} no encontrado` });
+      }
+
+      const subtotal = combo.precio * item.cantidad;
+      montoTotal += subtotal;
+
+      await OrdenCombo.create({
+        id_orden_compra: orden.id,
+        id_combo: item.id_combo,
+        cantidad: item.cantidad,
+        precio_unitario: combo.precio,
+        descuento: 0,
+      });
+    }
+
+    // Marcar asientos como OCUPADOS definitivamente
+    if (orden.id_funcion && asientos.length > 0) {
+      for (const { fila, numero } of asientos) {
+        await AsientoFuncion.update(
+          { 
+            estado: "ocupado",
+            id_usuario_bloqueo: req.user.id,
+            bloqueo_expira_en: null // Ya no expira
+          },
+          { 
+            where: { 
+              id_funcion: orden.id_funcion, 
+              fila, 
+              numero 
+            } 
+          }
+        );
+
+        // Crear registro de ticket con asiento
+        const tipoTicketAdulto = await TipoTicket.findOne({ where: { nombre: "Adulto" } });
+        await Ticket.create({
+          id_orden_ticket: (await OrdenTicket.findOne({ 
+            where: { id_orden_compra: orden.id },
+            order: [['id', 'ASC']]
+          })).id,
+          id_funcion: orden.id_funcion,
+          id_asiento_funcion: (await AsientoFuncion.findOne({
+            where: { id_funcion: orden.id_funcion, fila, numero }
+          })).id,
+          precio: tipoTicketAdulto.precio_base,
+        });
+      }
+    }
+
+    // Registrar pago simulado
+    const pago = await Pago.create({
+      id_orden_compra: orden.id,
+      id_metodo_pago: metodo_pago || 1,
+      monto_total: montoTotal,
+      estado_pago: "pagado",
+      fecha_pago: new Date(),
+    });
+
+    // Actualizar orden a "pagada"
+    await orden.update({ 
+      estado: "pagada",
+      monto_total: montoTotal 
+    });
+
+    // Cargar orden completa
+    const ordenCompleta = await OrdenCompra.findByPk(orden.id, {
+      include: ordenInclude,
+    });
+
+    res.json({
+      mensaje: "✅ Compra confirmada exitosamente (simulación)",
+      orden: ordenCompleta,
+      pago: {
+        ...pago.toJSON(),
+        nota: "Este es un pago simulado. No se procesó ningún cargo real."
+      }
+    });
+  } catch (error) {
+    console.error("Error confirmarOrden:", error);
+    res.status(500).json({ error: "Error al confirmar orden de compra" });
   }
 };
 

@@ -50,23 +50,41 @@ exports.bloquearAsiento = async (req, res) => {
         });
     }
 
+    // Verificar si el asiento ya existe
     const existente = await AsientoFuncion.findOne({
       where: { id_funcion, fila, numero },
     });
 
     if (existente) {
+      // Si está bloqueado y el bloqueo ha expirado, lo liberamos
       if (
         existente.estado === "bloqueado" &&
-        existente.bloqueo_expira_en < new Date()
+        existente.bloqueo_expira_en &&
+        new Date(existente.bloqueo_expira_en) < new Date()
       ) {
-        await existente.destroy(); // liberamos si venció
-      } else {
+        await existente.destroy();
+      } else if (existente.estado === "ocupado") {
+        // Asiento ocupado definitivamente
+        return res.status(409).json({ error: "El asiento ya está ocupado" });
+      } else if (existente.estado === "bloqueado") {
+        // Asiento bloqueado por otro usuario
+        if (existente.id_usuario_bloqueo === req.user.id) {
+          // El mismo usuario está re-bloqueando (extender tiempo)
+          await existente.update({
+            bloqueo_expira_en: new Date(Date.now() + 5 * 60 * 1000),
+          });
+          return res.json({ 
+            mensaje: "Bloqueo extendido", 
+            asiento: existente 
+          });
+        }
         return res
           .status(409)
-          .json({ error: "El asiento ya está reservado o bloqueado" });
+          .json({ error: "El asiento está bloqueado por otro usuario" });
       }
     }
 
+    // Crear nuevo bloqueo temporal (5 minutos)
     const nuevo = await AsientoFuncion.create({
       id_funcion,
       fila,
@@ -76,9 +94,10 @@ exports.bloquearAsiento = async (req, res) => {
       bloqueo_expira_en: new Date(Date.now() + 5 * 60 * 1000), // 5 min
     });
 
-    res
-      .status(200)
-      .json({ mensaje: "Asiento bloqueado correctamente", asiento: nuevo });
+    res.json({ 
+      mensaje: "Asiento bloqueado correctamente (5 minutos)", 
+      asiento: nuevo 
+    });
   } catch (error) {
     console.error("Error bloquearAsiento:", error);
     res.status(500).json({ error: "Error al bloquear asiento" });

@@ -10,7 +10,7 @@ exports.listarSedes = async (req, res) => {
       order: [["nombre", "ASC"]],
       include: [
         { model: Sala, as: "salas", attributes: ["id", "nombre"] },
-        { model: Publicidad, as: "publicidades", attributes: ["id", "tipo"] },
+        { model: Publicidad, as: "publicidadesSede", attributes: ["id", "tipo"], required: false },
       ],
     });
     res.json(sedes);
@@ -26,7 +26,7 @@ exports.obtenerSede = async (req, res) => {
     const sede = await Sede.findByPk(req.params.id, {
       include: [
         { model: Sala, as: "salas", attributes: ["id", "nombre"] },
-        { model: Publicidad, as: "publicidades", attributes: ["id", "tipo"] },
+        { model: Publicidad, as: "publicidadesSede", attributes: ["id", "tipo"], required: false },
       ],
     });
 

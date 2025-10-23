@@ -9,6 +9,7 @@ const { validarFuncion } = require("../utils/validacionesFunciones");
 const {
   listarFunciones,
   obtenerFuncion,
+  obtenerFuncionesByPelicula,
   crearFuncion,
   actualizarFuncion,
   eliminarFuncion,
@@ -16,6 +17,7 @@ const {
 
 // 📌 Público
 router.get("/", listarFunciones);
+router.get("/pelicula/:id_pelicula", obtenerFuncionesByPelicula);
 router.get("/:id", obtenerFuncion);
 
 // 📌 Admin
