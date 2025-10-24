@@ -6,7 +6,7 @@ exports.listarTipos = async (req, res) => {
   try {
     const tipos = await TipoTicket.findAll({
       where: { estado: "activo" },
-      attributes: ["id", "nombre"],
+      attributes: ["id", "nombre", "precio_base"],
     });
     res.json(tipos);
   } catch (error) {

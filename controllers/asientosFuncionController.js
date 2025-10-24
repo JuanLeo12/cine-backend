@@ -18,7 +18,7 @@ exports.listarAsientosPorFuncion = async (req, res) => {
 
     const asientos = await AsientoFuncion.findAll({
       where: { id_funcion },
-      attributes: ["id", "fila", "numero", "estado", "bloqueo_expira_en"],
+      attributes: ["id", "fila", "numero", "estado", "bloqueo_expira_en", "id_usuario_bloqueo"],
       order: [["fila", "ASC"], ["numero", "ASC"]],
     });
 

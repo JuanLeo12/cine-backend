@@ -1,5 +1,6 @@
 const sequelize = require("./config/db");
 const app = require("./app");
+const { invalidarTodasLasSesiones } = require("./utils/invalidarSesiones");
 
 // Iniciar cron job para liberar asientos
 require("./utils/liberarAsientos");
@@ -16,8 +17,14 @@ if (process.env.NODE_ENV !== "test") {
     })
     .then(() => {
       console.log("📦 Tablas sincronizadas");
+      
+      // Invalidar todas las sesiones al iniciar
+      return invalidarTodasLasSesiones();
+    })
+    .then(() => {
       app.listen(PORT, () => {
         console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+        console.log(`🔒 Sesiones anteriores invalidadas - usuarios deben volver a iniciar sesión`);
       });
     })
     .catch((err) => {

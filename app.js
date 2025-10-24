@@ -8,6 +8,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Tiempo de inicio del servidor para invalidar sesiones
+const SERVER_START_TIME = Date.now();
+
+// Ruta para verificar tiempo de inicio del servidor
+app.get('/api/server-status', (req, res) => {
+  res.json({ startTime: SERVER_START_TIME, status: 'ok' });
+});
+
 // Las asociaciones ahora se cargan automáticamente en models/index.js
 
 // Rutas principales
