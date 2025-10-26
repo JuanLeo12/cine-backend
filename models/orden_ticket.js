@@ -8,7 +8,7 @@ const OrdenTicket = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    id_tipo_usuario: {
+    id_tipo_ticket: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

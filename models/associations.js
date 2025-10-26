@@ -127,14 +127,17 @@ Funcion.belongsTo(Sala, { foreignKey: "id_sala", as: "sala" });
 Pelicula.hasMany(Funcion, { foreignKey: "id_pelicula", as: "funciones" });
 Funcion.belongsTo(Pelicula, { foreignKey: "id_pelicula", as: "pelicula" });
 
-Usuario.hasMany(Funcion, {
-  as: "funcionesCorporativas",
-  foreignKey: "id_cliente_corporativo",
-});
-Funcion.belongsTo(Usuario, {
-  as: "clienteCorporativo",
-  foreignKey: "id_cliente_corporativo",
-});
+// ⚠️ Temporalmente deshabilitado por conflicto de constraint
+// Usuario.hasMany(Funcion, {
+//   as: "funcionesCorporativas",
+//   foreignKey: "id_cliente_corporativo",
+//   constraints: false,
+// });
+// Funcion.belongsTo(Usuario, {
+//   as: "clienteCorporativo",
+//   foreignKey: "id_cliente_corporativo",
+//   constraints: false,
+// });
 
 Funcion.hasMany(AsientoFuncion, { foreignKey: "id_funcion", as: "asientos" });
 AsientoFuncion.belongsTo(Funcion, { foreignKey: "id_funcion", as: "funcion" });

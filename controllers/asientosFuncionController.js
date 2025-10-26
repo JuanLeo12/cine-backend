@@ -22,7 +22,23 @@ exports.listarAsientosPorFuncion = async (req, res) => {
       order: [["fila", "ASC"], ["numero", "ASC"]],
     });
 
-    res.json(asientos);
+    // Limpiar asientos bloqueados que ya expiraron
+    const ahora = new Date();
+    const asientosFiltrados = [];
+    
+    for (const asiento of asientos) {
+      if (asiento.estado === "bloqueado" && asiento.bloqueo_expira_en) {
+        if (new Date(asiento.bloqueo_expira_en) < ahora) {
+          // Bloqueo expirado - eliminar el registro
+          await asiento.destroy();
+          console.log(`🧹 Asiento ${asiento.fila}${asiento.numero} - Bloqueo expirado, limpiado`);
+          continue; // No incluir en respuesta
+        }
+      }
+      asientosFiltrados.push(asiento);
+    }
+
+    res.json(asientosFiltrados);
   } catch (error) {
     console.error("Error listarAsientosPorFuncion:", error);
     res.status(500).json({ error: "Error al obtener asientos de la función" });
@@ -51,25 +67,37 @@ exports.bloquearAsiento = async (req, res) => {
     }
 
     // Verificar si el asiento ya existe
-    const existente = await AsientoFuncion.findOne({
+    let existente = await AsientoFuncion.findOne({
       where: { id_funcion, fila, numero },
     });
 
     if (existente) {
-      // Si está bloqueado y el bloqueo ha expirado, lo liberamos
-      if (
-        existente.estado === "bloqueado" &&
-        existente.bloqueo_expira_en &&
-        new Date(existente.bloqueo_expira_en) < new Date()
-      ) {
-        await existente.destroy();
-      } else if (existente.estado === "ocupado") {
-        // Asiento ocupado definitivamente
+      // CASO 1: Asiento ocupado definitivamente
+      if (existente.estado === "ocupado") {
         return res.status(409).json({ error: "El asiento ya está ocupado" });
-      } else if (existente.estado === "bloqueado") {
-        // Asiento bloqueado por otro usuario
-        if (existente.id_usuario_bloqueo === req.user.id) {
-          // El mismo usuario está re-bloqueando (extender tiempo)
+      }
+
+      // CASO 2: Asiento bloqueado
+      if (existente.estado === "bloqueado") {
+        const ahora = new Date();
+        const bloqueadoPorMi = existente.id_usuario_bloqueo === req.user.id;
+        const estaExpirado = existente.bloqueo_expira_en && new Date(existente.bloqueo_expira_en) < ahora;
+
+        // 2A: Mi bloqueo expirado - renovar
+        if (bloqueadoPorMi && estaExpirado) {
+          console.log(`🔄 Renovando bloqueo expirado: ${fila}${numero} - Usuario ${req.user.id}`);
+          await existente.update({
+            bloqueo_expira_en: new Date(Date.now() + 5 * 60 * 1000),
+          });
+          return res.json({ 
+            mensaje: "Bloqueo renovado después de expiración", 
+            asiento: existente 
+          });
+        }
+
+        // 2B: Mi bloqueo vigente - extender
+        if (bloqueadoPorMi && !estaExpirado) {
+          console.log(`⏱️ Extendiendo bloqueo vigente: ${fila}${numero} - Usuario ${req.user.id}`);
           await existente.update({
             bloqueo_expira_en: new Date(Date.now() + 5 * 60 * 1000),
           });
@@ -78,26 +106,99 @@ exports.bloquearAsiento = async (req, res) => {
             asiento: existente 
           });
         }
-        return res
-          .status(409)
-          .json({ error: "El asiento está bloqueado por otro usuario" });
+
+        // 2C: Bloqueado por otro usuario y expirado - tomar posesión
+        if (!bloqueadoPorMi && estaExpirado) {
+          console.log(`🔄 Tomando posesión de asiento expirado: ${fila}${numero} - Usuario ${req.user.id}`);
+          await existente.update({
+            id_usuario_bloqueo: req.user.id,
+            bloqueo_expira_en: new Date(Date.now() + 5 * 60 * 1000),
+          });
+          return res.json({ 
+            mensaje: "Asiento bloqueado (estaba expirado)", 
+            asiento: existente 
+          });
+        }
+        
+        // 2D: Bloqueado por otro usuario y NO expirado - rechazar
+        if (!bloqueadoPorMi && !estaExpirado) {
+          return res
+            .status(409)
+            .json({ error: "El asiento está bloqueado por otro usuario" });
+        }
+      }
+      
+      // CASO 3: Asiento en estado libre - re-bloquear
+      if (existente.estado === "libre") {
+        console.log(`🔓 Re-bloqueando asiento libre: ${fila}${numero} - Usuario ${req.user.id}`);
+        await existente.update({
+          estado: "bloqueado",
+          id_usuario_bloqueo: req.user.id,
+          bloqueo_expira_en: new Date(Date.now() + 5 * 60 * 1000),
+        });
+        return res.json({ 
+          mensaje: "Asiento bloqueado", 
+          asiento: existente 
+        });
       }
     }
 
-    // Crear nuevo bloqueo temporal (5 minutos)
-    const nuevo = await AsientoFuncion.create({
-      id_funcion,
-      fila,
-      numero,
-      estado: "bloqueado",
-      id_usuario_bloqueo: req.user.id,
-      bloqueo_expira_en: new Date(Date.now() + 5 * 60 * 1000), // 5 min
-    });
+    // CASO 4: Asiento no existe - crear nuevo (protegido contra duplicados)
+    console.log(`🆕 Creando nuevo bloqueo: ${fila}${numero} - Usuario ${req.user.id}`);
+    
+    try {
+      const [nuevo, created] = await AsientoFuncion.findOrCreate({
+        where: { id_funcion, fila, numero },
+        defaults: {
+          estado: "bloqueado",
+          id_usuario_bloqueo: req.user.id,
+          bloqueo_expira_en: new Date(Date.now() + 5 * 60 * 1000),
+        }
+      });
 
-    res.json({ 
-      mensaje: "Asiento bloqueado correctamente (5 minutos)", 
-      asiento: nuevo 
-    });
+      if (!created) {
+        // El asiento fue creado por otra petición concurrente
+        // Verificar si puedo tomarlo
+        if (nuevo.estado === "bloqueado" && nuevo.id_usuario_bloqueo === req.user.id) {
+          console.log(`✅ Bloqueo ya existía (petición duplicada): ${fila}${numero}`);
+          return res.json({ 
+            mensaje: "Asiento bloqueado correctamente (5 minutos)", 
+            asiento: nuevo 
+          });
+        } else {
+          return res.status(409).json({ 
+            error: "El asiento fue tomado por otro usuario en este momento" 
+          });
+        }
+      }
+
+      res.json({ 
+        mensaje: "Asiento bloqueado correctamente (5 minutos)", 
+        asiento: nuevo 
+      });
+    } catch (error) {
+      // Si aún así hay un error de llave duplicada, significa que se creó entre medias
+      if (error.name === 'SequelizeUniqueConstraintError') {
+        console.log(`⚠️ Race condition detectada: ${fila}${numero} - reintentando...`);
+        
+        // Buscar el asiento recién creado
+        const asientoExistente = await AsientoFuncion.findOne({
+          where: { id_funcion, fila, numero }
+        });
+        
+        if (asientoExistente && asientoExistente.id_usuario_bloqueo === req.user.id) {
+          return res.json({ 
+            mensaje: "Asiento bloqueado correctamente (5 minutos)", 
+            asiento: asientoExistente 
+          });
+        } else {
+          return res.status(409).json({ 
+            error: "El asiento fue tomado por otro usuario" 
+          });
+        }
+      }
+      throw error; // Re-lanzar si es otro tipo de error
+    }
   } catch (error) {
     console.error("Error bloquearAsiento:", error);
     res.status(500).json({ error: "Error al bloquear asiento" });
@@ -113,24 +214,36 @@ exports.liberarAsiento = async (req, res) => {
       where: { id_funcion, fila, numero },
     });
 
-    if (!asiento)
-      return res.status(404).json({ error: "Asiento no encontrado" });
+    // Si no existe, considerarlo como "ya liberado" y retornar éxito
+    if (!asiento) {
+      console.log(`✅ Asiento ${fila}${numero} ya fue liberado previamente`);
+      return res.json({ 
+        mensaje: "Asiento liberado correctamente",
+        nota: "El asiento ya había sido liberado anteriormente" 
+      });
+    }
 
+    // Verificar permisos
     if (
       req.user.rol !== "admin" &&
       asiento.id_usuario_bloqueo !== req.user.id
     ) {
-      return res
-        .status(403)
-        .json({ error: "No tienes permiso para liberar este asiento" });
+      console.log(`⚠️ Usuario ${req.user.id} intentó liberar asiento bloqueado por usuario ${asiento.id_usuario_bloqueo}`);
+      // No es un error - simplemente el asiento ya no es nuestro
+      return res.json({ 
+        mensaje: "El asiento ya no está bajo tu control",
+        nota: "Otro usuario lo ha bloqueado mientras tanto"
+      });
     }
 
+    // No permitir liberar asientos ocupados definitivamente
     if (asiento.estado === "ocupado") {
       return res
         .status(400)
         .json({ error: "No se puede liberar un asiento ya ocupado" });
     }
 
+    console.log(`🧹 Liberando asiento: ${fila}${numero} - Usuario ${req.user.id}`);
     await asiento.destroy();
     res.json({ mensaje: "Asiento liberado correctamente" });
   } catch (error) {

@@ -12,11 +12,7 @@ if (process.env.NODE_ENV !== "test") {
     .authenticate()
     .then(() => {
       console.log("✅ Conexión a PostgreSQL exitosa");
-
-      return sequelize.sync({ alter: true }); // Sincroniza modelos con la base de datos
-    })
-    .then(() => {
-      console.log("📦 Tablas sincronizadas");
+      console.log("📦 Usando tablas existentes (sin sincronización)");
       
       // Invalidar todas las sesiones al iniciar
       return invalidarTodasLasSesiones();
@@ -28,6 +24,6 @@ if (process.env.NODE_ENV !== "test") {
       });
     })
     .catch((err) => {
-      console.error("❌ Error al conectar o sincronizar:", err);
+      console.error("❌ Error al conectar:", err);
     });
 }

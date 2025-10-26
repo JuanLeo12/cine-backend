@@ -7,8 +7,12 @@ const {
   Ticket,
   AsientoFuncion,
   Pago,
+  MetodoPago,
   TipoTicket,
   Combo,
+  Pelicula,
+  Sala,
+  Sede,
 } = require("../models");
 const { validarOrdenCompra } = require("../utils/validacionesOrdenCompra");
 const { Op } = require("sequelize");
@@ -18,11 +22,24 @@ const ordenInclude = [
   {
     model: Funcion,
     as: "funcion",
+    attributes: ["id", "fecha", "hora"],
     include: [
       {
-        model: Usuario,
-        as: "clienteCorporativo",
+        model: Pelicula,
+        as: "pelicula",
+        attributes: ["id", "titulo", "duracion"],
+      },
+      {
+        model: Sala,
+        as: "sala",
         attributes: ["id", "nombre"],
+        include: [
+          {
+            model: Sede,
+            as: "sede",
+            attributes: ["id", "nombre", "direccion"],
+          },
+        ],
       },
     ],
   },
@@ -32,6 +49,18 @@ const ordenInclude = [
     attributes: ["id", "cantidad", "precio_unitario", "descuento"],
     include: [
       { model: TipoTicket, as: "tipoTicket", attributes: ["id", "nombre"] },
+      {
+        model: Ticket,
+        as: "tickets",
+        attributes: ["id", "id_asiento"],
+        include: [
+          {
+            model: AsientoFuncion,
+            as: "asientoFuncion",
+            attributes: ["id", "fila", "numero"],
+          },
+        ],
+      },
     ],
   },
   {
@@ -43,7 +72,14 @@ const ordenInclude = [
   {
     model: Pago,
     as: "pago",
-    attributes: ["id", "monto_total", "estado_pago", "fecha_pago"],
+    attributes: ["id", "monto_total", "estado_pago", "fecha_pago", "id_metodo_pago"],
+    include: [
+      {
+        model: MetodoPago,
+        as: "metodoPago",
+        attributes: ["id", "nombre", "estado"],
+      },
+    ],
   },
 ];
 
@@ -146,6 +182,14 @@ exports.confirmarOrden = async (req, res) => {
       asientos = [] // [{ fila, numero }]
     } = req.body;
 
+    console.log('📝 Confirmando orden:', {
+      id_orden: id,
+      id_usuario: req.user.id,
+      tickets,
+      asientos,
+      metodo_pago
+    });
+
     const orden = await OrdenCompra.findOne({
       where: { 
         id, 
@@ -156,29 +200,76 @@ exports.confirmarOrden = async (req, res) => {
     });
 
     if (!orden) {
+      console.error('❌ Orden no encontrada:', { id, id_usuario: req.user.id });
       return res.status(404).json({ error: "Orden no encontrada o ya procesada" });
     }
 
-    // Verificar que los asientos estén bloqueados por este usuario
+    console.log('✅ Orden encontrada:', { id_orden: orden.id, id_funcion: orden.id_funcion });
+
+    // Verificar que los asientos estén bloqueados por este usuario O extender el bloqueo si expiró
     if (orden.id_funcion && asientos.length > 0) {
       for (const { fila, numero } of asientos) {
         const asiento = await AsientoFuncion.findOne({
           where: { 
             id_funcion: orden.id_funcion, 
             fila, 
-            numero,
-            estado: "bloqueado",
-            id_usuario_bloqueo: req.user.id
+            numero
           },
         });
 
+        console.log(`🔍 Verificando asiento ${fila}${numero}:`, {
+          encontrado: !!asiento,
+          estado: asiento?.estado,
+          id_usuario_bloqueo: asiento?.id_usuario_bloqueo,
+          bloqueo_expira_en: asiento?.bloqueo_expira_en,
+          req_user_id: req.user.id
+        });
+
+        // CASO 1: Asiento no existe (nunca fue bloqueado o ya fue limpiado)
         if (!asiento) {
+          console.error(`❌ Asiento ${fila}${numero} no existe en la base de datos`);
           return res.status(400).json({ 
-            error: `El asiento ${fila}${numero} no está disponible o el bloqueo expiró` 
+            error: `El asiento ${fila}${numero} no está disponible` 
           });
+        }
+
+        // CASO 2: Asiento ocupado por otra orden
+        if (asiento.estado === "ocupado") {
+          console.error(`❌ Asiento ${fila}${numero} ya está ocupado`);
+          return res.status(400).json({ 
+            error: `El asiento ${fila}${numero} ya fue vendido` 
+          });
+        }
+
+        // CASO 3: Asiento bloqueado
+        if (asiento.estado === "bloqueado") {
+          const bloqueadoPorMi = asiento.id_usuario_bloqueo === req.user.id;
+          const ahora = new Date();
+          const estaExpirado = asiento.bloqueo_expira_en && new Date(asiento.bloqueo_expira_en) < ahora;
+
+          // 3A: Bloqueado por otro usuario
+          if (!bloqueadoPorMi) {
+            console.error(`❌ Asiento ${fila}${numero} bloqueado por usuario ${asiento.id_usuario_bloqueo}`);
+            return res.status(400).json({ 
+              error: `El asiento ${fila}${numero} está siendo usado por otro cliente` 
+            });
+          }
+
+          // 3B: Bloqueado por mí pero expiró - RENOVAR antes de confirmar
+          if (bloqueadoPorMi && estaExpirado) {
+            console.log(`⚠️ Asiento ${fila}${numero} expiró, renovando antes de confirmar...`);
+            await asiento.update({
+              bloqueo_expira_en: new Date(Date.now() + 5 * 60 * 1000)
+            });
+          }
+
+          // 3C: Bloqueado por mí y vigente - OK, continuar
+          console.log(`✅ Asiento ${fila}${numero} verificado correctamente`);
         }
       }
     }
+
+    console.log('✅ Todos los asientos verificados');
 
     // Calcular total
     let montoTotal = 0;
@@ -187,6 +278,7 @@ exports.confirmarOrden = async (req, res) => {
     for (const item of tickets) {
       const tipoTicket = await TipoTicket.findByPk(item.id_tipo_ticket);
       if (!tipoTicket) {
+        console.error(`❌ Tipo de ticket no encontrado: ${item.id_tipo_ticket}`);
         return res.status(404).json({ error: `Tipo de ticket ${item.id_tipo_ticket} no encontrado` });
       }
 
@@ -221,37 +313,51 @@ exports.confirmarOrden = async (req, res) => {
       });
     }
 
-    // Marcar asientos como OCUPADOS definitivamente
+    // Marcar asientos como OCUPADOS definitivamente y crear tickets
     if (orden.id_funcion && asientos.length > 0) {
-      for (const { fila, numero } of asientos) {
-        await AsientoFuncion.update(
-          { 
-            estado: "ocupado",
-            id_usuario_bloqueo: req.user.id,
-            bloqueo_expira_en: null // Ya no expira
-          },
-          { 
-            where: { 
-              id_funcion: orden.id_funcion, 
-              fila, 
-              numero 
-            } 
-          }
-        );
+      // Obtener el OrdenTicket para asociar los tickets
+      const ordenTicket = await OrdenTicket.findOne({ 
+        where: { id_orden_compra: orden.id },
+        order: [['id', 'ASC']]
+      });
+      
+      if (!ordenTicket) {
+        return res.status(400).json({ error: "No se pudo encontrar la orden de tickets" });
+      }
 
-        // Crear registro de ticket con asiento
-        const tipoTicketAdulto = await TipoTicket.findOne({ where: { nombre: "Adulto" } });
-        await Ticket.create({
-          id_orden_ticket: (await OrdenTicket.findOne({ 
-            where: { id_orden_compra: orden.id },
-            order: [['id', 'ASC']]
-          })).id,
-          id_funcion: orden.id_funcion,
-          id_asiento_funcion: (await AsientoFuncion.findOne({
-            where: { id_funcion: orden.id_funcion, fila, numero }
-          })).id,
-          precio: tipoTicketAdulto.precio_base,
+      for (const { fila, numero } of asientos) {
+        // Buscar el asiento primero
+        const asientoFuncion = await AsientoFuncion.findOne({
+          where: { id_funcion: orden.id_funcion, fila, numero }
         });
+
+        if (!asientoFuncion) {
+          return res.status(400).json({ 
+            error: `El asiento ${fila}${numero} no existe` 
+          });
+        }
+
+        // Marcar como ocupado
+        await asientoFuncion.update({ 
+          estado: "ocupado",
+          id_usuario_bloqueo: req.user.id,
+          bloqueo_expira_en: null // Ya no expira
+        });
+
+        // Crear ticket usando el ID correcto del asiento_funcion
+        // El modelo Ticket usa "id_asiento" que referencia a asientos_funcion.id
+        const tipoTicketPrincipal = await TipoTicket.findOne({ 
+          where: { id: tickets[0].id_tipo_ticket } 
+        });
+        
+        await Ticket.create({
+          id_orden_ticket: ordenTicket.id,
+          id_funcion: orden.id_funcion,
+          id_asiento: asientoFuncion.id, // ← CORRECCIÓN: usar id_asiento, no id_asiento_funcion
+          precio: tipoTicketPrincipal.precio_base,
+        });
+        
+        console.log(`🎫 Ticket creado para asiento ${fila}${numero} (id: ${asientoFuncion.id})`);
       }
     }
 
@@ -260,7 +366,7 @@ exports.confirmarOrden = async (req, res) => {
       id_orden_compra: orden.id,
       id_metodo_pago: metodo_pago || 1,
       monto_total: montoTotal,
-      estado_pago: "pagado",
+      estado_pago: "completado", // ✅ CORRECCIÓN: usar "completado" (valor válido según modelo)
       fecha_pago: new Date(),
     });
 

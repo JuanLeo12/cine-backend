@@ -31,6 +31,12 @@ const OrdenCompra = sequelize.define(
         },
       },
     },
+    monto_total: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
+      defaultValue: 0.00,
+      validate: { min: 0 },
+    },
     estado: {
       type: DataTypes.ENUM("pendiente", "pagada", "cancelada"),
       defaultValue: "pendiente",
