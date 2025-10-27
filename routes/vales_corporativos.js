@@ -10,6 +10,7 @@ const {
   obtenerVale,
   actualizarVale,
   eliminarVale,
+  validarValeCodigo,
 } = require("../controllers/valesCorporativosController");
 
 // 📍 Listar vales → admin y corporativo
@@ -19,6 +20,9 @@ router.get(
   permitirRoles("admin", "corporativo"),
   listarVales
 );
+
+// 📍 Validar vale por código → cualquier usuario autenticado
+router.get("/validar/:codigo", autenticarUsuario, validarValeCodigo);
 
 // 📍 Crear vale → corporativo y admin
 router.post(

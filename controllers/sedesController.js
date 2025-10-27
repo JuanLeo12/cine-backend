@@ -6,7 +6,8 @@ exports.listarSedes = async (req, res) => {
   try {
     const sedes = await Sede.findAll({
       where: { estado: "activo" },
-      attributes: ["id", "nombre", "direccion", "ciudad"],
+      // Incluir imagen_url para que el frontend público pueda mostrar la imagen de la sede
+      attributes: ["id", "nombre", "direccion", "ciudad", "imagen_url", "telefono"],
       order: [["nombre", "ASC"]],
       include: [
         { model: Sala, as: "salas", attributes: ["id", "nombre"] },

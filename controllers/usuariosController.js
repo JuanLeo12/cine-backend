@@ -90,6 +90,59 @@ exports.obtenerPerfil = async (req, res) => {
   }
 };
 
+// 📌 Actualizar perfil del usuario autenticado
+exports.actualizarPerfil = async (req, res) => {
+  try {
+    const id = req.user.id;
+
+    const usuario = await Usuario.findByPk(id);
+    if (!usuario) return res.status(404).json({ error: "Usuario no encontrado" });
+
+    let { rol, ...data } = req.body;
+    const rolUsuario = rol || usuario.rol;
+
+    // validar campos según rol actual (no permitimos cambiar rol aquí salvo admin)
+    const errores = validarCamposPorRol(
+      rolUsuario,
+      {
+        ...usuario.toJSON(),
+        ...data,
+      },
+      true
+    );
+    if (errores.length > 0) return res.status(400).json({ errores });
+
+    if (
+      data.email &&
+      (await Usuario.findOne({ where: { email: data.email, id: { [Op.ne]: usuario.id } } }))
+    )
+      return res.status(409).json({ error: "El email ya está registrado" });
+
+    if (
+      data.dni &&
+      (await Usuario.findOne({ where: { dni: data.dni, id: { [Op.ne]: usuario.id } } }))
+    )
+      return res.status(409).json({ error: "El DNI ya está registrado" });
+
+    if (
+      data.ruc &&
+      (await Usuario.findOne({ where: { ruc: data.ruc, id: { [Op.ne]: usuario.id } } }))
+    )
+      return res.status(409).json({ error: "El RUC ya está registrado" });
+
+    // No permitir que un usuario se asigne rol admin desde perfil
+    if (rol && req.user.rol !== "admin") {
+      return res.status(403).json({ error: "No tienes permiso para cambiar el rol" });
+    }
+
+    await usuario.update({ ...data, rol: rolUsuario });
+    res.json({ mensaje: "Perfil actualizado correctamente", usuario });
+  } catch (error) {
+    console.error("Error en actualizarPerfil:", error);
+    res.status(500).json({ error: "Error al actualizar perfil" });
+  }
+};
+
 // 📌 Listado
 exports.listarUsuarios = async (req, res) => {
   try {

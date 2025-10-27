@@ -14,6 +14,8 @@ router.post("/login", usuariosController.loginUsuario);
 
 // 📌 Perfil autenticado
 router.get("/perfil", autenticarUsuario, usuariosController.obtenerPerfil);
+// 📌 Actualizar perfil autenticado
+router.patch("/perfil", autenticarUsuario, usuariosController.actualizarPerfil);
 
 // 📌 Listado de usuarios (solo admin)
 router.get(

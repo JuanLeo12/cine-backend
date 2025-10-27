@@ -2,7 +2,8 @@
 const soloLetrasRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/;
 const dniRegex = /^\d{8}$/;
 const rucRegex = /^\d{11}$/;
-const telefonoRegex = /^\d{7,9}$/;
+// Aceptamos 7 (fijo) o 9 (celular) dígitos — mantener consistente con el modelo Sequelize
+const telefonoRegex = /^(\d{7}|\d{9})$/;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**

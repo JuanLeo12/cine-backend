@@ -127,13 +127,16 @@ exports.actualizarVale = async (req, res) => {
     });
     if (!vale) return res.status(404).json({ error: "Vale no encontrado" });
 
-    if (
-      req.user.rol !== "admin" &&
-      vale.ordenCompra?.id_usuario !== req.user.id
-    ) {
-      return res
-        .status(403)
-        .json({ error: "No tienes permiso para actualizar este vale" });
+    // Permitir actualizar (marcar como usado) si:
+    // - es admin
+    // - o el vale está asociado a una orden del propio usuario
+    // - o el vale no está asociado a ninguna orden (se permite que el usuario que validó lo marque usado)
+    if (req.user.rol !== "admin") {
+      if (vale.ordenCompra && vale.ordenCompra.id_usuario !== req.user.id) {
+        return res
+          .status(403)
+          .json({ error: "No tienes permiso para actualizar este vale" });
+      }
     }
 
     await vale.update({ usado: true });
@@ -178,5 +181,57 @@ exports.eliminarVale = async (req, res) => {
   } catch (error) {
     console.error("Error eliminarVale:", error);
     res.status(500).json({ error: "Error al eliminar vale corporativo" });
+  }
+};
+
+// 📌 Validar vale para compra
+exports.validarValeCodigo = async (req, res) => {
+  try {
+    const { codigo } = req.params;
+
+    const vale = await ValeCorporativo.findOne({ 
+      where: { codigo }
+    });
+
+    if (!vale) {
+      return res.status(404).json({ 
+        valido: false, 
+        error: 'Código de vale no encontrado' 
+      });
+    }
+
+    // Verificar si ya fue usado
+    if (vale.usado) {
+      return res.status(400).json({ 
+        valido: false, 
+        error: 'Este vale ya fue utilizado' 
+      });
+    }
+
+    // Verificar fecha de expiración
+    const ahora = new Date();
+    const fechaExpiracion = new Date(vale.fecha_expiracion);
+    if (fechaExpiracion < ahora) {
+      return res.status(400).json({ 
+        valido: false, 
+        error: 'Este vale ha expirado' 
+      });
+    }
+
+    res.json({
+      valido: true,
+      vale: {
+        id: vale.id,
+        codigo: vale.codigo,
+        tipo: vale.tipo,
+        valor: vale.valor,
+        fecha_expiracion: vale.fecha_expiracion
+      },
+      mensaje: `Vale válido: S/ ${vale.valor} de descuento en ${vale.tipo === 'entrada' ? 'entradas' : 'combos'}`
+    });
+
+  } catch (error) {
+    console.error('Error validarValeCodigo:', error);
+    res.status(500).json({ error: 'Error al validar vale' });
   }
 };

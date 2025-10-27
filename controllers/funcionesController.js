@@ -1,4 +1,5 @@
 const { Funcion, Pelicula, Sala, Sede, Usuario } = require("../models");
+const { Op } = require("sequelize");
 
 // 📌 Obtener todas las funciones (solo activas)
 exports.listarFunciones = async (req, res) => {
@@ -9,15 +10,29 @@ exports.listarFunciones = async (req, res) => {
         {
           model: Pelicula,
           as: "pelicula",
-          attributes: ["id", "titulo", "genero"],
+          attributes: ["id", "titulo", "genero", "imagen_url", "duracion"],
         },
-        { model: Sala, as: "sala", attributes: ["id", "nombre"] },
+        { 
+          model: Sala, 
+          as: "sala", 
+          attributes: ["id", "nombre", "filas", "columnas"],
+          include: [
+            {
+              model: Sede,
+              as: "sede",
+              // Filtrar solo sedes activas para evitar mostrar sedes "fantasma"
+              where: { estado: 'activo' },
+              attributes: ["id", "nombre", "ciudad", "direccion", "imagen_url"]
+            }
+          ]
+        },
         {
           model: Usuario,
           as: "clienteCorporativo",
           attributes: ["id", "nombre"],
         },
       ],
+      order: [['fecha', 'ASC'], ['hora', 'ASC']]
     });
     res.json(funciones);
   } catch (error) {
@@ -26,11 +41,98 @@ exports.listarFunciones = async (req, res) => {
   }
 };
 
+// 📌 Obtener TODAS las funciones (incluyendo inactivas) - Para análisis admin
+exports.listarTodasFunciones = async (req, res) => {
+  try {
+    const funciones = await Funcion.findAll({
+      include: [
+        {
+          model: Pelicula,
+          as: "pelicula",
+          attributes: ["id", "titulo", "genero", "imagen_url", "duracion"],
+        },
+        { 
+          model: Sala, 
+          as: "sala", 
+          attributes: ["id", "nombre", "filas", "columnas"],
+          include: [
+            {
+              model: Sede,
+              as: "sede",
+              attributes: ["id", "nombre", "ciudad", "direccion", "imagen_url"]
+            }
+          ]
+        },
+        {
+          model: Usuario,
+          as: "clienteCorporativo",
+          attributes: ["id", "nombre"],
+        },
+      ],
+      order: [['fecha', 'ASC'], ['hora', 'ASC']]
+    });
+    res.json(funciones);
+  } catch (error) {
+    console.error("Error listarTodasFunciones:", error);
+    res.status(500).json({ error: "Error al obtener funciones" });
+  }
+};
+
+// 📌 Desactivar funciones pasadas automáticamente
+exports.desactivarFuncionesPasadas = async (req, res) => {
+  try {
+    const hoy = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const horaActual = new Date().toTimeString().split(' ')[0]; // HH:MM:SS
+
+    // Desactivar funciones con fecha anterior a hoy
+    const resultadoFechasPasadas = await Funcion.update(
+      { estado: "inactiva" },
+      {
+        where: {
+          fecha: { [Op.lt]: hoy },
+          estado: "activa"
+        }
+      }
+    );
+
+    const totalDesactivadas = resultadoFechasPasadas[0];
+
+    res.json({
+      message: `✅ Se desactivaron ${totalDesactivadas} funciones pasadas (fechas anteriores a hoy)`,
+      desactivadas: totalDesactivadas,
+    });
+  } catch (error) {
+    console.error("Error desactivarFuncionesPasadas:", error);
+    res.status(500).json({ error: "Error al desactivar funciones" });
+  }
+};
+
+// 📌 Desactivar función específica
+exports.desactivarFuncion = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const funcion = await Funcion.findByPk(id);
+    if (!funcion) {
+      return res.status(404).json({ error: "Función no encontrada" });
+    }
+
+    funcion.estado = "inactiva";
+    await funcion.save();
+
+    res.json({ message: "✅ Función desactivada exitosamente", funcion });
+  } catch (error) {
+    console.error("Error desactivarFuncion:", error);
+    res.status(500).json({ error: "Error al desactivar función" });
+  }
+};
+
 // 📌 Obtener funciones por película
 exports.obtenerFuncionesByPelicula = async (req, res) => {
   try {
     const { id_pelicula } = req.params;
     
+    // Solo devolver funciones activas y cuya sede esté activa (evita sedes fantasma)
     const funciones = await Funcion.findAll({
       where: { 
         id_pelicula,
@@ -45,7 +147,8 @@ exports.obtenerFuncionesByPelicula = async (req, res) => {
             {
               model: Sede,
               as: "sede",
-              attributes: ["id", "nombre", "direccion", "ciudad"]
+              where: { estado: 'activo' },
+              attributes: ["id", "nombre", "direccion", "ciudad", "imagen_url"]
             }
           ]
         },

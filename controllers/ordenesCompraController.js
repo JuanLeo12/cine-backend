@@ -14,6 +14,7 @@ const {
   Sala,
   Sede,
 } = require("../models");
+const { ValeCorporativo } = require('../models');
 const { validarOrdenCompra } = require("../utils/validacionesOrdenCompra");
 const { Op } = require("sequelize");
 
@@ -22,21 +23,25 @@ const ordenInclude = [
   {
     model: Funcion,
     as: "funcion",
+    required: false, // LEFT OUTER JOIN - no rompe si la función no existe
     attributes: ["id", "fecha", "hora"],
     include: [
       {
         model: Pelicula,
         as: "pelicula",
+        required: false,
         attributes: ["id", "titulo", "duracion"],
       },
       {
         model: Sala,
         as: "sala",
+        required: false,
         attributes: ["id", "nombre"],
         include: [
           {
             model: Sede,
             as: "sede",
+            required: false,
             attributes: ["id", "nombre", "direccion"],
           },
         ],
@@ -46,17 +51,20 @@ const ordenInclude = [
   {
     model: OrdenTicket,
     as: "ordenTickets",
+    required: false,
     attributes: ["id", "cantidad", "precio_unitario", "descuento"],
     include: [
-      { model: TipoTicket, as: "tipoTicket", attributes: ["id", "nombre"] },
+      { model: TipoTicket, as: "tipoTicket", required: false, attributes: ["id", "nombre"] },
       {
         model: Ticket,
         as: "tickets",
+        required: false,
         attributes: ["id", "id_asiento"],
         include: [
           {
             model: AsientoFuncion,
             as: "asientoFuncion",
+            required: false,
             attributes: ["id", "fila", "numero"],
           },
         ],
@@ -66,334 +74,223 @@ const ordenInclude = [
   {
     model: OrdenCombo,
     as: "ordenCombos",
+    required: false,
     attributes: ["id", "cantidad", "precio_unitario", "descuento"],
-    include: [{ model: Combo, as: "combo", attributes: ["id", "nombre"] }],
+    include: [{ model: Combo, as: "combo", required: false, attributes: ["id", "nombre"] }],
   },
   {
     model: Pago,
     as: "pago",
+    required: false,
     attributes: ["id", "monto_total", "estado_pago", "fecha_pago", "id_metodo_pago"],
     include: [
       {
         model: MetodoPago,
         as: "metodoPago",
+        required: false,
         attributes: ["id", "nombre", "estado"],
       },
     ],
   },
 ];
 
+// 📌 Listar todas las órdenes (admin ve todas, usuario solo las suyas)
+exports.listarOrdenes = async (req, res) => {
+  try {
+    const where = req.user.rol === 'admin' ? {} : { id_usuario: req.user.id };
+    const ordenes = await OrdenCompra.findAll({ where, include: ordenInclude, order: [['createdAt', 'DESC']] });
+    res.json(ordenes);
+  } catch (error) {
+    console.error('Error listarOrdenes:', error);
+    res.status(500).json({ error: 'Error al listar órdenes' });
+  }
+};
+
+// 📌 Obtener orden por ID
+exports.obtenerOrden = async (req, res) => {
+  try {
+    const orden = await OrdenCompra.findByPk(req.params.id, { include: ordenInclude });
+    if (!orden) return res.status(404).json({ error: 'Orden no encontrada' });
+    if (req.user.rol !== 'admin' && orden.id_usuario !== req.user.id) return res.status(403).json({ error: 'No tienes permiso para ver esta orden' });
+    res.json(orden);
+  } catch (error) {
+    console.error('Error obtenerOrden:', error);
+    res.status(500).json({ error: 'Error al obtener la orden' });
+  }
+};
+
+// 📌 Crear nueva orden (estado pendiente)
+exports.crearOrden = async (req, res) => {
+  try {
+    const { id_funcion = null } = req.body;
+    const orden = await OrdenCompra.create({ id_usuario: req.user.id, id_funcion, estado: 'pendiente', monto_total: 0 });
+    res.status(201).json(orden);
+  } catch (error) {
+    console.error('Error crearOrden:', error);
+    res.status(500).json({ error: 'Error al crear la orden' });
+  }
+};
+
 // 📌 Listar órdenes
 exports.listarOrdenes = async (req, res) => {
   try {
-    const where = {};
-    if (req.user.rol !== "admin") {
-      where.id_usuario = req.user.id;
-    }
-
-    // Solo listar órdenes no canceladas
-    where.estado = { [Op.ne]: "cancelada" };
-
-    const ordenes = await OrdenCompra.findAll({
-      where,
-      include: ordenInclude,
-      order: [["fecha_compra", "DESC"]],
-    });
-
+    const ordenes = await OrdenCompra.findAll({ include: ordenInclude });
     res.json(ordenes);
   } catch (error) {
-    console.error("Error listarOrdenes:", error);
-    res.status(500).json({ error: "Error al obtener órdenes de compra" });
-  }
-};
-
-// 📌 Obtener una orden por ID
-exports.obtenerOrden = async (req, res) => {
-  try {
-    const orden = await OrdenCompra.findOne({
-      where: { 
-        id: req.params.id,
-        estado: { [Op.ne]: "cancelada" }
-      },
-      include: ordenInclude,
-    });
-
-    if (!orden) return res.status(404).json({ error: "Orden no encontrada" });
-
-    if (req.user.rol !== "admin" && orden.id_usuario !== req.user.id) {
-      return res
-        .status(403)
-        .json({ error: "No tienes permiso para ver esta orden" });
-    }
-
-    res.json(orden);
-  } catch (error) {
-    console.error("Error obtenerOrden:", error);
-    res.status(500).json({ error: "Error al obtener orden de compra" });
-  }
-};
-
-// 📌 Crear nueva orden de compra
-exports.crearOrden = async (req, res) => {
-  try {
-    const { id_funcion, tickets = [], combos = [] } = req.body;
-
-    const errores = validarOrdenCompra({ id_funcion, tickets });
-    if (errores.length > 0) return res.status(400).json({ errores });
-
-    if (id_funcion) {
-      const funcion = await Funcion.findByPk(id_funcion);
-      if (!funcion)
-        return res.status(404).json({ error: "Función no encontrada" });
-
-      const fechaHoraFuncion = new Date(`${funcion.fecha}T${funcion.hora}`);
-      if (fechaHoraFuncion <= new Date()) {
-        return res.status(400).json({
-          error:
-            "No se puede crear una orden para una función ya iniciada o pasada",
-        });
-      }
-    }
-
-    const nueva = await OrdenCompra.create({
-      id_usuario: req.user.id,
-      id_funcion: id_funcion || null,
-      estado: "pendiente",
-    });
-
-    res.status(201).json({
-      mensaje: "Orden creada correctamente",
-      orden: nueva,
-    });
-  } catch (error) {
-    console.error("Error crearOrden:", error);
-    res.status(500).json({ error: "Error al crear orden de compra" });
+    console.error('Error listarOrdenes:', error);
+    res.status(500).json({ error: 'Error al listar órdenes' });
   }
 };
 
 // 📌 Confirmar orden de compra (pago simulado)
 exports.confirmarOrden = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { 
-      tickets = [], 
-      combos = [], 
-      metodo_pago,
-      asientos = [] // [{ fila, numero }]
-    } = req.body;
+    try {
+      const { id } = req.params;
+      const {
+        tickets = [],
+        combos = [],
+        metodo_pago,
+        asientos = [], // [{ fila, numero }]
+        vale_id = null,
+      } = req.body;
 
-    console.log('📝 Confirmando orden:', {
-      id_orden: id,
-      id_usuario: req.user.id,
-      tickets,
-      asientos,
-      metodo_pago
-    });
+      console.log('📝 Confirmando orden:', { id_orden: id, id_usuario: req.user.id });
 
-    const orden = await OrdenCompra.findOne({
-      where: { 
-        id, 
-        id_usuario: req.user.id,
-        estado: "pendiente" 
-      },
-      include: [{ model: Funcion, as: "funcion" }],
-    });
+      const orden = await OrdenCompra.findOne({
+        where: { id, id_usuario: req.user.id, estado: 'pendiente' },
+      });
 
-    if (!orden) {
-      console.error('❌ Orden no encontrada:', { id, id_usuario: req.user.id });
-      return res.status(404).json({ error: "Orden no encontrada o ya procesada" });
-    }
+      if (!orden) {
+        console.error('❌ Orden no encontrada:', { id, id_usuario: req.user.id });
+        return res.status(404).json({ error: 'Orden no encontrada o ya procesada' });
+      }
 
-    console.log('✅ Orden encontrada:', { id_orden: orden.id, id_funcion: orden.id_funcion });
-
-    // Verificar que los asientos estén bloqueados por este usuario O extender el bloqueo si expiró
-    if (orden.id_funcion && asientos.length > 0) {
-      for (const { fila, numero } of asientos) {
-        const asiento = await AsientoFuncion.findOne({
-          where: { 
-            id_funcion: orden.id_funcion, 
-            fila, 
-            numero
-          },
-        });
-
-        console.log(`🔍 Verificando asiento ${fila}${numero}:`, {
-          encontrado: !!asiento,
-          estado: asiento?.estado,
-          id_usuario_bloqueo: asiento?.id_usuario_bloqueo,
-          bloqueo_expira_en: asiento?.bloqueo_expira_en,
-          req_user_id: req.user.id
-        });
-
-        // CASO 1: Asiento no existe (nunca fue bloqueado o ya fue limpiado)
-        if (!asiento) {
-          console.error(`❌ Asiento ${fila}${numero} no existe en la base de datos`);
-          return res.status(400).json({ 
-            error: `El asiento ${fila}${numero} no está disponible` 
+      // Verificar asientos bloqueados (si aplica)
+      if (orden.id_funcion && asientos.length > 0) {
+        for (const { fila, numero } of asientos) {
+          const asiento = await AsientoFuncion.findOne({
+            where: { id_funcion: orden.id_funcion, fila, numero },
           });
-        }
 
-        // CASO 2: Asiento ocupado por otra orden
-        if (asiento.estado === "ocupado") {
-          console.error(`❌ Asiento ${fila}${numero} ya está ocupado`);
-          return res.status(400).json({ 
-            error: `El asiento ${fila}${numero} ya fue vendido` 
-          });
-        }
-
-        // CASO 3: Asiento bloqueado
-        if (asiento.estado === "bloqueado") {
-          const bloqueadoPorMi = asiento.id_usuario_bloqueo === req.user.id;
-          const ahora = new Date();
-          const estaExpirado = asiento.bloqueo_expira_en && new Date(asiento.bloqueo_expira_en) < ahora;
-
-          // 3A: Bloqueado por otro usuario
-          if (!bloqueadoPorMi) {
-            console.error(`❌ Asiento ${fila}${numero} bloqueado por usuario ${asiento.id_usuario_bloqueo}`);
-            return res.status(400).json({ 
-              error: `El asiento ${fila}${numero} está siendo usado por otro cliente` 
-            });
+          if (!asiento) {
+            return res.status(400).json({ error: `El asiento ${fila}${numero} no está disponible` });
           }
 
-          // 3B: Bloqueado por mí pero expiró - RENOVAR antes de confirmar
-          if (bloqueadoPorMi && estaExpirado) {
-            console.log(`⚠️ Asiento ${fila}${numero} expiró, renovando antes de confirmar...`);
-            await asiento.update({
-              bloqueo_expira_en: new Date(Date.now() + 5 * 60 * 1000)
-            });
+          if (asiento.estado === 'ocupado') {
+            return res.status(400).json({ error: `El asiento ${fila}${numero} ya fue vendido` });
           }
 
-          // 3C: Bloqueado por mí y vigente - OK, continuar
-          console.log(`✅ Asiento ${fila}${numero} verificado correctamente`);
+          if (asiento.estado === 'bloqueado') {
+            const bloqueadoPorMi = asiento.id_usuario_bloqueo === req.user.id;
+            const ahora = new Date();
+            const estaExpirado = asiento.bloqueo_expira_en && new Date(asiento.bloqueo_expira_en) < ahora;
+
+            if (!bloqueadoPorMi) {
+              return res.status(400).json({ error: `El asiento ${fila}${numero} está siendo usado por otro cliente` });
+            }
+
+            if (bloqueadoPorMi && estaExpirado) {
+              await asiento.update({ bloqueo_expira_en: new Date(Date.now() + 5 * 60 * 1000) });
+            }
+          }
         }
       }
-    }
 
-    console.log('✅ Todos los asientos verificados');
+      // Calcular subtotales
+      let ticketsSubtotal = 0;
+      let combosSubtotal = 0;
 
-    // Calcular total
-    let montoTotal = 0;
-
-    // Procesar tickets
-    for (const item of tickets) {
-      const tipoTicket = await TipoTicket.findByPk(item.id_tipo_ticket);
-      if (!tipoTicket) {
-        console.error(`❌ Tipo de ticket no encontrado: ${item.id_tipo_ticket}`);
-        return res.status(404).json({ error: `Tipo de ticket ${item.id_tipo_ticket} no encontrado` });
+      for (const item of tickets) {
+        const tipoTicket = await TipoTicket.findByPk(item.id_tipo_ticket);
+        if (!tipoTicket) return res.status(404).json({ error: `Tipo de ticket ${item.id_tipo_ticket} no encontrado` });
+        ticketsSubtotal += tipoTicket.precio_base * item.cantidad;
       }
 
-      const subtotal = tipoTicket.precio_base * item.cantidad;
-      montoTotal += subtotal;
-
-      await OrdenTicket.create({
-        id_orden_compra: orden.id,
-        id_tipo_ticket: item.id_tipo_ticket,
-        cantidad: item.cantidad,
-        precio_unitario: tipoTicket.precio_base,
-        descuento: 0,
-      });
-    }
-
-    // Procesar combos
-    for (const item of combos) {
-      const combo = await Combo.findByPk(item.id_combo);
-      if (!combo) {
-        return res.status(404).json({ error: `Combo ${item.id_combo} no encontrado` });
+      for (const item of combos) {
+        const combo = await Combo.findByPk(item.id_combo);
+        if (!combo) return res.status(404).json({ error: `Combo ${item.id_combo} no encontrado` });
+        combosSubtotal += combo.precio * item.cantidad;
       }
 
-      const subtotal = combo.precio * item.cantidad;
-      montoTotal += subtotal;
+      let montoTotal = ticketsSubtotal + combosSubtotal;
 
-      await OrdenCombo.create({
-        id_orden_compra: orden.id,
-        id_combo: item.id_combo,
-        cantidad: item.cantidad,
-        precio_unitario: combo.precio,
-        descuento: 0,
-      });
-    }
+      // Aplicar vale si existe
+      let descuentoAplicado = 0;
+      let vale = null;
+      if (vale_id) {
+        vale = await ValeCorporativo.findByPk(vale_id);
+        if (!vale) return res.status(404).json({ error: 'Vale no encontrado' });
+        if (vale.usado) return res.status(400).json({ error: 'Vale ya fue utilizado' });
+        const ahora = new Date();
+        if (vale.fecha_expiracion && new Date(vale.fecha_expiracion) < ahora) return res.status(400).json({ error: 'Vale expirado' });
 
-    // Marcar asientos como OCUPADOS definitivamente y crear tickets
-    if (orden.id_funcion && asientos.length > 0) {
-      // Obtener el OrdenTicket para asociar los tickets
-      const ordenTicket = await OrdenTicket.findOne({ 
-        where: { id_orden_compra: orden.id },
-        order: [['id', 'ASC']]
-      });
-      
-      if (!ordenTicket) {
-        return res.status(400).json({ error: "No se pudo encontrar la orden de tickets" });
+        if (vale.tipo === 'entrada') descuentoAplicado = Math.min(vale.valor || 0, ticketsSubtotal);
+        else if (vale.tipo === 'combo') descuentoAplicado = Math.min(vale.valor || 0, combosSubtotal);
+
+        montoTotal = Math.max(0, montoTotal - descuentoAplicado);
       }
 
-      for (const { fila, numero } of asientos) {
-        // Buscar el asiento primero
-        const asientoFuncion = await AsientoFuncion.findOne({
-          where: { id_funcion: orden.id_funcion, fila, numero }
+      // Crear OrdenTicket
+      let ordenTicketPrimero = null;
+      for (const item of tickets) {
+        const tipoTicket = await TipoTicket.findByPk(item.id_tipo_ticket);
+        const ordenTicket = await OrdenTicket.create({
+          id_orden_compra: orden.id,
+          id_tipo_ticket: item.id_tipo_ticket,
+          cantidad: item.cantidad,
+          precio_unitario: tipoTicket.precio_base,
+          descuento: 0,
         });
+        if (!ordenTicketPrimero) ordenTicketPrimero = ordenTicket;
+      }
 
-        if (!asientoFuncion) {
-          return res.status(400).json({ 
-            error: `El asiento ${fila}${numero} no existe` 
-          });
+      // Asociar asientos y crear Tickets
+      if (orden.id_funcion && asientos.length > 0) {
+        if (!ordenTicketPrimero) return res.status(400).json({ error: 'No se pudo encontrar la orden de tickets' });
+        for (const { fila, numero } of asientos) {
+          const asientoFuncion = await AsientoFuncion.findOne({ where: { id_funcion: orden.id_funcion, fila, numero } });
+          if (!asientoFuncion) return res.status(400).json({ error: `El asiento ${fila}${numero} no existe` });
+
+          await asientoFuncion.update({ estado: 'ocupado', id_usuario_bloqueo: req.user.id, bloqueo_expira_en: null });
+
+          const tipoTicketPrincipal = await TipoTicket.findByPk(tickets[0].id_tipo_ticket);
+          await Ticket.create({ id_orden_ticket: ordenTicketPrimero.id, id_funcion: orden.id_funcion, id_asiento: asientoFuncion.id, precio: tipoTicketPrincipal.precio_base });
         }
-
-        // Marcar como ocupado
-        await asientoFuncion.update({ 
-          estado: "ocupado",
-          id_usuario_bloqueo: req.user.id,
-          bloqueo_expira_en: null // Ya no expira
-        });
-
-        // Crear ticket usando el ID correcto del asiento_funcion
-        // El modelo Ticket usa "id_asiento" que referencia a asientos_funcion.id
-        const tipoTicketPrincipal = await TipoTicket.findOne({ 
-          where: { id: tickets[0].id_tipo_ticket } 
-        });
-        
-        await Ticket.create({
-          id_orden_ticket: ordenTicket.id,
-          id_funcion: orden.id_funcion,
-          id_asiento: asientoFuncion.id, // ← CORRECCIÓN: usar id_asiento, no id_asiento_funcion
-          precio: tipoTicketPrincipal.precio_base,
-        });
-        
-        console.log(`🎫 Ticket creado para asiento ${fila}${numero} (id: ${asientoFuncion.id})`);
       }
+
+      // Crear OrdenCombo
+      let ordenComboPrimero = null;
+      for (const item of combos) {
+        const combo = await Combo.findByPk(item.id_combo);
+        const ordenCombo = await OrdenCombo.create({ id_orden_compra: orden.id, id_combo: item.id_combo, cantidad: item.cantidad, precio_unitario: combo.precio, descuento: 0 });
+        if (!ordenComboPrimero) ordenComboPrimero = ordenCombo;
+      }
+
+      // Aplicar descuento en registro correspondiente
+      if (descuentoAplicado > 0) {
+        if (vale.tipo === 'entrada' && ordenTicketPrimero) await ordenTicketPrimero.update({ descuento: descuentoAplicado });
+        if (vale.tipo === 'combo' && ordenComboPrimero) await ordenComboPrimero.update({ descuento: descuentoAplicado });
+      }
+
+      // Registrar pago
+      const pago = await Pago.create({ id_orden_compra: orden.id, id_metodo_pago: metodo_pago || 1, monto_total: montoTotal, estado_pago: 'completado', fecha_pago: new Date() });
+
+      // Actualizar orden
+      await orden.update({ estado: 'pagada', monto_total: montoTotal });
+
+      // Marcar vale usado
+      if (vale) {
+        try { await vale.update({ usado: true, id_orden_compra: orden.id }); } catch (err) { console.error('Error marcando vale como usado:', err); }
+      }
+
+      const ordenCompleta = await OrdenCompra.findByPk(orden.id, { include: ordenInclude });
+
+      res.json({ mensaje: '✅ Compra confirmada exitosamente (simulación)', orden: ordenCompleta, pago: { ...pago.toJSON(), nota: 'Este es un pago simulado. No se procesó ningún cargo real.' } });
+    } catch (error) {
+      console.error('Error confirmarOrden:', error);
+      res.status(500).json({ error: 'Error al confirmar orden de compra' });
     }
-
-    // Registrar pago simulado
-    const pago = await Pago.create({
-      id_orden_compra: orden.id,
-      id_metodo_pago: metodo_pago || 1,
-      monto_total: montoTotal,
-      estado_pago: "completado", // ✅ CORRECCIÓN: usar "completado" (valor válido según modelo)
-      fecha_pago: new Date(),
-    });
-
-    // Actualizar orden a "pagada"
-    await orden.update({ 
-      estado: "pagada",
-      monto_total: montoTotal 
-    });
-
-    // Cargar orden completa
-    const ordenCompleta = await OrdenCompra.findByPk(orden.id, {
-      include: ordenInclude,
-    });
-
-    res.json({
-      mensaje: "✅ Compra confirmada exitosamente (simulación)",
-      orden: ordenCompleta,
-      pago: {
-        ...pago.toJSON(),
-        nota: "Este es un pago simulado. No se procesó ningún cargo real."
-      }
-    });
-  } catch (error) {
-    console.error("Error confirmarOrden:", error);
-    res.status(500).json({ error: "Error al confirmar orden de compra" });
-  }
-};
+  };
 
 // 📌 Cancelar orden de compra (soft delete)
 exports.cancelarOrden = async (req, res) => {
