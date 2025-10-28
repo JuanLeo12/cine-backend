@@ -5,9 +5,8 @@ const { validarCamposSede } = require("../utils/validacionesSede");
 exports.listarSedes = async (req, res) => {
   try {
     const sedes = await Sede.findAll({
-      where: { estado: "activo" },
-      // Incluir imagen_url para que el frontend público pueda mostrar la imagen de la sede
-      attributes: ["id", "nombre", "direccion", "ciudad", "imagen_url", "telefono"],
+      // Sin filtro de estado: mostrar todas las sedes
+      attributes: ["id", "nombre", "direccion", "ciudad", "imagen_url", "telefono", "estado"],
       order: [["nombre", "ASC"]],
       include: [
         { model: Sala, as: "salas", attributes: ["id", "nombre"] },
