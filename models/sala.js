@@ -9,6 +9,12 @@ const Sala = sequelize.define(
       allowNull: false,
       validate: { notEmpty: true },
     },
+    tipo_sala: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+      defaultValue: "2D",
+      validate: { isIn: [["2D", "3D", "4DX", "Xtreme"]] },
+    },
     filas: {
       type: DataTypes.INTEGER,
       allowNull: false,

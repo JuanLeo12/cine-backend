@@ -50,11 +50,31 @@ exports.loginUsuario = async (req, res) => {
         .status(400)
         .json({ error: "Email y contraseña son obligatorios" });
 
+    // Log minimal info to help debug login issues (no passwords)
+    console.debug(`[loginUsuario] intento de login para email: ${email}`);
+
     const usuario = await Usuario.scope("withPassword").findOne({
       where: { email: email.toLowerCase().trim() },
     });
 
-    if (!usuario || !(await usuario.validarPassword(password))) {
+    if (!usuario) {
+      console.debug(`[loginUsuario] usuario no encontrado para email: ${email}`);
+      return res.status(401).json({ error: "Credenciales inválidas" });
+    }
+
+    if (!usuario.password) {
+      console.debug(`[loginUsuario] usuario id=${usuario.id} no tiene password en DB`);
+      return res
+        .status(403)
+        .json({ error: "Cuenta sin contraseña establecida. Pide restablecer la contraseña o contacta a un admin." });
+    }
+
+    const passwordValido = await usuario.validarPassword(password);
+    console.debug(
+      `[loginUsuario] usuario encontrado id=${usuario.id} rol=${usuario.rol} estado=${usuario.estado} passwordValido=${passwordValido}`
+    );
+
+    if (!passwordValido) {
       return res.status(401).json({ error: "Credenciales inválidas" });
     }
 
@@ -95,11 +115,32 @@ exports.actualizarPerfil = async (req, res) => {
   try {
     const id = req.user.id;
 
-    const usuario = await Usuario.findByPk(id);
+    const usuario = await Usuario.scope("withPassword").findByPk(id);
     if (!usuario) return res.status(404).json({ error: "Usuario no encontrado" });
 
-    let { rol, ...data } = req.body;
+    let { rol, password, passwordActual, ...data } = req.body;
     const rolUsuario = rol || usuario.rol;
+
+    // Si se quiere cambiar la contraseña, verificar la actual
+    if (password) {
+      if (!passwordActual) {
+        return res.status(400).json({ 
+          error: "Debes proporcionar tu contraseña actual para cambiarla" 
+        });
+      }
+      
+      const passwordValida = await usuario.validarPassword(passwordActual);
+      if (!passwordValida) {
+        return res.status(401).json({ error: "La contraseña actual es incorrecta" });
+      }
+      
+      // Validar nueva contraseña
+      if (password.length < 8 || password.length > 16) {
+        return res.status(400).json({ 
+          error: "La nueva contraseña debe tener entre 8 y 16 caracteres" 
+        });
+      }
+    }
 
     // validar campos según rol actual (no permitimos cambiar rol aquí salvo admin)
     const errores = validarCamposPorRol(
@@ -135,8 +176,17 @@ exports.actualizarPerfil = async (req, res) => {
       return res.status(403).json({ error: "No tienes permiso para cambiar el rol" });
     }
 
-    await usuario.update({ ...data, rol: rolUsuario });
-    res.json({ mensaje: "Perfil actualizado correctamente", usuario });
+    // Actualizar (password se encriptará automáticamente por el hook)
+    const updateData = { ...data, rol: rolUsuario };
+    if (password) {
+      updateData.password = password;
+    }
+
+    await usuario.update(updateData);
+    
+    // Devolver usuario sin password
+    const usuarioActualizado = await Usuario.findByPk(id);
+    res.json({ mensaje: "Perfil actualizado correctamente", usuario: usuarioActualizado });
   } catch (error) {
     console.error("Error en actualizarPerfil:", error);
     res.status(500).json({ error: "Error al actualizar perfil" });

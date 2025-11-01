@@ -7,6 +7,10 @@ const Sede = sequelize.define(
     nombre: { type: DataTypes.STRING(100), allowNull: false },
     direccion: { type: DataTypes.STRING(255), allowNull: false },
     ciudad: { type: DataTypes.STRING(100), allowNull: false },
+    telefono: { 
+      type: DataTypes.STRING(9), 
+      allowNull: true 
+    },
     imagen_url: {
       type: DataTypes.TEXT,
       allowNull: true

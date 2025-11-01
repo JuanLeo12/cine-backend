@@ -12,10 +12,22 @@ if (process.env.NODE_ENV !== "test") {
     .authenticate()
     .then(() => {
       console.log("✅ Conexión a PostgreSQL exitosa");
-      console.log("📦 Usando tablas existentes (sin sincronización)");
-      
-      // Invalidar todas las sesiones al iniciar
-      return invalidarTodasLasSesiones();
+
+      // Intentar sincronizar modelos con la base de datos en entorno de desarrollo
+      // Esto aplicará cambios necesarios en las tablas según los modelos (alter)
+      // En producción recomendamos mantener la gestión de migraciones fuera de la app.
+      return sequelize
+        .sync({ alter: true })
+        .then(() => {
+          console.log("📦 Tablas sincronizadas (sequelize.sync { alter: true })");
+          // Invalidar todas las sesiones al iniciar
+          return invalidarTodasLasSesiones();
+        })
+        .catch((syncErr) => {
+          console.error('⚠️ Error al sincronizar tablas:', syncErr);
+          // Aun así intentamos seguir y ejecutar la invalidación
+          return invalidarTodasLasSesiones();
+        });
     })
     .then(() => {
       app.listen(PORT, () => {
