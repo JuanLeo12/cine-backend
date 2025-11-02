@@ -13,18 +13,18 @@ if (process.env.NODE_ENV !== "test") {
     .then(() => {
       console.log("✅ Conexión a PostgreSQL exitosa");
 
-      // Intentar sincronizar modelos con la base de datos en entorno de desarrollo
-      // Esto aplicará cambios necesarios en las tablas según los modelos (alter)
-      // En producción recomendamos mantener la gestión de migraciones fuera de la app.
+      // Sincronizar modelos sin modificar estructura de tablas existentes
+      // alter: false asegura que no se modifiquen tablas en producción
+      // Para cambios de esquema, ejecutar SQL manualmente en Supabase
       return sequelize
-        .sync({ alter: true })
+        .sync({ alter: false })
         .then(() => {
-          console.log("📦 Tablas sincronizadas (sequelize.sync { alter: true })");
+          console.log("📦 Modelos sincronizados (sin modificar estructura)");
           // Invalidar todas las sesiones al iniciar
           return invalidarTodasLasSesiones();
         })
         .catch((syncErr) => {
-          console.error('⚠️ Error al sincronizar tablas:', syncErr);
+          console.error('⚠️ Error al sincronizar modelos:', syncErr);
           // Aun así intentamos seguir y ejecutar la invalidación
           return invalidarTodasLasSesiones();
         });
