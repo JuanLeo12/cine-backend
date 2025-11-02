@@ -5,12 +5,19 @@ exports.listarSalas = async (req, res) => {
   try {
     const salas = await Sala.findAll({
       where: { estado: "activa" },
-      attributes: ["id", "nombre", "filas", "columnas", "estado"],
+      attributes: ["id", "nombre", "tipo_sala", "filas", "columnas", "id_sede", "estado"],
       include: [
         { model: Sede, as: "sede", attributes: ["id", "nombre", "ciudad"] },
       ],
     });
-    res.json(salas);
+    
+    // Calcular capacidad como filas × columnas
+    const salasConCapacidad = salas.map(sala => ({
+      ...sala.toJSON(),
+      capacidad: sala.filas * sala.columnas
+    }));
+    
+    res.json(salasConCapacidad);
   } catch (error) {
     console.error("Error listarSalas:", error);
     res.status(500).json({ error: "Error al obtener salas" });

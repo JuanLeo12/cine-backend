@@ -131,7 +131,7 @@ exports.actualizarPerfil = async (req, res) => {
       
       const passwordValida = await usuario.validarPassword(passwordActual);
       if (!passwordValida) {
-        return res.status(401).json({ error: "La contraseña actual es incorrecta" });
+        return res.status(400).json({ error: "La contraseña actual es incorrecta" });
       }
       
       // Validar nueva contraseña
