@@ -31,6 +31,7 @@ const Publicidad = sequelize.define(
     },
     descripcion: { type: DataTypes.TEXT },
     imagen_url: { type: DataTypes.STRING(255) },
+    archivo_publicidad: { type: DataTypes.STRING(500) }, // Ruta del archivo subido
     estado: {
       type: DataTypes.STRING(20),
       allowNull: false,

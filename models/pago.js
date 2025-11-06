@@ -24,6 +24,9 @@ const Pago = sequelize.define(
 
     fecha_pago: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
 
+    // 🔧 Código QR generado para la orden
+    codigo_qr: { type: DataTypes.TEXT, allowNull: true },
+
     // 🔧 Simulación de datos adicionales según método
     numero_tarjeta: { type: DataTypes.STRING(20), allowNull: true },
     codigo_aprobacion: { type: DataTypes.STRING(20), allowNull: true },

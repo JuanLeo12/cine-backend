@@ -1,4 +1,4 @@
-const { TipoTicket, Usuario, TarifaCorporativa } = require("../models");
+const { TipoTicket, Usuario, TarifaCorporativa, TarifaSala } = require("../models");
 const { validarTipoTicket } = require("../utils/validacionesTipoTicket");
 
 // 📌 Obtener todos los tipos de ticket (público o autenticado)
@@ -26,6 +26,50 @@ exports.obtenerTipo = async (req, res) => {
   } catch (error) {
     console.error("Error obtenerTipo:", error);
     res.status(500).json({ error: "Error al obtener tipo de ticket" });
+  }
+};
+
+// 📌 Obtener tipos de tickets con precios según el tipo de sala
+exports.listarTiposPorSala = async (req, res) => {
+  try {
+    const { tipo_sala } = req.query;
+
+    if (!tipo_sala) {
+      return res.status(400).json({ error: "Se requiere el parámetro tipo_sala" });
+    }
+
+    if (!["2D", "3D", "4DX", "Xtreme"].includes(tipo_sala)) {
+      return res.status(400).json({ error: "Tipo de sala inválido" });
+    }
+
+    // Obtener tipos de tickets con sus tarifas específicas
+    const tipos = await TipoTicket.findAll({
+      where: { estado: "activo" },
+      attributes: ["id", "nombre", "precio_base"],
+      include: [
+        {
+          model: TarifaSala,
+          as: "tarifasSala",
+          where: { tipo_sala },
+          attributes: ["tipo_sala", "precio"],
+          required: true, // INNER JOIN - solo tipos con tarifa configurada
+        },
+      ],
+      order: [["id", "ASC"]],
+    });
+
+    // Formatear respuesta con el precio correcto
+    const tiposConPrecio = tipos.map((tipo) => ({
+      id: tipo.id,
+      nombre: tipo.nombre,
+      precio: parseFloat(tipo.tarifasSala[0].precio), // Precio según tipo de sala
+      tipo_sala: tipo.tarifasSala[0].tipo_sala,
+    }));
+
+    res.json(tiposConPrecio);
+  } catch (error) {
+    console.error("Error listarTiposPorSala:", error);
+    res.status(500).json({ error: "Error al obtener tipos de ticket por sala" });
   }
 };
 

@@ -1,5 +1,6 @@
 const { Publicidad, Usuario, Sede, Pago, OrdenCompra } = require("../models");
 const { validarPublicidad } = require("../utils/validacionesPublicidad");
+const { getFilePath, fileExists, getFileName } = require("../utils/fileStorage");
 const { Op } = require("sequelize");
 
 const publicidadInclude = [
@@ -99,6 +100,9 @@ exports.crearPublicidad = async (req, res) => {
       }
     }
 
+    // Obtener ruta del archivo si se subió
+    const archivoPublicidad = req.file ? `/uploads/publicidad/${req.file.filename}` : null;
+
     const nueva = await Publicidad.create({
       cliente: cliente || null,
       tipo,
@@ -107,6 +111,7 @@ exports.crearPublicidad = async (req, res) => {
       precio,
       descripcion,
       imagen_url,
+      archivo_publicidad: archivoPublicidad, // Guardar ruta del archivo
       visible: visible ?? true,
       id_usuario: req.user.id,
       id_sede,
@@ -243,5 +248,51 @@ exports.listarPublicidadPendiente = async (req, res) => {
   } catch (error) {
     console.error("Error listarPublicidadPendiente:", error);
     res.status(500).json({ error: "Error al obtener campañas pendientes" });
+  }
+};
+
+// 📌 Descargar archivo de publicidad
+exports.descargarArchivo = async (req, res) => {
+  try {
+    const publicidad = await Publicidad.findByPk(req.params.id);
+
+    if (!publicidad) {
+      return res.status(404).json({ error: "Campaña no encontrada" });
+    }
+
+    if (!publicidad.archivo_publicidad) {
+      return res.status(404).json({ error: "Esta campaña no tiene archivo adjunto" });
+    }
+
+    // Solo admins o el dueño pueden descargar archivos
+    if (req.user.rol !== "admin" && publicidad.id_usuario !== req.user.id) {
+      return res.status(403).json({ error: "No tienes permiso para descargar este archivo" });
+    }
+
+    // Usar utilidades de fileStorage para obtener la ruta
+    // Esto facilita la migración a almacenamiento en la nube en el futuro
+    const filePath = getFilePath(publicidad.archivo_publicidad);
+    
+    // Verificar que el archivo existe
+    if (!fileExists(publicidad.archivo_publicidad)) {
+      return res.status(404).json({ error: "El archivo no existe en el servidor" });
+    }
+
+    // Obtener el nombre del archivo
+    const fileName = getFileName(publicidad.archivo_publicidad);
+    
+    // Enviar archivo con headers apropiados para forzar descarga
+    // El navegador abrirá el diálogo "Guardar como" permitiendo al usuario elegir dónde guardarlo
+    res.download(filePath, fileName, (err) => {
+      if (err) {
+        console.error("Error al enviar archivo:", err);
+        if (!res.headersSent) {
+          res.status(500).json({ error: "Error al descargar el archivo" });
+        }
+      }
+    });
+  } catch (error) {
+    console.error("Error descargarArchivo:", error);
+    res.status(500).json({ error: "Error al descargar archivo" });
   }
 };

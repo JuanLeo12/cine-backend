@@ -104,7 +104,11 @@ exports.crearAlquiler = async (req, res) => {
 
     res
       .status(201)
-      .json({ mensaje: "Alquiler registrado correctamente", alquiler: nuevo });
+      .json({ 
+        mensaje: "Alquiler registrado correctamente", 
+        alquiler: nuevo,
+        id: nuevo.id // Incluir ID para crear boleta
+      });
   } catch (error) {
     console.error("Error crearAlquiler:", error);
     res.status(500).json({ error: "Error al registrar alquiler de sala" });

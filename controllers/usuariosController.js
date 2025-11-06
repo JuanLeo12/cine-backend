@@ -114,6 +114,9 @@ exports.obtenerPerfil = async (req, res) => {
 exports.actualizarPerfil = async (req, res) => {
   try {
     const id = req.user.id;
+    
+    console.log('📝 Actualizando perfil usuario:', id);
+    console.log('📦 Datos recibidos (tamaño):', JSON.stringify(req.body).length, 'caracteres');
 
     const usuario = await Usuario.scope("withPassword").findByPk(id);
     if (!usuario) return res.status(404).json({ error: "Usuario no encontrado" });
@@ -143,6 +146,7 @@ exports.actualizarPerfil = async (req, res) => {
     }
 
     // validar campos según rol actual (no permitimos cambiar rol aquí salvo admin)
+    console.log('✅ Validando campos para rol:', rolUsuario);
     const errores = validarCamposPorRol(
       rolUsuario,
       {
@@ -151,7 +155,10 @@ exports.actualizarPerfil = async (req, res) => {
       },
       true
     );
-    if (errores.length > 0) return res.status(400).json({ errores });
+    if (errores.length > 0) {
+      console.error('❌ Errores de validación:', errores);
+      return res.status(400).json({ errores });
+    }
 
     if (
       data.email &&
@@ -182,13 +189,16 @@ exports.actualizarPerfil = async (req, res) => {
       updateData.password = password;
     }
 
+    console.log('💾 Actualizando usuario en BD...');
     await usuario.update(updateData);
     
     // Devolver usuario sin password
     const usuarioActualizado = await Usuario.findByPk(id);
+    console.log('✅ Perfil actualizado correctamente');
     res.json({ mensaje: "Perfil actualizado correctamente", usuario: usuarioActualizado });
   } catch (error) {
-    console.error("Error en actualizarPerfil:", error);
+    console.error("❌ Error en actualizarPerfil:", error);
+    console.error("Stack:", error.stack);
     res.status(500).json({ error: "Error al actualizar perfil" });
   }
 };

@@ -1,0 +1,86 @@
+======================================================================
+📋 REPORTE DEL PROYECTO CINESTAR
+======================================================================
+
+Fecha de generación: 4/11/2025, 11:56:16
+Ubicación: D:\PROYECTO CINE STAR\cine-backend
+
+📦 INFORMACIÓN DEL PROYECTO
+----------------------------------------------------------------------
+Nombre: cine-backend
+Versión: 1.0.0
+Descripción: Sistema de gestión de cines
+
+🔐 VARIABLES DE ENTORNO
+----------------------------------------------------------------------
+✅ DB_NAME: cine_bd
+✅ DB_USER: postgres
+✅ DB_HOST: localhost
+✅ DB_PORT: 5432
+✅ PORT: 4000
+❌ NODE_ENV: NO CONFIGURADA
+✅ DB_PASSWORD: [CONFIGURADA - Sí]
+✅ JWT_SECRET: [CONFIGURADA - Sí]
+   Longitud: 6 caracteres ⚠️
+
+📁 ESTRUCTURA DEL PROYECTO
+----------------------------------------------------------------------
+✅ config/: 1 archivos
+✅ controllers/: 19 archivos
+✅ middleware/: 1 archivos
+✅ models/: 21 archivos
+✅ routes/: 19 archivos
+✅ utils/: 21 archivos
+
+📦 DEPENDENCIAS PRINCIPALES
+----------------------------------------------------------------------
+✅ express: ^5.1.0
+✅ sequelize: ^6.37.7
+✅ pg: ^8.16.3
+✅ bcrypt: ^6.0.0
+✅ jsonwebtoken: ^9.0.2
+✅ cors: ^2.8.5
+✅ dotenv: ^17.2.2
+
+💾 RESPALDOS
+----------------------------------------------------------------------
+⚠️  No hay respaldos disponibles
+💡 Crear uno con: node crear-respaldo.js
+
+🔧 SCRIPTS DISPONIBLES
+----------------------------------------------------------------------
+✅ npm run start
+   → node server.js
+✅ npm run dev
+   → nodemon server.js
+✅ npm run test
+   → cross-env NODE_ENV=test jest --runInBand --detectOpenHandles --setupFilesAfterEnv ./jest.setup.js --verbose
+
+📄 DOCUMENTACIÓN DE MIGRACIÓN
+----------------------------------------------------------------------
+✅ GUIA_MIGRACION_COMPLETA.md (16.16 KB)
+✅ CHECKLIST_MIGRACION.md (9.39 KB)
+✅ MIGRACION_RAPIDA.md (4.59 KB)
+✅ INFORMACION_PROYECTO.md (11.10 KB)
+✅ RESUMEN_MIGRACION.md (8.28 KB)
+
+🛠️ SCRIPTS DE UTILIDAD
+----------------------------------------------------------------------
+✅ verificar-pre-migracion.js
+✅ verificar-migracion.js
+✅ crear-respaldo.js
+✅ restaurar-respaldo.js
+✅ resetear-admin.js
+✅ verificar-servicios.js
+
+💡 RECOMENDACIONES ANTES DE MIGRAR
+----------------------------------------------------------------------
+1. Ejecutar: node verificar-pre-migracion.js
+2. Crear respaldo: node crear-respaldo.js
+3. Guardar archivos .env de forma segura
+4. Anotar JWT_SECRET para usarlo en nuevo dispositivo
+5. Consultar GUIA_MIGRACION_COMPLETA.md
+
+======================================================================
+✅ REPORTE GENERADO EXITOSAMENTE
+======================================================================

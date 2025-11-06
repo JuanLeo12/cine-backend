@@ -25,7 +25,7 @@ const Usuario = sequelize.define(
     direccion: { type: DataTypes.STRING(255) },
     fecha_nacimiento: { type: DataTypes.DATEONLY },
     genero: { type: DataTypes.STRING(20) },
-    foto_perfil: { type: DataTypes.STRING(255) },
+    foto_perfil: { type: DataTypes.TEXT }, // Cambiado a TEXT para soportar base64 de imágenes
     estado: { type: DataTypes.STRING(20), defaultValue: "activo" },
     ultimo_acceso: { type: DataTypes.DATE },
     email: {

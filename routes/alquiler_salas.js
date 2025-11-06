@@ -15,15 +15,15 @@ const {
 router.get(
   "/",
   autenticarUsuario,
-  permitirRoles("admin", "corporativo"),
+  permitirRoles("admin", "corporativo", "cliente"),
   listarAlquileres
 );
 
-// 📍 Crear → corporativo y admin
+// 📍 Crear → corporativo, cliente y admin
 router.post(
   "/",
   autenticarUsuario,
-  permitirRoles("corporativo", "admin"),
+  permitirRoles("corporativo", "cliente", "admin"),
   crearAlquiler
 );
 

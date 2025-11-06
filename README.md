@@ -1,6 +1,8 @@
-# 🎬 Cinestar - Backend API
+# 🎬 CineStar - Backend API
 
-Backend del sistema de gestión de cines desarrollado con Node.js, Express y PostgreSQL.
+API REST del sistema de gestión de cines desarrollado con Node.js, Express y PostgreSQL.
+
+---
 
 ## 📋 Requisitos
 
@@ -8,182 +10,305 @@ Backend del sistema de gestión de cines desarrollado con Node.js, Express y Pos
 - PostgreSQL v12 o superior
 - npm o yarn
 
-## 🚀 Instalación
+---
+
+## 🚀 Instalación Local
 
 ```bash
-# Instalar dependencias
+# 1. Clonar el repositorio
+git clone <tu-repo>
+cd cine-backend
+
+# 2. Instalar dependencias
 npm install
 
-# Configurar variables de entorno
+# 3. Configurar variables de entorno
 cp .env.example .env
-# Editar .env con tus credenciales de base de datos
+# Editar .env con tus credenciales
+
+# 4. Iniciar servidor
+npm run dev
 ```
 
-## ⚙️ Configuración de Base de Datos
+El servidor estará disponible en `http://localhost:4000`
 
-Edita el archivo `.env` con tus credenciales:
+---
+
+## ⚙️ Variables de Entorno
+
+Crea un archivo `.env` basado en `.env.example`:
 
 ```env
+DB_NAME=cine_bd
+DB_USER=postgres
+DB_PASSWORD=tu_password
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=cinestar_db
-DB_USER=tu_usuario
-DB_PASSWORD=tu_password
-JWT_SECRET=tu_clave_secreta
-PORT=5000
+BCRYPT_SALT_ROUNDS=10
+JWT_SECRET=tu_secreto_seguro
+JWT_EXPIRES_IN=1h
+PORT=4000
 ```
 
-## 🏃‍♂️ Ejecución
-
-```bash
-# Modo desarrollo (con nodemon)
-npm run dev
-
-# Modo producción
-npm start
-```
-
-El servidor estará disponible en `http://localhost:5000`
+---
 
 ## 📁 Estructura del Proyecto
 
 ```
 cine-backend/
 ├── config/          # Configuración de base de datos
-├── controllers/     # Controladores de rutas
-├── middleware/      # Middlewares (autenticación, etc.)
-├── models/          # Modelos de Sequelize
-├── routes/          # Definición de rutas
-├── utils/           # Utilidades y validaciones
-├── tools/           # Scripts de mantenimiento
-├── app.js           # Configuración de Express
-└── server.js        # Punto de entrada
+├── controllers/     # Lógica de negocio
+├── middleware/      # Autenticación y validaciones
+├── models/          # Modelos Sequelize (ORM)
+├── routes/          # Definición de endpoints
+├── utils/           # Funciones auxiliares
+├── scripts/         # Scripts de mantenimiento
+├── respaldos/       # Backups de la BD
+├── app.js           # Configuración Express
+├── server.js        # Punto de entrada
+└── package.json     # Dependencias
 ```
+
+---
 
 ## 🔐 Autenticación
 
-El sistema utiliza JWT (JSON Web Tokens) para la autenticación. Los tokens se envían en el header:
+### Sistema JWT
 
-```
-Authorization: Bearer <token>
+El sistema usa JSON Web Tokens para autenticación:
+
+```http
+Authorization: Bearer <tu_token_jwt>
 ```
 
 ### Roles de Usuario
 
-- **cliente**: Usuario regular (puede comprar tickets)
-- **corporativo**: Usuario empresarial (puede usar vales corporativos)
-- **admin**: Administrador del sistema (acceso completo)
+| Rol | Descripción | Permisos |
+|-----|-------------|----------|
+| `cliente` | Usuario regular | Compra de tickets y combos |
+| `corporativo` | Usuario empresarial | Funciones privadas, alquiler de salas |
+| `admin` | Administrador | Gestión completa del sistema |
 
-## 📡 API Endpoints Principales
+### Usuarios por Defecto
 
-### Autenticación
-- `POST /api/usuarios/register` - Registrar nuevo usuario
-- `POST /api/usuarios/login` - Iniciar sesión
-- `GET /api/usuarios/perfil` - Obtener perfil (requiere auth)
-- `PUT /api/usuarios/perfil` - Actualizar perfil (requiere auth)
+**Administrador:**
+- Email: `admin@cinestar.com`
+- Password: `Admin123`
 
-### Sedes
-- `GET /api/sedes` - Listar todas las sedes activas
-- `GET /api/sedes/:id` - Obtener sede por ID
-- `POST /api/sedes` - Crear sede (admin)
-- `PUT /api/sedes/:id` - Actualizar sede (admin)
-- `DELETE /api/sedes/:id` - Eliminar sede (admin)
+---
 
-### Películas
-- `GET /api/peliculas` - Listar películas
-- `GET /api/peliculas/:id` - Obtener película por ID
-- `POST /api/peliculas` - Crear película (admin)
-- `PUT /api/peliculas/:id` - Actualizar película (admin)
-- `DELETE /api/peliculas/:id` - Eliminar película (admin)
+## 📡 Endpoints Principales
 
-### Funciones
-- `GET /api/funciones` - Listar funciones
-- `GET /api/funciones/pelicula/:id` - Funciones de una película
-- `POST /api/funciones` - Crear función (admin)
-- `PUT /api/funciones/:id` - Actualizar función (admin)
-- `DELETE /api/funciones/:id` - Eliminar función (admin)
+### 🔑 Autenticación (`/api/usuarios`)
 
-### Combos
-- `GET /api/combos` - Listar combos disponibles
-- `POST /api/combos` - Crear combo (admin)
-- `PUT /api/combos/:id` - Actualizar combo (admin)
-- `DELETE /api/combos/:id` - Eliminar combo (admin)
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| POST | `/register` | Registrar usuario | No |
+| POST | `/login` | Iniciar sesión | No |
+| GET | `/perfil` | Obtener perfil | Sí |
+| PUT | `/perfil` | Actualizar perfil | Sí |
 
-### Compras
-- `POST /api/ordenes-compra` - Crear orden de compra
-- `GET /api/ordenes-compra/mis-ordenes` - Mis compras (requiere auth)
-- `POST /api/pagos` - Procesar pago
+### 🏢 Sedes (`/api/sedes`)
 
-### Vales Corporativos
-- `POST /api/vales-corporativos/validar` - Validar vale (corporativo)
-- `GET /api/vales-corporativos` - Listar vales (admin)
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| GET | `/` | Listar sedes activas | No |
+| GET | `/:id` | Obtener sede | No |
+| POST | `/` | Crear sede | Admin |
+| PUT | `/:id` | Actualizar sede | Admin |
+| DELETE | `/:id` | Eliminar sede | Admin |
+
+### 🎥 Películas (`/api/peliculas`)
+
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| GET | `/` | Listar películas | No |
+| GET | `/:id` | Obtener película | No |
+| POST | `/` | Crear película | Admin |
+| PUT | `/:id` | Actualizar película | Admin |
+| DELETE | `/:id` | Eliminar película | Admin |
+
+### 🎟️ Funciones (`/api/funciones`)
+
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| GET | `/` | Listar funciones | No |
+| GET | `/pelicula/:id` | Funciones por película | No |
+| GET | `/:id/asientos` | Asientos disponibles | No |
+| POST | `/` | Crear función | Admin |
+
+### 🍿 Combos (`/api/combos`)
+
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| GET | `/` | Listar combos | No |
+| POST | `/` | Crear combo | Admin |
+| PUT | `/:id` | Actualizar combo | Admin |
+
+### 🛒 Compras (`/api/ordenes-compra`)
+
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| POST | `/` | Crear orden | Sí |
+| GET | `/mis-ordenes` | Mis compras | Sí |
+| GET | `/:id` | Detalle de orden | Sí |
+
+### 💳 Pagos (`/api/pagos`)
+
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| POST | `/procesar` | Procesar pago | Sí |
+
+### 🏢 Servicios Corporativos
+
+#### Funciones Privadas (`/api/boletas-corporativas`)
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| POST | `/` | Crear boleta | Corporativo |
+| GET | `/` | Listar boletas | Corporativo |
+
+#### Alquiler de Salas (`/api/alquiler-salas`)
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| POST | `/` | Alquilar sala | Corporativo |
+| GET | `/` | Mis alquileres | Corporativo |
+
+---
 
 ## 🛠️ Scripts Útiles
 
-### Herramientas de Base de Datos
+### Respaldo y Restauración
 
 ```bash
-# Resetear base de datos (mantiene usuarios)
-node tools/reset-completo-excepto-usuarios.js
+# Crear respaldo completo de la BD
+node scripts/crear-respaldo-completo.js
 
-# Resetear contraseñas corporativas
-node tools/reset-corporativo-passwords.js
-
-# Verificar sedes en BD
-node tools/verificar-sedes-actuales.js
-
-# Agregar columna teléfono a sedes
-node tools/agregar-columna-telefono-sedes.js
+# Restaurar desde respaldo
+node scripts/restaurar-respaldo-completo.js respaldos/respaldo-YYYY-MM-DD.json
 ```
+
+### Mantenimiento
+
+```bash
+# Resetear contraseña del admin
+node scripts/resetear-admin.js
+
+# Verificar estado de servicios
+node scripts/verificar-servicios.js
+```
+
+---
+
+## 🗄️ Modelos de Datos
+
+### Usuario
+```javascript
+{
+  id, nombre, apellido, email, password_hash,
+  telefono, fecha_nacimiento, rol, foto_perfil,
+  fecha_registro, estado
+}
+```
+
+### Película
+```javascript
+{
+  id, titulo, sinopsis, duracion, genero,
+  clasificacion, director, reparto, idioma,
+  subtitulos, trailer_url, poster_url,
+  tipo (cartelera/proxEstreno), estado
+}
+```
+
+### Función
+```javascript
+{
+  id, id_pelicula, id_sala, fecha, hora_inicio,
+  hora_fin, precio_base, estado
+}
+```
+
+### Combo
+```javascript
+{
+  id, nombre, descripcion, precio, imagen_url,
+  tipo (combo/individual), disponible
+}
+```
+
+### Orden de Compra
+```javascript
+{
+  id, id_usuario, fecha_compra, monto_total,
+  estado (pendiente/pagada/cancelada)
+}
+```
+
+---
 
 ## 🔒 Validaciones
 
-### Sede
-- Nombre: 3-100 caracteres
-- Dirección: 5-255 caracteres
-- Ciudad: 2-100 caracteres
-- Teléfono: Exactamente 9 dígitos (opcional)
-- Imagen URL: URL válida (opcional)
-
 ### Usuario
-- Email: Formato válido
-- Contraseña: 8-16 caracteres
-- Nombre: 3-100 caracteres
+- Email: formato válido
+- Contraseña: 8-16 caracteres, mínimo 1 mayúscula y 1 número
 - Teléfono: 9 dígitos numéricos
+- Nombre/Apellido: 2-50 caracteres
 
 ### Película
-- Título: 1-255 caracteres
-- Duración: Mínimo 1 minuto
-- Clasificación: G, PG, PG-13, R, NC-17
+- Título: 1-200 caracteres
+- Duración: 1-500 minutos
+- Clasificación: `G`, `PG`, `PG-13`, `R`, `NC-17`
 
-## 📝 Modelos Principales
+### Función
+- Fecha: no puede ser en el pasado
+- Hora: formato HH:MM
+- Precio: mayor a 0
 
-- **Usuario**: Gestión de usuarios y autenticación
-- **Sede**: Ubicaciones de cines
-- **Sala**: Salas de cada sede (2D, 3D, 4DX, Xtreme)
-- **Pelicula**: Catálogo de películas
-- **Funcion**: Funciones/horarios de películas
-- **AsientoFuncion**: Asientos disponibles por función
-- **OrdenCompra**: Órdenes de compra
-- **Pago**: Pagos procesados
-- **Combo**: Combos de dulcería
-- **ValeCorporativo**: Vales para clientes corporativos
+---
+
+## ☁️ Despliegue a la Nube
+
+Ver la guía completa en [`DEPLOY.md`](../DEPLOY.md) para instrucciones detalladas de despliegue en Railway, Render, Vercel, etc.
+
+### Resumen rápido:
+
+1. **Crear respaldo de datos actuales:**
+   ```bash
+   node scripts/crear-respaldo-completo.js
+   ```
+
+2. **Desplegar backend en Railway/Render**
+3. **Desplegar frontend en Vercel/Netlify**
+4. **Restaurar datos en la nube:**
+   ```bash
+   railway run node scripts/restaurar-respaldo-completo.js respaldos/archivo.json
+   ```
+
+---
 
 ## 🐛 Solución de Problemas
 
-### Error: "no existe la columna X"
-Ejecuta las migraciones o sincroniza los modelos:
-```bash
-# En app.js, usa:
-sequelize.sync({ alter: true })
-```
+### Error de conexión a la BD
+✅ Verifica credenciales en `.env`  
+✅ Asegúrate que PostgreSQL esté corriendo  
+✅ Revisa firewall/puertos
 
 ### Error de autenticación
-Verifica que el JWT_SECRET esté configurado en `.env`
+✅ Verifica que `JWT_SECRET` esté configurado  
+✅ Revisa formato del token en headers
 
-### Problemas de conexión a BD
-Verifica las credenciales en `.env` y que PostgreSQL esté corriendo
+### Tabla/columna no existe
+✅ Ejecuta sincronización: `sequelize.sync({ alter: true })`  
+✅ O ejecuta migraciones pendientes
+
+---
 
 ## 📄 Licencia
 
-Proyecto educativo - Cinestar © 2025
+MIT License - CineStar © 2025
+
+---
+
+## 📞 Soporte
+
+Para más información, consulta [`DEPLOY.md`](../DEPLOY.md) o la documentación del proyecto.

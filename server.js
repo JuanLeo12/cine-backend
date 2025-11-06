@@ -30,9 +30,15 @@ if (process.env.NODE_ENV !== "test") {
         });
     })
     .then(() => {
-      app.listen(PORT, () => {
+      console.log("🔵 Intentando iniciar el servidor...");
+      const server = app.listen(PORT, '0.0.0.0', () => {
         console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
         console.log(`🔒 Sesiones anteriores invalidadas - usuarios deben volver a iniciar sesión`);
+        console.log(`✅ Servidor REALMENTE escuchando en puerto ${PORT}`);
+      });
+      
+      server.on('error', (err) => {
+        console.error("❌ Error al iniciar servidor:", err);
       });
     })
     .catch((err) => {

@@ -13,6 +13,7 @@ const {
   Pelicula,
   Sala,
   Sede,
+  TarifaSala,
 } = require("../models");
 const { ValeCorporativo } = require('../models');
 const { validarOrdenCompra } = require("../utils/validacionesOrdenCompra");
@@ -36,7 +37,7 @@ const ordenInclude = [
         model: Sala,
         as: "sala",
         required: false,
-        attributes: ["id", "nombre"],
+        attributes: ["id", "nombre", "tipo_sala"],
         include: [
           {
             model: Sede,
@@ -98,7 +99,17 @@ const ordenInclude = [
 exports.listarOrdenes = async (req, res) => {
   try {
     const where = req.user.rol === 'admin' ? {} : { id_usuario: req.user.id };
-    const ordenes = await OrdenCompra.findAll({ where, include: ordenInclude, order: [['createdAt', 'DESC']] });
+    console.log(`🔍 Usuario ${req.user.id} (${req.user.rol}) solicitando órdenes. Filtro:`, where);
+    
+    const ordenes = await OrdenCompra.findAll({ 
+      where, 
+      include: ordenInclude, 
+      order: [['createdAt', 'DESC']] 
+    });
+    
+    console.log(`📦 Encontradas ${ordenes.length} órdenes para usuario ${req.user.id}`);
+    console.log('📋 IDs de órdenes:', ordenes.map(o => ({ id: o.id, id_usuario: o.id_usuario })));
+    
     res.json(ordenes);
   } catch (error) {
     console.error('Error listarOrdenes:', error);
@@ -200,16 +211,43 @@ exports.confirmarOrden = async (req, res) => {
       let ticketsSubtotal = 0;
       let combosSubtotal = 0;
 
-      for (const item of tickets) {
-        const tipoTicket = await TipoTicket.findByPk(item.id_tipo_ticket);
-        if (!tipoTicket) return res.status(404).json({ error: `Tipo de ticket ${item.id_tipo_ticket} no encontrado` });
-        ticketsSubtotal += tipoTicket.precio_base * item.cantidad;
+      // Obtener tipo de sala de la función (si existe)
+      let tipoSala = '2D'; // Default
+      if (orden.id_funcion) {
+        const funcion = await Funcion.findByPk(orden.id_funcion, {
+          include: [{ model: Sala, as: 'sala', attributes: ['tipo_sala'] }]
+        });
+        if (funcion && funcion.sala) {
+          tipoSala = funcion.sala.tipo_sala;
+          console.log('🎬 Tipo de sala de la función:', tipoSala);
+        }
       }
 
-      for (const item of combos) {
-        const combo = await Combo.findByPk(item.id_combo);
-        if (!combo) return res.status(404).json({ error: `Combo ${item.id_combo} no encontrado` });
-        combosSubtotal += combo.precio * item.cantidad;
+      // Solo procesar tickets si hay alguno
+      if (tickets && tickets.length > 0) {
+        for (const item of tickets) {
+          const tipoTicket = await TipoTicket.findByPk(item.id_tipo_ticket);
+          if (!tipoTicket) return res.status(404).json({ error: `Tipo de ticket ${item.id_tipo_ticket} no encontrado` });
+          
+          // Buscar precio según tipo de sala
+          const tarifa = await TarifaSala.findOne({
+            where: { id_tipo_ticket: item.id_tipo_ticket, tipo_sala: tipoSala }
+          });
+          
+          const precioUnitario = tarifa ? parseFloat(tarifa.precio) : parseFloat(tipoTicket.precio_base);
+          console.log(`💰 Precio para ${tipoTicket.nombre} en sala ${tipoSala}: S/ ${precioUnitario}`);
+          
+          ticketsSubtotal += precioUnitario * item.cantidad;
+        }
+      }
+
+      // Solo procesar combos si hay alguno
+      if (combos && combos.length > 0) {
+        for (const item of combos) {
+          const combo = await Combo.findByPk(item.id_combo);
+          if (!combo) return res.status(404).json({ error: `Combo ${item.id_combo} no encontrado` });
+          combosSubtotal += combo.precio * item.cantidad;
+        }
       }
 
       let montoTotal = ticketsSubtotal + combosSubtotal;
@@ -230,40 +268,70 @@ exports.confirmarOrden = async (req, res) => {
         montoTotal = Math.max(0, montoTotal - descuentoAplicado);
       }
 
-      // Crear OrdenTicket
+      // Crear OrdenTicket (solo si hay tickets)
       let ordenTicketPrimero = null;
-      for (const item of tickets) {
-        const tipoTicket = await TipoTicket.findByPk(item.id_tipo_ticket);
-        const ordenTicket = await OrdenTicket.create({
-          id_orden_compra: orden.id,
-          id_tipo_ticket: item.id_tipo_ticket,
-          cantidad: item.cantidad,
-          precio_unitario: tipoTicket.precio_base,
-          descuento: 0,
-        });
-        if (!ordenTicketPrimero) ordenTicketPrimero = ordenTicket;
+      if (tickets && tickets.length > 0) {
+        for (const item of tickets) {
+          const tipoTicket = await TipoTicket.findByPk(item.id_tipo_ticket);
+          
+          // Buscar precio según tipo de sala
+          const tarifa = await TarifaSala.findOne({
+            where: { id_tipo_ticket: item.id_tipo_ticket, tipo_sala: tipoSala }
+          });
+          
+          const precioUnitario = tarifa ? parseFloat(tarifa.precio) : parseFloat(tipoTicket.precio_base);
+          
+          const ordenTicket = await OrdenTicket.create({
+            id_orden_compra: orden.id,
+            id_tipo_ticket: item.id_tipo_ticket,
+            cantidad: item.cantidad,
+            precio_unitario: precioUnitario,
+            descuento: 0,
+          });
+          if (!ordenTicketPrimero) ordenTicketPrimero = ordenTicket;
+        }
       }
 
       // Asociar asientos y crear Tickets
       if (orden.id_funcion && asientos.length > 0) {
         if (!ordenTicketPrimero) return res.status(400).json({ error: 'No se pudo encontrar la orden de tickets' });
+        
         for (const { fila, numero } of asientos) {
           const asientoFuncion = await AsientoFuncion.findOne({ where: { id_funcion: orden.id_funcion, fila, numero } });
           if (!asientoFuncion) return res.status(400).json({ error: `El asiento ${fila}${numero} no existe` });
 
           await asientoFuncion.update({ estado: 'ocupado', id_usuario_bloqueo: req.user.id, bloqueo_expira_en: null });
 
+          // Usar el precio del primer tipo de ticket con tarifa de sala
           const tipoTicketPrincipal = await TipoTicket.findByPk(tickets[0].id_tipo_ticket);
-          await Ticket.create({ id_orden_ticket: ordenTicketPrimero.id, id_funcion: orden.id_funcion, id_asiento: asientoFuncion.id, precio: tipoTicketPrincipal.precio_base });
+          const tarifaPrincipal = await TarifaSala.findOne({
+            where: { id_tipo_ticket: tickets[0].id_tipo_ticket, tipo_sala: tipoSala }
+          });
+          const precioPrincipal = tarifaPrincipal ? parseFloat(tarifaPrincipal.precio) : parseFloat(tipoTicketPrincipal.precio_base);
+          
+          await Ticket.create({ 
+            id_orden_ticket: ordenTicketPrimero.id, 
+            id_funcion: orden.id_funcion, 
+            id_asiento: asientoFuncion.id, 
+            precio: precioPrincipal 
+          });
         }
       }
 
-      // Crear OrdenCombo
+      // Crear OrdenCombo (solo si hay combos)
       let ordenComboPrimero = null;
-      for (const item of combos) {
-        const combo = await Combo.findByPk(item.id_combo);
-        const ordenCombo = await OrdenCombo.create({ id_orden_compra: orden.id, id_combo: item.id_combo, cantidad: item.cantidad, precio_unitario: combo.precio, descuento: 0 });
-        if (!ordenComboPrimero) ordenComboPrimero = ordenCombo;
+      if (combos && combos.length > 0) {
+        for (const item of combos) {
+          const combo = await Combo.findByPk(item.id_combo);
+          const ordenCombo = await OrdenCombo.create({ 
+            id_orden_compra: orden.id, 
+            id_combo: item.id_combo, 
+            cantidad: item.cantidad, 
+            precio_unitario: combo.precio, 
+            descuento: 0 
+          });
+          if (!ordenComboPrimero) ordenComboPrimero = ordenCombo;
+        }
       }
 
       // Aplicar descuento en registro correspondiente
@@ -285,7 +353,11 @@ exports.confirmarOrden = async (req, res) => {
 
       const ordenCompleta = await OrdenCompra.findByPk(orden.id, { include: ordenInclude });
 
-      res.json({ mensaje: '✅ Compra confirmada exitosamente (simulación)', orden: ordenCompleta, pago: { ...pago.toJSON(), nota: 'Este es un pago simulado. No se procesó ningún cargo real.' } });
+      res.json({ 
+        mensaje: '✅ Compra confirmada exitosamente (simulación)', 
+        orden: ordenCompleta, 
+        pago: ordenCompleta.pago // Usar el pago de ordenCompleta que incluye metodoPago
+      });
     } catch (error) {
       console.error('Error confirmarOrden:', error);
       res.status(500).json({ error: 'Error al confirmar orden de compra' });

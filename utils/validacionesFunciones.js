@@ -32,10 +32,12 @@ exports.validarFuncion = async (req, res, next) => {
 
     // Validaciones de coherencia privada/pública
     if (es_privada) {
-      if (!precio_corporativo || !id_cliente_corporativo) {
+      // Para funciones privadas, el cliente corporativo puede ser asignado automáticamente
+      // en el controller si no se proporciona (para clientes/corporativos que reservan)
+      // Solo validamos que si se envía precio_corporativo, sea válido
+      if (precio_corporativo && precio_corporativo <= 0) {
         return res.status(400).json({
-          error:
-            "Funciones privadas requieren cliente corporativo y precio corporativo",
+          error: "El precio corporativo debe ser mayor a 0",
         });
       }
     } else {

@@ -1,4 +1,5 @@
 const { Sala, Sede, Funcion, AlquilerSala } = require("../models");
+const { verificarDisponibilidadSala } = require("../utils/disponibilidadSalas");
 
 // 📌 Listar salas activas
 exports.listarSalas = async (req, res) => {
@@ -112,5 +113,50 @@ exports.eliminarSala = async (req, res) => {
   } catch (error) {
     console.error("Error eliminarSala:", error);
     res.status(500).json({ error: "Error al eliminar sala" });
+  }
+};
+
+// 📌 Verificar disponibilidad de sala en un horario específico
+exports.verificarDisponibilidad = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { fecha, hora_inicio, hora_fin } = req.query;
+
+    // Validar parámetros requeridos
+    if (!fecha || !hora_inicio || !hora_fin) {
+      return res.status(400).json({ 
+        error: "Parámetros requeridos: fecha, hora_inicio, hora_fin" 
+      });
+    }
+
+    // Verificar que la sala exista
+    const sala = await Sala.findOne({
+      where: { id, estado: "activa" }
+    });
+
+    if (!sala) {
+      return res.status(404).json({ error: "Sala no encontrada o inactiva" });
+    }
+
+    // Verificar disponibilidad
+    const resultado = await verificarDisponibilidadSala(
+      id,
+      fecha,
+      hora_inicio,
+      hora_fin
+    );
+
+    res.json({
+      disponible: resultado.disponible,
+      conflictos: resultado.conflictos,
+      sala: {
+        id: sala.id,
+        nombre: sala.nombre,
+        tipo_sala: sala.tipo_sala
+      }
+    });
+  } catch (error) {
+    console.error("Error verificarDisponibilidad:", error);
+    res.status(500).json({ error: "Error al verificar disponibilidad" });
   }
 };

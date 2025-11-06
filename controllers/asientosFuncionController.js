@@ -82,8 +82,22 @@ exports.bloquearAsiento = async (req, res) => {
         const ahora = new Date();
         const bloqueadoPorMi = existente.id_usuario_bloqueo === req.user.id;
         const estaExpirado = existente.bloqueo_expira_en && new Date(existente.bloqueo_expira_en) < ahora;
+        const sinUsuario = !existente.id_usuario_bloqueo;
 
-        // 2A: Mi bloqueo expirado - renovar
+        // 2A: Bloqueado sin usuario (huérfano) - tomar posesión
+        if (sinUsuario) {
+          console.log(`🔄 Tomando posesión de asiento huérfano: ${fila}${numero} - Usuario ${req.user.id}`);
+          await existente.update({
+            id_usuario_bloqueo: req.user.id,
+            bloqueo_expira_en: new Date(Date.now() + 5 * 60 * 1000),
+          });
+          return res.json({ 
+            mensaje: "Asiento bloqueado (estaba sin usuario)", 
+            asiento: existente 
+          });
+        }
+
+        // 2B: Mi bloqueo expirado - renovar
         if (bloqueadoPorMi && estaExpirado) {
           console.log(`🔄 Renovando bloqueo expirado: ${fila}${numero} - Usuario ${req.user.id}`);
           await existente.update({
@@ -95,7 +109,7 @@ exports.bloquearAsiento = async (req, res) => {
           });
         }
 
-        // 2B: Mi bloqueo vigente - extender
+        // 2C: Mi bloqueo vigente - extender
         if (bloqueadoPorMi && !estaExpirado) {
           console.log(`⏱️ Extendiendo bloqueo vigente: ${fila}${numero} - Usuario ${req.user.id}`);
           await existente.update({
@@ -107,7 +121,7 @@ exports.bloquearAsiento = async (req, res) => {
           });
         }
 
-        // 2C: Bloqueado por otro usuario y expirado - tomar posesión
+        // 2D: Bloqueado por otro usuario y expirado - tomar posesión
         if (!bloqueadoPorMi && estaExpirado) {
           console.log(`🔄 Tomando posesión de asiento expirado: ${fila}${numero} - Usuario ${req.user.id}`);
           await existente.update({
@@ -120,7 +134,7 @@ exports.bloquearAsiento = async (req, res) => {
           });
         }
         
-        // 2D: Bloqueado por otro usuario y NO expirado - rechazar
+        // 2E: Bloqueado por otro usuario y NO expirado - rechazar
         if (!bloqueadoPorMi && !estaExpirado) {
           return res
             .status(409)

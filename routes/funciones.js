@@ -45,7 +45,7 @@ router.patch(
 router.post(
   "/",
   autenticarUsuario,
-  permitirRoles("admin"),
+  permitirRoles("admin", "cliente", "corporativo"),
   validarFuncion,
   crearFuncion
 );

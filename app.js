@@ -30,7 +30,11 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(express.json());
+app.use(express.json({ limit: '10mb' })); // 📸 Aumentado para soportar imágenes en base64
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
+// 📁 Servir archivos estáticos (uploads)
+app.use('/uploads', express.static('uploads'));
 
 // Tiempo de inicio del servidor para invalidar sesiones
 const SERVER_START_TIME = Date.now();
@@ -63,6 +67,7 @@ app.use('/ordenes_tickets', require('./routes/ordenes_tickets'));
 app.use('/ordenes_combos', require('./routes/ordenes_combos'));
 app.use('/tickets', require('./routes/tickets'));
 app.use('/tarifas_corporativas', require('./routes/tarifas_corporativas'));
+app.use('/boletas-corporativas', require('./routes/boletasCorporativas'));
 
 // Ruta base
 app.get("/", (req, res) => {

@@ -16,7 +16,19 @@ const ValeCorporativo = sequelize.define(
       validate: { min: 0.01 },
     },
     fecha_expiracion: { type: DataTypes.DATEONLY, allowNull: false },
-    usado: { type: DataTypes.BOOLEAN, defaultValue: false },
+    cantidad_usos: { 
+      type: DataTypes.INTEGER, 
+      allowNull: false,
+      defaultValue: 1,
+      validate: { min: 1 }
+    }, // Cantidad total de usos del vale
+    usos_disponibles: { 
+      type: DataTypes.INTEGER, 
+      allowNull: false,
+      defaultValue: 1,
+      validate: { min: 0 }
+    }, // Usos restantes
+    usado: { type: DataTypes.BOOLEAN, defaultValue: false }, // Se marca true cuando usos_disponibles = 0
     id_pago: { type: DataTypes.INTEGER, allowNull: true },
     id_orden_compra: { type: DataTypes.INTEGER, allowNull: true },
   },

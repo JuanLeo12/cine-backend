@@ -7,6 +7,7 @@ const {
 const {
   listarTipos,
   obtenerTipo,
+  listarTiposPorSala,
   crearTipo,
   actualizarTipo,
   eliminarTipo,
@@ -14,6 +15,7 @@ const {
 
 // 📍 Públicos
 router.get("/", listarTipos);
+router.get("/por-sala", listarTiposPorSala); // Nueva ruta para precios por sala
 router.get("/:id", obtenerTipo);
 
 // 📍 Solo admin

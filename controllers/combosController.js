@@ -4,9 +4,17 @@ const { validarCombo } = require("../utils/validacionesCombo");
 // 📌 Listar combos
 exports.listarCombos = async (req, res) => {
   try {
+    const { tipo } = req.query;
+    
+    // Construir condiciones de filtrado
+    const where = { estado: "activo" };
+    if (tipo && ["popcorn", "bebidas", "combos"].includes(tipo)) {
+      where.tipo = tipo;
+    }
+
     const combos = await Combo.findAll({
-      where: { estado: "activo" },
-      attributes: ["id", "nombre", "descripcion", "precio", "imagen_url"],
+      where,
+      attributes: ["id", "nombre", "descripcion", "precio", "imagen_url", "tipo"],
       order: [["nombre", "ASC"]],
     });
     res.json(combos);
@@ -33,10 +41,15 @@ exports.obtenerCombo = async (req, res) => {
 // 📌 Crear combo
 exports.crearCombo = async (req, res) => {
   try {
-    const { nombre, descripcion, precio, imagen_url } = req.body;
+    const { nombre, descripcion, precio, imagen_url, tipo } = req.body;
 
     const errores = validarCombo({ nombre, precio });
     if (errores.length > 0) return res.status(400).json({ errores });
+
+    // Validar tipo si se proporciona
+    if (tipo && !["popcorn", "bebidas", "combos"].includes(tipo)) {
+      return res.status(400).json({ error: "Tipo inválido. Debe ser: popcorn, bebidas o combos" });
+    }
 
     const existe = await Combo.findOne({ where: { nombre: nombre.trim() } });
     if (existe) return res.status(409).json({ error: "El combo ya existe" });
@@ -46,6 +59,7 @@ exports.crearCombo = async (req, res) => {
       descripcion: descripcion?.trim() || null,
       precio,
       imagen_url: imagen_url?.trim() || null,
+      tipo: tipo || "combos",
     });
 
     res

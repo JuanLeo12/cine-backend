@@ -1,0 +1,4570 @@
+{
+  "sedes": [
+    {
+      "id": 52,
+      "nombre": "CINESTAR ARENALES",
+      "direccion": "Arenales 1756 - Centro comercial Arenales - 5to piso",
+      "ciudad": "LINCE",
+      "estado": "activo",
+      "imagen_url": "https://elcomercio.pe/resizer/CEcjJmjHrESJZmU3lxQXzYvmQps=/3024x2016/smart/filters:format(jpeg):quality(75)/cloudfront-us-east-1.images.arcpublishing.com/elcomercio/WQBTYHGPVNFUDFHZ74V6QW42YY.jpg",
+      "telefono": "986215989"
+    },
+    {
+      "id": 53,
+      "nombre": "CINESTAR SUR",
+      "direccion": "Av. los Héroes 240, San Juan de Miraflores 15801",
+      "ciudad": "SJM",
+      "estado": "activo",
+      "imagen_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4a4duotnqCsuDnX9cdRlBoKwCiY8JGJHwnQ&s",
+      "telefono": "987654321"
+    },
+    {
+      "id": 54,
+      "nombre": "CINESTAR CHOSICA",
+      "direccion": "Ca.Argentina, Sub Lote 02, parte del Potrero Sauce Grande, Lurigancho-Chosica, Lima",
+      "ciudad": "Chosica",
+      "estado": "activo",
+      "imagen_url": "https://elcomercio.pe/resizer/5MdZ-efUOfd_GeopR83tqkgcr28=/1200x900/smart/filters:format(jpeg):quality(75)/cloudfront-us-east-1.images.arcpublishing.com/elcomercio/M3GNOVPB5BEI7DXKBKNUHSFMKQ.jpg",
+      "telefono": "987654324"
+    },
+    {
+      "id": 55,
+      "nombre": "CINESTAR TINGO MARÍA",
+      "direccion": "Cajamarca 901, Tingo María 10131",
+      "ciudad": "Tingo María",
+      "estado": "activo",
+      "imagen_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRApLybkqAAs5TXPHGqv8NsISFImw4gMlMLug&s",
+      "telefono": "951623784"
+    },
+    {
+      "id": 56,
+      "nombre": "CINESTAR TARAPOTO",
+      "direccion": "Av. Peru 594, Tarapoto 22201",
+      "ciudad": "Tarapoto",
+      "estado": "activo",
+      "imagen_url": "https://www.televisiontarapoto.pe/wp-content/uploads/2025/02/maxresdefault-216.jpg",
+      "telefono": "985763249"
+    },
+    {
+      "id": 57,
+      "nombre": "CINESTAR SULLANA",
+      "direccion": "Marcelino Champagnat 1112, Sullana 20100",
+      "ciudad": "Sullana",
+      "estado": "activo",
+      "imagen_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUt-_NwJqOnhWnTq5gviYN8cgg5AvmEMx_9g&s",
+      "telefono": "963496875"
+    },
+    {
+      "id": 58,
+      "nombre": "CINESTAR CHIMBOTE",
+      "direccion": "Av. Francisco Bolognesi 277, Chimbote 02803",
+      "ciudad": "Chimbote",
+      "estado": "activo",
+      "imagen_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqQJD7BEpMRJAp1J7CbMKnelA7FFv8qE5r2w&s",
+      "telefono": "986798503"
+    },
+    {
+      "id": 59,
+      "nombre": "CINESTAR PORTEÑO",
+      "direccion": "Av Saenz Peña 342, Callao 07021",
+      "ciudad": "Callao",
+      "estado": "activo",
+      "imagen_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiF7M4sy8vi2iKdvBt9Rd57pfqjiEd0Zc5YnQzr_HsmU4ATX86bZdzuE_nwERvBJMf9uEhYB4KpC79iEHBvzTjab8glBjROUZjV7tW9QZQ-vDhjd05JIYyEGD6mdGcV1CE6z34Hng9Sw6rP/s280/035.JPG",
+      "telefono": "963980175"
+    },
+    {
+      "id": 60,
+      "nombre": "CINESTAR EXCELSIOR",
+      "direccion": "Jirón de la Unión Nº 780 - Cercado de Lima",
+      "ciudad": "Cercado de Lima",
+      "estado": "activo",
+      "imagen_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhOpTgTx_bvs909kpezfQldY-F08IL2VVabynQkhs0Dsb1_2pdSXp7G-eyhVfrQKCcKA2YCdEL4yRE9yeHFjkJ3tN384WUZGUgcM6Wu2XYU60y57px8QqLSzBIPRlmVjuQctD1tuJxH25U6/s1600/IMG_20141103_160952.jpg",
+      "telefono": "987430897"
+    },
+    {
+      "id": 61,
+      "nombre": "CINESTAR AYACUCHO",
+      "direccion": "Jr. Grau No. 279 esquina con Jr. Carlos F. Vivanco Ayacucho",
+      "ciudad": "Ayacucho",
+      "estado": "activo",
+      "imagen_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAo52R4NLNXsqgOYvqSPUoNUvXsTXNg8w45A&s",
+      "telefono": "903708964"
+    },
+    {
+      "id": 62,
+      "nombre": "CINESTAR ILO",
+      "direccion": "Av. La Costanera 12, Ilo",
+      "ciudad": "Ilo",
+      "estado": "activo",
+      "imagen_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMzp870lSJLF-svLztfMuuodDl70E0dxsAUAZF-5A9Uk3DAVf-hZ9LOAz8aFuBxgpVm-s&usqp=CAU",
+      "telefono": "963098967"
+    },
+    {
+      "id": 63,
+      "nombre": "CINESTAR MOQUEGUA",
+      "direccion": "Av. Circunvalación N°1A - 1 Moquegua",
+      "ciudad": "Moquegua",
+      "estado": "activo",
+      "imagen_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrAB50L_QsyygEE2EIKLfKW9pyNwOr6Ia1ZA&s",
+      "telefono": "986098707"
+    },
+    {
+      "id": 65,
+      "nombre": "CINESTAR SJL",
+      "direccion": "Av. Los Próceres de la Independencia 1632 - San Juan de Lurigancho",
+      "ciudad": "SJL",
+      "estado": "activo",
+      "imagen_url": "https://www.sanjuandelurigancho.com/uploads/imgnoticias/art-20180226-599d.jpg",
+      "telefono": "906870698"
+    },
+    {
+      "id": 66,
+      "nombre": "CINESTAR BREÑA",
+      "direccion": "Jr. Iquique Nº 315 - Breña Av. Alfonso Ugarte y Venezuela",
+      "ciudad": "Breña",
+      "estado": "activo",
+      "imagen_url": "https://larepublica.cronosmedia.glr.pe/migration/images/IOMOQWQWHREJRHRSBPGHTUCMZM.jpg",
+      "telefono": "906378509"
+    },
+    {
+      "id": 67,
+      "nombre": "CINESTAR CHORRILLOS",
+      "direccion": "AV. GUARDIA CIVIL 390 URB. PARCELACION SEMI RUSTICA LA CAMPIÑA MZ.E IT.16- CHORRILLOS",
+      "ciudad": "Chorrillos",
+      "estado": "activo",
+      "imagen_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShz_nXoq0kYfQj2nBcHtHlMKbf4IOVmDOnbA&s",
+      "telefono": "960784520"
+    },
+    {
+      "id": 68,
+      "nombre": "CINESTAR UNI",
+      "direccion": "Av. Gerardo Unger s/n cuadra 16 – Rímac (Altura de Metro)",
+      "ciudad": "Rímac",
+      "estado": "activo",
+      "imagen_url": "https://peruretail.sfo3.cdn.digitaloceanspaces.com/wp-content/uploads/Plantillas-Facebook-2-28-17.png",
+      "telefono": "963032037"
+    },
+    {
+      "id": 64,
+      "nombre": "CINESTAR COMAS",
+      "direccion": "Av.Tupac Amaru Cuadra 39 S/N - La Pascana (Altura de Plaza Vea)",
+      "ciudad": "Comas",
+      "estado": "activo",
+      "imagen_url": "https://larepublica.cronosmedia.glr.pe/migration/images/IOMOQWQWHREJRHRSBPGHTUCMZM.jpg",
+      "telefono": "906784950"
+    }
+  ],
+  "salas": [
+    {
+      "id": 106,
+      "nombre": "Sala 5",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 53,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 107,
+      "nombre": "Sala 6",
+      "filas": 6,
+      "columnas": 6,
+      "id_sede": 53,
+      "estado": "activa",
+      "tipo_sala": "4DX"
+    },
+    {
+      "id": 108,
+      "nombre": "Sala 7",
+      "filas": 8,
+      "columnas": 7,
+      "id_sede": 53,
+      "estado": "activa",
+      "tipo_sala": "Xtreme"
+    },
+    {
+      "id": 109,
+      "nombre": "Sala 1",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 54,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 110,
+      "nombre": "Sala 2",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 54,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 111,
+      "nombre": "Sala 3",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 54,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 112,
+      "nombre": "Sala 4",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 54,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 113,
+      "nombre": "Sala 5",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 54,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 114,
+      "nombre": "Sala 1",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 55,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 116,
+      "nombre": "Sala 3",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 55,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 117,
+      "nombre": "Sala 4",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 55,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 118,
+      "nombre": "Sala 5",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 55,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 119,
+      "nombre": "Sala 6",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 55,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 120,
+      "nombre": "Sala 1",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 56,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 121,
+      "nombre": "Sala 2",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 56,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 122,
+      "nombre": "Sala 3",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 56,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 123,
+      "nombre": "Sala 4",
+      "filas": 8,
+      "columnas": 7,
+      "id_sede": 56,
+      "estado": "activa",
+      "tipo_sala": "Xtreme"
+    },
+    {
+      "id": 124,
+      "nombre": "Sala 5",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 56,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 125,
+      "nombre": "Sala 1",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 57,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 126,
+      "nombre": "Sala 2",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 57,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 127,
+      "nombre": "Sala 3",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 57,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 128,
+      "nombre": "Sala 4",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 57,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 129,
+      "nombre": "Sala 5",
+      "filas": 6,
+      "columnas": 6,
+      "id_sede": 57,
+      "estado": "activa",
+      "tipo_sala": "4DX"
+    },
+    {
+      "id": 130,
+      "nombre": "Sala 6",
+      "filas": 8,
+      "columnas": 7,
+      "id_sede": 57,
+      "estado": "activa",
+      "tipo_sala": "Xtreme"
+    },
+    {
+      "id": 131,
+      "nombre": "Sala 7",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 57,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 132,
+      "nombre": "Sala 1",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 58,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 133,
+      "nombre": "Sala 2",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 58,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 134,
+      "nombre": "Sala 3",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 58,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 135,
+      "nombre": "Sala 4",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 58,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 136,
+      "nombre": "Sala 1",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 59,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 137,
+      "nombre": "Sala 2",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 59,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 138,
+      "nombre": "Sala 3",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 59,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 139,
+      "nombre": "Sala 1",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 60,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 140,
+      "nombre": "Sala 2",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 60,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 141,
+      "nombre": "Sala 3",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 60,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 142,
+      "nombre": "Sala 4",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 60,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 143,
+      "nombre": "Sala 5",
+      "filas": 8,
+      "columnas": 7,
+      "id_sede": 60,
+      "estado": "activa",
+      "tipo_sala": "Xtreme"
+    },
+    {
+      "id": 144,
+      "nombre": "Sala 1",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 61,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 145,
+      "nombre": "Sala 2",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 61,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 146,
+      "nombre": "Sala 3",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 61,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 147,
+      "nombre": "Sala 4",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 61,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 148,
+      "nombre": "Sala 1",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 62,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 149,
+      "nombre": "Sala 2",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 62,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 150,
+      "nombre": "Sala 3",
+      "filas": 6,
+      "columnas": 6,
+      "id_sede": 62,
+      "estado": "activa",
+      "tipo_sala": "4DX"
+    },
+    {
+      "id": 151,
+      "nombre": "Sala 4",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 62,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 152,
+      "nombre": "Sala 5",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 62,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 153,
+      "nombre": "Sala 1",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 63,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 154,
+      "nombre": "Sala 2",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 63,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 155,
+      "nombre": "Sala 3",
+      "filas": 6,
+      "columnas": 6,
+      "id_sede": 63,
+      "estado": "activa",
+      "tipo_sala": "4DX"
+    },
+    {
+      "id": 156,
+      "nombre": "Sala 4",
+      "filas": 8,
+      "columnas": 7,
+      "id_sede": 63,
+      "estado": "activa",
+      "tipo_sala": "Xtreme"
+    },
+    {
+      "id": 157,
+      "nombre": "Sala 5",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 63,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 158,
+      "nombre": "Sala 6",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 63,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 159,
+      "nombre": "Sala 1",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 64,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 160,
+      "nombre": "Sala 2",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 64,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 161,
+      "nombre": "Sala 3",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 64,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 162,
+      "nombre": "Sala 4",
+      "filas": 6,
+      "columnas": 6,
+      "id_sede": 64,
+      "estado": "activa",
+      "tipo_sala": "4DX"
+    },
+    {
+      "id": 163,
+      "nombre": "Sala 5",
+      "filas": 8,
+      "columnas": 7,
+      "id_sede": 64,
+      "estado": "activa",
+      "tipo_sala": "Xtreme"
+    },
+    {
+      "id": 164,
+      "nombre": "Sala 1",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 65,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 165,
+      "nombre": "Sala 2",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 65,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 166,
+      "nombre": "Sala 3",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 65,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 167,
+      "nombre": "Sala 4",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 65,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 168,
+      "nombre": "Sala 5",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 65,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 169,
+      "nombre": "Sala 6",
+      "filas": 6,
+      "columnas": 6,
+      "id_sede": 65,
+      "estado": "activa",
+      "tipo_sala": "4DX"
+    },
+    {
+      "id": 170,
+      "nombre": "Sala 7",
+      "filas": 8,
+      "columnas": 7,
+      "id_sede": 65,
+      "estado": "activa",
+      "tipo_sala": "Xtreme"
+    },
+    {
+      "id": 171,
+      "nombre": "Sala 1",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 66,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 172,
+      "nombre": "Sala 2",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 66,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 173,
+      "nombre": "Sala 3",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 66,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 174,
+      "nombre": "Sala 4",
+      "filas": 6,
+      "columnas": 6,
+      "id_sede": 66,
+      "estado": "activa",
+      "tipo_sala": "4DX"
+    },
+    {
+      "id": 175,
+      "nombre": "Sala 5",
+      "filas": 8,
+      "columnas": 7,
+      "id_sede": 66,
+      "estado": "activa",
+      "tipo_sala": "Xtreme"
+    },
+    {
+      "id": 176,
+      "nombre": "Sala 6",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 66,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 177,
+      "nombre": "Sala 1",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 67,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 178,
+      "nombre": "Sala 2",
+      "filas": 6,
+      "columnas": 6,
+      "id_sede": 67,
+      "estado": "activa",
+      "tipo_sala": "4DX"
+    },
+    {
+      "id": 179,
+      "nombre": "Sala 3",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 67,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 180,
+      "nombre": "Sala 4",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 67,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 181,
+      "nombre": "Sala 5",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 67,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 182,
+      "nombre": "Sala 6",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 67,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 183,
+      "nombre": "Sala 1",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 68,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 184,
+      "nombre": "Sala 2",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 68,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 185,
+      "nombre": "Sala 3",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 68,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 186,
+      "nombre": "Sala 4",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 68,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 187,
+      "nombre": "Sala 5",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 68,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 188,
+      "nombre": "Sala 6",
+      "filas": 6,
+      "columnas": 6,
+      "id_sede": 68,
+      "estado": "activa",
+      "tipo_sala": "4DX"
+    },
+    {
+      "id": 189,
+      "nombre": "Sala 7",
+      "filas": 8,
+      "columnas": 7,
+      "id_sede": 68,
+      "estado": "activa",
+      "tipo_sala": "Xtreme"
+    },
+    {
+      "id": 97,
+      "nombre": "Sala 1",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 52,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 98,
+      "nombre": "Sala 2",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 52,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 99,
+      "nombre": "Sala 3",
+      "filas": 6,
+      "columnas": 6,
+      "id_sede": 52,
+      "estado": "activa",
+      "tipo_sala": "4DX"
+    },
+    {
+      "id": 100,
+      "nombre": "Sala 4",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 52,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 101,
+      "nombre": "Sala 5",
+      "filas": 8,
+      "columnas": 7,
+      "id_sede": 52,
+      "estado": "activa",
+      "tipo_sala": "Xtreme"
+    },
+    {
+      "id": 102,
+      "nombre": "Sala 1",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 53,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 103,
+      "nombre": "Sala 2",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 53,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 104,
+      "nombre": "Sala 3",
+      "filas": 8,
+      "columnas": 10,
+      "id_sede": 53,
+      "estado": "activa",
+      "tipo_sala": "2D"
+    },
+    {
+      "id": 105,
+      "nombre": "Sala 4",
+      "filas": 7,
+      "columnas": 8,
+      "id_sede": 53,
+      "estado": "activa",
+      "tipo_sala": "3D"
+    },
+    {
+      "id": 115,
+      "nombre": "Sala 2",
+      "filas": 8,
+      "columnas": 7,
+      "id_sede": 55,
+      "estado": "activa",
+      "tipo_sala": "Xtreme"
+    }
+  ],
+  "tarifas_salas": [],
+  "peliculas": [
+    {
+      "id": 33,
+      "titulo": "Chavín de Huántar: El rescate del siglo",
+      "genero": "Documental",
+      "clasificacion": "PG-13",
+      "sinopsis": "En una operación de rescate sin precedentes, comandos de élite se infiltran en una embajada sitiada por terroristas para liberar a decenas de rehenes, enfrentando un desafío que pondrá a prueba su valentía y humanidad.",
+      "imagen_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIbGMuQxsFV97xC4fSnBuT_dXoJhzsfscEkg&s",
+      "fecha_estreno": "2025-10-30T00:00:00.000Z",
+      "duracion": 95,
+      "estado": "activa",
+      "tipo": "cartelera"
+    },
+    {
+      "id": 34,
+      "titulo": "Tron Ares",
+      "genero": "Ciencia Ficción",
+      "clasificacion": "PG",
+      "sinopsis": "Tercera entrega de la saga \"TRON\". Cuenta la historia de Ares, un programa altamente sofisticado que es enviado desde el mundo digital al mundo real en una misión peligrosa, marcando el primer encuentro de la humanidad con seres de inteligencia artificial.",
+      "imagen_url": "https://preview.redd.it/new-poster-for-tron-ares-v0-9r3kon61c5nf1.jpeg?width=1080&crop=smart&auto=webp&s=b67c5a0437382adb86bd119f1034553f0a14f6b4",
+      "fecha_estreno": "2025-10-10T00:00:00.000Z",
+      "duracion": 119,
+      "estado": "activa",
+      "tipo": "cartelera"
+    },
+    {
+      "id": 31,
+      "titulo": "Teléfono Negro 2",
+      "genero": "Terror",
+      "clasificacion": "PG-13",
+      "sinopsis": "Hace cuatro años, Finn, de 13 años, mató a su secuestrador y escapó, convirtiéndose en el único sobreviviente de El Raptor. Pero el verdadero mal trasciende la muerte… y el teléfono vuelve a sonar. Mientras Finn, ahora de 17 años, lucha por sobrellevar su vida después del cautiverio, Gwen, de 15 años, comienza a recibir llamadas en sus sueños a través del teléfono negro y a tener visiones inquietantes de tres niños que son acechados en un campamento de invierno conocido como Alpine Lake. Decidida a resolver el misterio y terminar con el tormento tanto para ella como para su hermano, Gwen convence a Finn de visitar el campamento durante una tormenta de invierno. Allí, descubre un vínculo impactante entre El Raptor y la historia de su propia familia. Juntos, deberán enfrentarse a un asesino que se ha vuelto más poderoso en la muerte y que resulta ser más importante para ellos de lo que jamás imaginaron.",
+      "imagen_url": "https://alarmadepeliculas.com/wp-content/uploads/2024/12/858DAB02-801E-4939-804D-E6649DCE5C6A.png",
+      "fecha_estreno": "2025-10-17T00:00:00.000Z",
+      "duracion": 174,
+      "estado": "activa",
+      "tipo": "cartelera"
+    },
+    {
+      "id": 37,
+      "titulo": "Amor Fuera de Tiempo",
+      "genero": "Romance",
+      "clasificacion": "PG-13",
+      "sinopsis": "Dallas Bryan está decidida a ingresar a la mejor escuela de danza del país, pero su sueño se ve truncado cuando conoce al famoso mariscal de campo (Noah Beck). ¿Lograrán juntos sus sueños o quedarán marginados?",
+      "imagen_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR34ySoepbOOOqUCIbd4PoKqOc-FgLMo31W3w&s",
+      "fecha_estreno": "2025-12-18T00:00:00.000Z",
+      "duracion": 99,
+      "estado": "activa",
+      "tipo": "proxEstreno"
+    },
+    {
+      "id": 32,
+      "titulo": "Good Boy",
+      "genero": "Terror",
+      "clasificacion": "PG-13",
+      "sinopsis": "Tras la muerte de un familiar, Todd se muda con su perro Indy a una antigua granja rural —supuestamente embrujada— que perteneció a su abuelo. Aunque Todd ignora las advertencias, Indy comienza a percibir presencias sobrenaturales invisibles para los humanos. Al no poder comunicarse verbalmente, Indy debe enfrentarse a estas fuerzas malignas para proteger a quien ama.",
+      "imagen_url": "https://i.redd.it/fjtufq05amhf1.jpeg",
+      "fecha_estreno": "2025-10-23T00:00:00.000Z",
+      "duracion": 72,
+      "estado": "activa",
+      "tipo": "cartelera"
+    },
+    {
+      "id": 35,
+      "titulo": "La habitación negra",
+      "genero": "Thriller",
+      "clasificacion": "PG-13",
+      "sinopsis": "Camila, una influencer obsesionada con la fama es secuestrada y obligada a transmitir en vivo su propio aislamiento, mientras una audiencia anónima decide su destino. Atrapada en La Habitación Negra, enfrentará desafíos humillantes y pruebas extremas que pondrán a prueba su voluntad y su identidad. Lo que parece un cruel juego se revela como parte de un espectáculo aún más macabro, donde la fama tiene un precio y el entretenimiento no conoce límites.",
+      "imagen_url": "https://m.media-amazon.com/images/M/MV5BZjA3NDY4ZGEtYTVjNi00MGVmLTkzM2EtZDNmNzdkNWM5YmE3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
+      "fecha_estreno": "2025-10-30T00:00:00.000Z",
+      "duracion": 85,
+      "estado": "activa",
+      "tipo": "cartelera"
+    },
+    {
+      "id": 36,
+      "titulo": "Noche de Paz, Noche de Horror",
+      "genero": "Terror",
+      "clasificacion": "PG-13",
+      "sinopsis": "Un niño presencia el asesinato de sus padres por un hombre disfrazado de Papá Noel. Años más tarde, ya adulto, se pone él mismo un disfraz de Papá Noel y se embarca en una violenta búsqueda de venganza contra los responsables.",
+      "imagen_url": "https://m.media-amazon.com/images/M/MV5BYjJmYzNmMmEtNDJhZC00YjViLWJjNzYtMDhkZDEyOTAwZTBjXkEyXkFqcGc@._V1_.jpg",
+      "fecha_estreno": "2025-12-11T00:00:00.000Z",
+      "duracion": 96,
+      "estado": "activa",
+      "tipo": "proxEstreno"
+    },
+    {
+      "id": 38,
+      "titulo": "Pelicula de prueba",
+      "genero": "Western",
+      "clasificacion": "PG",
+      "sinopsis": "Pelicula de prueba",
+      "imagen_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR34ySoepbOOOqUCIbd4PoKqOc-FgLMo31W3w&s",
+      "fecha_estreno": "2025-10-30T00:00:00.000Z",
+      "duracion": 100,
+      "estado": "inactiva",
+      "tipo": "cartelera"
+    }
+  ],
+  "funciones": [
+    {
+      "id": 1620,
+      "fecha": "2025-11-05",
+      "hora": "16:00:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 33,
+      "id_sala": 161,
+      "estado": "activa",
+      "hora_inicio": "16:00:00",
+      "hora_fin": "17:35:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1621,
+      "fecha": "2025-11-05",
+      "hora": "16:00:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 33,
+      "id_sala": 168,
+      "estado": "activa",
+      "hora_inicio": "16:00:00",
+      "hora_fin": "17:35:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1622,
+      "fecha": "2025-11-05",
+      "hora": "16:30:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 33,
+      "id_sala": 109,
+      "estado": "activa",
+      "hora_inicio": "16:30:00",
+      "hora_fin": "18:05:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1623,
+      "fecha": "2025-11-05",
+      "hora": "17:00:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 33,
+      "id_sala": 102,
+      "estado": "activa",
+      "hora_inicio": "17:00:00",
+      "hora_fin": "18:35:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1624,
+      "fecha": "2025-11-05",
+      "hora": "20:45:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 33,
+      "id_sala": 104,
+      "estado": "activa",
+      "hora_inicio": "20:45:00",
+      "hora_fin": "22:20:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1625,
+      "fecha": "2025-11-05",
+      "hora": "15:00:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 33,
+      "id_sala": 180,
+      "estado": "activa",
+      "hora_inicio": "15:00:00",
+      "hora_fin": "16:35:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1626,
+      "fecha": "2025-11-05",
+      "hora": "18:00:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 33,
+      "id_sala": 119,
+      "estado": "activa",
+      "hora_inicio": "18:00:00",
+      "hora_fin": "19:35:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1627,
+      "fecha": "2025-11-05",
+      "hora": "18:00:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 33,
+      "id_sala": 98,
+      "estado": "activa",
+      "hora_inicio": "18:00:00",
+      "hora_fin": "19:35:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1628,
+      "fecha": "2025-11-05",
+      "hora": "17:00:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 33,
+      "id_sala": 171,
+      "estado": "activa",
+      "hora_inicio": "17:00:00",
+      "hora_fin": "18:35:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1629,
+      "fecha": "2025-11-05",
+      "hora": "19:30:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 33,
+      "id_sala": 142,
+      "estado": "activa",
+      "hora_inicio": "19:30:00",
+      "hora_fin": "21:05:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1630,
+      "fecha": "2025-11-05",
+      "hora": "21:15:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 33,
+      "id_sala": 128,
+      "estado": "activa",
+      "hora_inicio": "21:15:00",
+      "hora_fin": "22:50:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1631,
+      "fecha": "2025-11-05",
+      "hora": "16:00:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 33,
+      "id_sala": 135,
+      "estado": "activa",
+      "hora_inicio": "16:00:00",
+      "hora_fin": "17:35:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1632,
+      "fecha": "2025-11-05",
+      "hora": "18:45:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 33,
+      "id_sala": 185,
+      "estado": "activa",
+      "hora_inicio": "18:45:00",
+      "hora_fin": "20:20:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1633,
+      "fecha": "2025-11-05",
+      "hora": "20:15:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 33,
+      "id_sala": 136,
+      "estado": "activa",
+      "hora_inicio": "20:15:00",
+      "hora_fin": "21:50:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1634,
+      "fecha": "2025-11-05",
+      "hora": "20:45:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 32,
+      "id_sala": 157,
+      "estado": "activa",
+      "hora_inicio": "20:45:00",
+      "hora_fin": "21:57:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1617,
+      "fecha": "2025-11-04",
+      "hora": "16:00:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 32,
+      "id_sala": 106,
+      "estado": "inactiva",
+      "hora_inicio": "16:00:00",
+      "hora_fin": "17:12:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1618,
+      "fecha": "2025-11-04",
+      "hora": "18:30:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 31,
+      "id_sala": 106,
+      "estado": "inactiva",
+      "hora_inicio": "18:30:00",
+      "hora_fin": "21:24:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1619,
+      "fecha": "2025-11-04",
+      "hora": "13:00:00",
+      "id_cliente_corporativo": 29,
+      "es_privada": true,
+      "precio_corporativo": "2500.00",
+      "id_pago": null,
+      "id_pelicula": 34,
+      "id_sala": 106,
+      "estado": "inactiva",
+      "hora_inicio": "13:00:00",
+      "hora_fin": "16:00:00",
+      "descripcion_evento": "Cumpleaños de un gerente"
+    },
+    {
+      "id": 1635,
+      "fecha": "2025-11-05",
+      "hora": "19:45:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 32,
+      "id_sala": 111,
+      "estado": "activa",
+      "hora_inicio": "19:45:00",
+      "hora_fin": "20:57:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1636,
+      "fecha": "2025-11-05",
+      "hora": "21:00:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 32,
+      "id_sala": 102,
+      "estado": "activa",
+      "hora_inicio": "21:00:00",
+      "hora_fin": "22:12:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1637,
+      "fecha": "2025-11-05",
+      "hora": "21:15:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 32,
+      "id_sala": 125,
+      "estado": "activa",
+      "hora_inicio": "21:15:00",
+      "hora_fin": "22:27:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1638,
+      "fecha": "2025-11-05",
+      "hora": "20:45:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 32,
+      "id_sala": 183,
+      "estado": "activa",
+      "hora_inicio": "20:45:00",
+      "hora_fin": "21:57:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1639,
+      "fecha": "2025-11-05",
+      "hora": "21:45:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 32,
+      "id_sala": 100,
+      "estado": "activa",
+      "hora_inicio": "21:45:00",
+      "hora_fin": "22:57:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1640,
+      "fecha": "2025-11-05",
+      "hora": "19:50:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 32,
+      "id_sala": 146,
+      "estado": "activa",
+      "hora_inicio": "19:50:00",
+      "hora_fin": "21:02:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1641,
+      "fecha": "2025-11-05",
+      "hora": "20:45:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 32,
+      "id_sala": 173,
+      "estado": "activa",
+      "hora_inicio": "20:45:00",
+      "hora_fin": "21:57:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1642,
+      "fecha": "2025-11-05",
+      "hora": "21:50:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 32,
+      "id_sala": 132,
+      "estado": "activa",
+      "hora_inicio": "21:50:00",
+      "hora_fin": "23:02:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1643,
+      "fecha": "2025-11-05",
+      "hora": "20:50:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 32,
+      "id_sala": 180,
+      "estado": "activa",
+      "hora_inicio": "20:50:00",
+      "hora_fin": "22:02:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1644,
+      "fecha": "2025-11-05",
+      "hora": "22:00:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 32,
+      "id_sala": 161,
+      "estado": "activa",
+      "hora_inicio": "22:00:00",
+      "hora_fin": "23:12:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1645,
+      "fecha": "2025-11-05",
+      "hora": "21:45:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 32,
+      "id_sala": 140,
+      "estado": "activa",
+      "hora_inicio": "21:45:00",
+      "hora_fin": "22:57:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1646,
+      "fecha": "2025-11-05",
+      "hora": "19:50:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 35,
+      "id_sala": 138,
+      "estado": "activa",
+      "hora_inicio": "19:50:00",
+      "hora_fin": "21:15:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1647,
+      "fecha": "2025-11-05",
+      "hora": "22:00:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 35,
+      "id_sala": 170,
+      "estado": "activa",
+      "hora_inicio": "22:00:00",
+      "hora_fin": "23:25:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1648,
+      "fecha": "2025-11-05",
+      "hora": "22:00:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 35,
+      "id_sala": 142,
+      "estado": "activa",
+      "hora_inicio": "22:00:00",
+      "hora_fin": "23:25:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1649,
+      "fecha": "2025-11-05",
+      "hora": "21:00:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 35,
+      "id_sala": 149,
+      "estado": "activa",
+      "hora_inicio": "21:00:00",
+      "hora_fin": "22:25:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1650,
+      "fecha": "2025-11-05",
+      "hora": "21:00:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 35,
+      "id_sala": 122,
+      "estado": "activa",
+      "hora_inicio": "21:00:00",
+      "hora_fin": "22:25:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1651,
+      "fecha": "2025-11-05",
+      "hora": "21:00:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 31,
+      "id_sala": 108,
+      "estado": "activa",
+      "hora_inicio": "21:00:00",
+      "hora_fin": "23:54:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1652,
+      "fecha": "2025-11-05",
+      "hora": "20:45:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 31,
+      "id_sala": 151,
+      "estado": "activa",
+      "hora_inicio": "20:45:00",
+      "hora_fin": "23:39:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1653,
+      "fecha": "2025-11-05",
+      "hora": "19:45:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 31,
+      "id_sala": 123,
+      "estado": "activa",
+      "hora_inicio": "19:45:00",
+      "hora_fin": "22:39:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1654,
+      "fecha": "2025-11-05",
+      "hora": "15:00:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 34,
+      "id_sala": 107,
+      "estado": "activa",
+      "hora_inicio": "15:00:00",
+      "hora_fin": "16:59:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1655,
+      "fecha": "2025-11-05",
+      "hora": "16:30:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 34,
+      "id_sala": 97,
+      "estado": "activa",
+      "hora_inicio": "16:30:00",
+      "hora_fin": "18:29:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1656,
+      "fecha": "2025-11-05",
+      "hora": "15:30:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 34,
+      "id_sala": 145,
+      "estado": "activa",
+      "hora_inicio": "15:30:00",
+      "hora_fin": "17:29:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1657,
+      "fecha": "2025-11-05",
+      "hora": "17:15:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 34,
+      "id_sala": 174,
+      "estado": "activa",
+      "hora_inicio": "17:15:00",
+      "hora_fin": "19:14:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1658,
+      "fecha": "2025-11-05",
+      "hora": "14:45:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 34,
+      "id_sala": 169,
+      "estado": "activa",
+      "hora_inicio": "14:45:00",
+      "hora_fin": "16:44:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1659,
+      "fecha": "2025-11-05",
+      "hora": "16:00:00",
+      "id_cliente_corporativo": null,
+      "es_privada": false,
+      "precio_corporativo": null,
+      "id_pago": null,
+      "id_pelicula": 33,
+      "id_sala": 100,
+      "estado": "activa",
+      "hora_inicio": "16:00:00",
+      "hora_fin": "17:35:00",
+      "descripcion_evento": null
+    },
+    {
+      "id": 1660,
+      "fecha": "2025-11-06",
+      "hora": "16:00:00",
+      "id_cliente_corporativo": 32,
+      "es_privada": true,
+      "precio_corporativo": "2500.00",
+      "id_pago": null,
+      "id_pelicula": 36,
+      "id_sala": 160,
+      "estado": "activa",
+      "hora_inicio": "16:00:00",
+      "hora_fin": "19:00:00",
+      "descripcion_evento": "Celebración de un cumpleaños."
+    },
+    {
+      "id": 1661,
+      "fecha": "2025-12-16",
+      "hora": "19:30:00",
+      "id_cliente_corporativo": 32,
+      "es_privada": true,
+      "precio_corporativo": "3250.00",
+      "id_pago": null,
+      "id_pelicula": 31,
+      "id_sala": 133,
+      "estado": "activa",
+      "hora_inicio": "19:30:00",
+      "hora_fin": "22:30:00",
+      "descripcion_evento": "Reunión de una promoción de colegio."
+    },
+    {
+      "id": 1662,
+      "fecha": "2025-11-15",
+      "hora": "19:00:00",
+      "id_cliente_corporativo": 32,
+      "es_privada": true,
+      "precio_corporativo": "2500.00",
+      "id_pago": null,
+      "id_pelicula": 34,
+      "id_sala": 168,
+      "estado": "activa",
+      "hora_inicio": "19:00:00",
+      "hora_fin": "22:00:00",
+      "descripcion_evento": "Reencuentro de Promoción."
+    }
+  ],
+  "asientos_funcion": [
+    {
+      "id": 557,
+      "id_funcion": 1618,
+      "fila": "B",
+      "numero": 4,
+      "estado": "ocupado",
+      "id_usuario_bloqueo": 31,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 558,
+      "id_funcion": 1618,
+      "fila": "B",
+      "numero": 5,
+      "estado": "ocupado",
+      "id_usuario_bloqueo": 31,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 559,
+      "id_funcion": 1618,
+      "fila": "C",
+      "numero": 4,
+      "estado": "ocupado",
+      "id_usuario_bloqueo": 31,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 564,
+      "id_funcion": 1656,
+      "fila": "D",
+      "numero": 5,
+      "estado": "ocupado",
+      "id_usuario_bloqueo": 32,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 565,
+      "id_funcion": 1656,
+      "fila": "D",
+      "numero": 4,
+      "estado": "ocupado",
+      "id_usuario_bloqueo": 32,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 573,
+      "id_funcion": 1656,
+      "fila": "D",
+      "numero": 3,
+      "estado": "ocupado",
+      "id_usuario_bloqueo": 32,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 574,
+      "id_funcion": 1656,
+      "fila": "D",
+      "numero": 2,
+      "estado": "ocupado",
+      "id_usuario_bloqueo": 32,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 306,
+      "id_funcion": 1617,
+      "fila": "A",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 307,
+      "id_funcion": 1617,
+      "fila": "A",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 308,
+      "id_funcion": 1617,
+      "fila": "A",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 309,
+      "id_funcion": 1617,
+      "fila": "A",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 310,
+      "id_funcion": 1617,
+      "fila": "A",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 311,
+      "id_funcion": 1617,
+      "fila": "A",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 312,
+      "id_funcion": 1617,
+      "fila": "A",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 313,
+      "id_funcion": 1617,
+      "fila": "A",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 314,
+      "id_funcion": 1617,
+      "fila": "A",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 315,
+      "id_funcion": 1617,
+      "fila": "A",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 316,
+      "id_funcion": 1617,
+      "fila": "B",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 317,
+      "id_funcion": 1617,
+      "fila": "B",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 318,
+      "id_funcion": 1617,
+      "fila": "B",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 319,
+      "id_funcion": 1617,
+      "fila": "B",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 320,
+      "id_funcion": 1617,
+      "fila": "B",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 321,
+      "id_funcion": 1617,
+      "fila": "B",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 322,
+      "id_funcion": 1617,
+      "fila": "B",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 323,
+      "id_funcion": 1617,
+      "fila": "B",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 324,
+      "id_funcion": 1617,
+      "fila": "B",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 325,
+      "id_funcion": 1617,
+      "fila": "B",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 326,
+      "id_funcion": 1617,
+      "fila": "C",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 327,
+      "id_funcion": 1617,
+      "fila": "C",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 328,
+      "id_funcion": 1617,
+      "fila": "C",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 329,
+      "id_funcion": 1617,
+      "fila": "C",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 330,
+      "id_funcion": 1617,
+      "fila": "C",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 331,
+      "id_funcion": 1617,
+      "fila": "C",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 332,
+      "id_funcion": 1617,
+      "fila": "C",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 333,
+      "id_funcion": 1617,
+      "fila": "C",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 334,
+      "id_funcion": 1617,
+      "fila": "C",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 335,
+      "id_funcion": 1617,
+      "fila": "C",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 336,
+      "id_funcion": 1617,
+      "fila": "D",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 337,
+      "id_funcion": 1617,
+      "fila": "D",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 338,
+      "id_funcion": 1617,
+      "fila": "D",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 339,
+      "id_funcion": 1617,
+      "fila": "D",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 340,
+      "id_funcion": 1617,
+      "fila": "D",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 341,
+      "id_funcion": 1617,
+      "fila": "D",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 342,
+      "id_funcion": 1617,
+      "fila": "D",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 343,
+      "id_funcion": 1617,
+      "fila": "D",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 344,
+      "id_funcion": 1617,
+      "fila": "D",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 345,
+      "id_funcion": 1617,
+      "fila": "D",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 346,
+      "id_funcion": 1617,
+      "fila": "E",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 347,
+      "id_funcion": 1617,
+      "fila": "E",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 348,
+      "id_funcion": 1617,
+      "fila": "E",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 349,
+      "id_funcion": 1617,
+      "fila": "E",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 350,
+      "id_funcion": 1617,
+      "fila": "E",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 351,
+      "id_funcion": 1617,
+      "fila": "E",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 352,
+      "id_funcion": 1617,
+      "fila": "E",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 353,
+      "id_funcion": 1617,
+      "fila": "E",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 354,
+      "id_funcion": 1617,
+      "fila": "E",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 355,
+      "id_funcion": 1617,
+      "fila": "E",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 356,
+      "id_funcion": 1617,
+      "fila": "F",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 357,
+      "id_funcion": 1617,
+      "fila": "F",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 358,
+      "id_funcion": 1617,
+      "fila": "F",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 359,
+      "id_funcion": 1617,
+      "fila": "F",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 360,
+      "id_funcion": 1617,
+      "fila": "F",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 361,
+      "id_funcion": 1617,
+      "fila": "F",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 362,
+      "id_funcion": 1617,
+      "fila": "F",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 363,
+      "id_funcion": 1617,
+      "fila": "F",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 364,
+      "id_funcion": 1617,
+      "fila": "F",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 365,
+      "id_funcion": 1617,
+      "fila": "F",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 366,
+      "id_funcion": 1617,
+      "fila": "G",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 367,
+      "id_funcion": 1617,
+      "fila": "G",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 368,
+      "id_funcion": 1617,
+      "fila": "G",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 369,
+      "id_funcion": 1617,
+      "fila": "G",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 370,
+      "id_funcion": 1617,
+      "fila": "G",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 371,
+      "id_funcion": 1617,
+      "fila": "G",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 372,
+      "id_funcion": 1617,
+      "fila": "G",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 373,
+      "id_funcion": 1617,
+      "fila": "G",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 374,
+      "id_funcion": 1617,
+      "fila": "G",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 375,
+      "id_funcion": 1617,
+      "fila": "G",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 376,
+      "id_funcion": 1617,
+      "fila": "H",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 377,
+      "id_funcion": 1617,
+      "fila": "H",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 378,
+      "id_funcion": 1617,
+      "fila": "H",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 379,
+      "id_funcion": 1617,
+      "fila": "H",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 380,
+      "id_funcion": 1617,
+      "fila": "H",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 381,
+      "id_funcion": 1617,
+      "fila": "H",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 382,
+      "id_funcion": 1617,
+      "fila": "H",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 383,
+      "id_funcion": 1617,
+      "fila": "H",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 384,
+      "id_funcion": 1617,
+      "fila": "H",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 385,
+      "id_funcion": 1617,
+      "fila": "H",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 386,
+      "id_funcion": 1618,
+      "fila": "A",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 387,
+      "id_funcion": 1618,
+      "fila": "A",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 388,
+      "id_funcion": 1618,
+      "fila": "A",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 389,
+      "id_funcion": 1618,
+      "fila": "A",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 390,
+      "id_funcion": 1618,
+      "fila": "A",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 391,
+      "id_funcion": 1618,
+      "fila": "A",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 392,
+      "id_funcion": 1618,
+      "fila": "A",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 393,
+      "id_funcion": 1618,
+      "fila": "A",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 394,
+      "id_funcion": 1618,
+      "fila": "A",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 395,
+      "id_funcion": 1618,
+      "fila": "A",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 396,
+      "id_funcion": 1618,
+      "fila": "B",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 397,
+      "id_funcion": 1618,
+      "fila": "B",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 398,
+      "id_funcion": 1618,
+      "fila": "B",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 404,
+      "id_funcion": 1618,
+      "fila": "B",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 405,
+      "id_funcion": 1618,
+      "fila": "B",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 406,
+      "id_funcion": 1618,
+      "fila": "C",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 407,
+      "id_funcion": 1618,
+      "fila": "C",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 408,
+      "id_funcion": 1618,
+      "fila": "C",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 413,
+      "id_funcion": 1618,
+      "fila": "C",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 414,
+      "id_funcion": 1618,
+      "fila": "C",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 415,
+      "id_funcion": 1618,
+      "fila": "C",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 416,
+      "id_funcion": 1618,
+      "fila": "D",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 417,
+      "id_funcion": 1618,
+      "fila": "D",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 418,
+      "id_funcion": 1618,
+      "fila": "D",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 419,
+      "id_funcion": 1618,
+      "fila": "D",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 420,
+      "id_funcion": 1618,
+      "fila": "D",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 421,
+      "id_funcion": 1618,
+      "fila": "D",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 422,
+      "id_funcion": 1618,
+      "fila": "D",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 423,
+      "id_funcion": 1618,
+      "fila": "D",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 424,
+      "id_funcion": 1618,
+      "fila": "D",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 425,
+      "id_funcion": 1618,
+      "fila": "D",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 426,
+      "id_funcion": 1618,
+      "fila": "E",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 427,
+      "id_funcion": 1618,
+      "fila": "E",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 428,
+      "id_funcion": 1618,
+      "fila": "E",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 429,
+      "id_funcion": 1618,
+      "fila": "E",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 430,
+      "id_funcion": 1618,
+      "fila": "E",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 431,
+      "id_funcion": 1618,
+      "fila": "E",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 432,
+      "id_funcion": 1618,
+      "fila": "E",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 433,
+      "id_funcion": 1618,
+      "fila": "E",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 434,
+      "id_funcion": 1618,
+      "fila": "E",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 435,
+      "id_funcion": 1618,
+      "fila": "E",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 436,
+      "id_funcion": 1618,
+      "fila": "F",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 437,
+      "id_funcion": 1618,
+      "fila": "F",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 438,
+      "id_funcion": 1618,
+      "fila": "F",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 439,
+      "id_funcion": 1618,
+      "fila": "F",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 440,
+      "id_funcion": 1618,
+      "fila": "F",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 441,
+      "id_funcion": 1618,
+      "fila": "F",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 442,
+      "id_funcion": 1618,
+      "fila": "F",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 443,
+      "id_funcion": 1618,
+      "fila": "F",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 444,
+      "id_funcion": 1618,
+      "fila": "F",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 445,
+      "id_funcion": 1618,
+      "fila": "F",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 446,
+      "id_funcion": 1618,
+      "fila": "G",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 447,
+      "id_funcion": 1618,
+      "fila": "G",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 448,
+      "id_funcion": 1618,
+      "fila": "G",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 449,
+      "id_funcion": 1618,
+      "fila": "G",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 450,
+      "id_funcion": 1618,
+      "fila": "G",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 451,
+      "id_funcion": 1618,
+      "fila": "G",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 452,
+      "id_funcion": 1618,
+      "fila": "G",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 453,
+      "id_funcion": 1618,
+      "fila": "G",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 454,
+      "id_funcion": 1618,
+      "fila": "G",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 455,
+      "id_funcion": 1618,
+      "fila": "G",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 456,
+      "id_funcion": 1618,
+      "fila": "H",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 457,
+      "id_funcion": 1618,
+      "fila": "H",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 458,
+      "id_funcion": 1618,
+      "fila": "H",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 459,
+      "id_funcion": 1618,
+      "fila": "H",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 460,
+      "id_funcion": 1618,
+      "fila": "H",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 461,
+      "id_funcion": 1618,
+      "fila": "H",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 462,
+      "id_funcion": 1618,
+      "fila": "H",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 463,
+      "id_funcion": 1618,
+      "fila": "H",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 464,
+      "id_funcion": 1618,
+      "fila": "H",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 465,
+      "id_funcion": 1618,
+      "fila": "H",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 466,
+      "id_funcion": 1619,
+      "fila": "A",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 467,
+      "id_funcion": 1619,
+      "fila": "A",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 468,
+      "id_funcion": 1619,
+      "fila": "A",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 469,
+      "id_funcion": 1619,
+      "fila": "A",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 470,
+      "id_funcion": 1619,
+      "fila": "A",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 471,
+      "id_funcion": 1619,
+      "fila": "A",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 472,
+      "id_funcion": 1619,
+      "fila": "A",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 473,
+      "id_funcion": 1619,
+      "fila": "A",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 474,
+      "id_funcion": 1619,
+      "fila": "A",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 475,
+      "id_funcion": 1619,
+      "fila": "A",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 476,
+      "id_funcion": 1619,
+      "fila": "B",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 477,
+      "id_funcion": 1619,
+      "fila": "B",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 478,
+      "id_funcion": 1619,
+      "fila": "B",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 479,
+      "id_funcion": 1619,
+      "fila": "B",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 480,
+      "id_funcion": 1619,
+      "fila": "B",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 481,
+      "id_funcion": 1619,
+      "fila": "B",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 482,
+      "id_funcion": 1619,
+      "fila": "B",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 483,
+      "id_funcion": 1619,
+      "fila": "B",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 484,
+      "id_funcion": 1619,
+      "fila": "B",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 485,
+      "id_funcion": 1619,
+      "fila": "B",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 486,
+      "id_funcion": 1619,
+      "fila": "C",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 487,
+      "id_funcion": 1619,
+      "fila": "C",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 488,
+      "id_funcion": 1619,
+      "fila": "C",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 489,
+      "id_funcion": 1619,
+      "fila": "C",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 490,
+      "id_funcion": 1619,
+      "fila": "C",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 491,
+      "id_funcion": 1619,
+      "fila": "C",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 492,
+      "id_funcion": 1619,
+      "fila": "C",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 493,
+      "id_funcion": 1619,
+      "fila": "C",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 494,
+      "id_funcion": 1619,
+      "fila": "C",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 495,
+      "id_funcion": 1619,
+      "fila": "C",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 496,
+      "id_funcion": 1619,
+      "fila": "D",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 497,
+      "id_funcion": 1619,
+      "fila": "D",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 498,
+      "id_funcion": 1619,
+      "fila": "D",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 499,
+      "id_funcion": 1619,
+      "fila": "D",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 500,
+      "id_funcion": 1619,
+      "fila": "D",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 501,
+      "id_funcion": 1619,
+      "fila": "D",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 502,
+      "id_funcion": 1619,
+      "fila": "D",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 503,
+      "id_funcion": 1619,
+      "fila": "D",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 504,
+      "id_funcion": 1619,
+      "fila": "D",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 505,
+      "id_funcion": 1619,
+      "fila": "D",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 506,
+      "id_funcion": 1619,
+      "fila": "E",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 507,
+      "id_funcion": 1619,
+      "fila": "E",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 508,
+      "id_funcion": 1619,
+      "fila": "E",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 509,
+      "id_funcion": 1619,
+      "fila": "E",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 510,
+      "id_funcion": 1619,
+      "fila": "E",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 511,
+      "id_funcion": 1619,
+      "fila": "E",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 512,
+      "id_funcion": 1619,
+      "fila": "E",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 513,
+      "id_funcion": 1619,
+      "fila": "E",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 514,
+      "id_funcion": 1619,
+      "fila": "E",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 515,
+      "id_funcion": 1619,
+      "fila": "E",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 516,
+      "id_funcion": 1619,
+      "fila": "F",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 517,
+      "id_funcion": 1619,
+      "fila": "F",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 518,
+      "id_funcion": 1619,
+      "fila": "F",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 519,
+      "id_funcion": 1619,
+      "fila": "F",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 520,
+      "id_funcion": 1619,
+      "fila": "F",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 521,
+      "id_funcion": 1619,
+      "fila": "F",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 522,
+      "id_funcion": 1619,
+      "fila": "F",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 523,
+      "id_funcion": 1619,
+      "fila": "F",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 524,
+      "id_funcion": 1619,
+      "fila": "F",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 525,
+      "id_funcion": 1619,
+      "fila": "F",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 526,
+      "id_funcion": 1619,
+      "fila": "G",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 527,
+      "id_funcion": 1619,
+      "fila": "G",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 528,
+      "id_funcion": 1619,
+      "fila": "G",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 529,
+      "id_funcion": 1619,
+      "fila": "G",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 530,
+      "id_funcion": 1619,
+      "fila": "G",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 531,
+      "id_funcion": 1619,
+      "fila": "G",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 532,
+      "id_funcion": 1619,
+      "fila": "G",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 533,
+      "id_funcion": 1619,
+      "fila": "G",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 534,
+      "id_funcion": 1619,
+      "fila": "G",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 535,
+      "id_funcion": 1619,
+      "fila": "G",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 536,
+      "id_funcion": 1619,
+      "fila": "H",
+      "numero": 1,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 537,
+      "id_funcion": 1619,
+      "fila": "H",
+      "numero": 2,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 538,
+      "id_funcion": 1619,
+      "fila": "H",
+      "numero": 3,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 539,
+      "id_funcion": 1619,
+      "fila": "H",
+      "numero": 4,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 540,
+      "id_funcion": 1619,
+      "fila": "H",
+      "numero": 5,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 541,
+      "id_funcion": 1619,
+      "fila": "H",
+      "numero": 6,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 542,
+      "id_funcion": 1619,
+      "fila": "H",
+      "numero": 7,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 543,
+      "id_funcion": 1619,
+      "fila": "H",
+      "numero": 8,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 544,
+      "id_funcion": 1619,
+      "fila": "H",
+      "numero": 9,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 545,
+      "id_funcion": 1619,
+      "fila": "H",
+      "numero": 10,
+      "estado": "libre",
+      "id_usuario_bloqueo": null,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 561,
+      "id_funcion": 1618,
+      "fila": "B",
+      "numero": 6,
+      "estado": "ocupado",
+      "id_usuario_bloqueo": 31,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 562,
+      "id_funcion": 1618,
+      "fila": "B",
+      "numero": 7,
+      "estado": "ocupado",
+      "id_usuario_bloqueo": 31,
+      "bloqueo_expira_en": null
+    },
+    {
+      "id": 563,
+      "id_funcion": 1618,
+      "fila": "B",
+      "numero": 8,
+      "estado": "ocupado",
+      "id_usuario_bloqueo": 31,
+      "bloqueo_expira_en": null
+    }
+  ],
+  "tipos_tickets": [],
+  "combos": [
+    {
+      "id": 21,
+      "nombre": "COMBO 3",
+      "descripcion": "1 POP/SAL GIGANTE + 2GAS MEDIANAS",
+      "precio": "29.50",
+      "imagen_url": "https://www.cinestar.com.pe/bucket/images/cine/products/cinestar/2484.png/w=800,h=800,fit=contain",
+      "estado": "activo",
+      "tipo": "combos"
+    },
+    {
+      "id": 20,
+      "nombre": "COMBO 2",
+      "descripcion": "2 POP/SAL CHICOS + 2GAS CHICAS",
+      "precio": "24.50",
+      "imagen_url": "https://www.cinestar.com.pe/bucket/images/cine/products/cinestar/2517.png/w=800,h=800,fit=contain",
+      "estado": "activo",
+      "tipo": "combos"
+    },
+    {
+      "id": 22,
+      "nombre": "COMBO 4",
+      "descripcion": "1POP/SAL GIGANTE + 2GAS GRANDES",
+      "precio": "33.50",
+      "imagen_url": "https://www.cinestar.com.pe/bucket/images/cine/products/cinestar/2488.png/w=800,h=800,fit=contain",
+      "estado": "activo",
+      "tipo": "combos"
+    },
+    {
+      "id": 11,
+      "nombre": "POP CORN SALADO CHICO",
+      "descripcion": "1 porción",
+      "precio": "11.00",
+      "imagen_url": "https://www.cinestar.com.pe/bucket/images/cine/products/cinestar/31.png/w=800,h=800,fit=contain",
+      "estado": "activo",
+      "tipo": "popcorn"
+    },
+    {
+      "id": 14,
+      "nombre": "POP CORN SALADO GIGANTE",
+      "descripcion": "1 porción",
+      "precio": "20.00",
+      "imagen_url": "https://www.cinestar.com.pe/bucket/images/cine/products/cinestar/47.png/w=800,h=800,fit=contain",
+      "estado": "activo",
+      "tipo": "popcorn"
+    },
+    {
+      "id": 13,
+      "nombre": "POP CORN SALADO GRANDE",
+      "descripcion": "1 porción",
+      "precio": "14.00",
+      "imagen_url": "https://www.cinestar.com.pe/bucket/images/cine/products/cinestar/33.png/w=800,h=800,fit=contain",
+      "estado": "activo",
+      "tipo": "popcorn"
+    },
+    {
+      "id": 12,
+      "nombre": "POP CORN SALADO MEDIANO",
+      "descripcion": "1 porción",
+      "precio": "12.00",
+      "imagen_url": "https://www.cinestar.com.pe/bucket/images/cine/products/cinestar/32.png/w=800,h=800,fit=contain",
+      "estado": "activo",
+      "tipo": "popcorn"
+    },
+    {
+      "id": 15,
+      "nombre": "GASEOSA VASO CHICO",
+      "descripcion": "Gaseosa Coca Cola",
+      "precio": "8.00",
+      "imagen_url": "https://www.cinestar.com.pe/bucket/images/cine/products/cinestar/2085.png/w=800,h=800,fit=contain",
+      "estado": "activo",
+      "tipo": "bebidas"
+    },
+    {
+      "id": 16,
+      "nombre": "GASEOSA VASO MEDIANO",
+      "descripcion": "Gaseosa Coca Cola",
+      "precio": "10.00",
+      "imagen_url": "https://www.cinestar.com.pe/bucket/images/cine/products/cinestar/2086.png/w=800,h=800,fit=contain",
+      "estado": "activo",
+      "tipo": "bebidas"
+    },
+    {
+      "id": 17,
+      "nombre": "GASEOSA GRANDE",
+      "descripcion": "Gaseosa Coca Cola",
+      "precio": "11.50",
+      "imagen_url": "https://www.cinestar.com.pe/bucket/images/cine/products/cinestar/2087.png/w=800,h=800,fit=contain",
+      "estado": "activo",
+      "tipo": "bebidas"
+    },
+    {
+      "id": 18,
+      "nombre": "GASEOSA BOTELLA",
+      "descripcion": "Gaseosa Coca Cola",
+      "precio": "8.00",
+      "imagen_url": "https://www.cinestar.com.pe/bucket/images/cine/products/cinestar/2750.png/w=800,h=800,fit=contain",
+      "estado": "activo",
+      "tipo": "bebidas"
+    },
+    {
+      "id": 19,
+      "nombre": "COMBO 1",
+      "descripcion": "1POP MED SAL + 1GAS MED + 1CAÑONAZO",
+      "precio": "19.50",
+      "imagen_url": "https://www.cinestar.com.pe/bucket/images/cine/products/cinestar/2512.png/w=800,h=800,fit=contain",
+      "estado": "activo",
+      "tipo": "combos"
+    }
+  ],
+  "metodos_pago": [
+    {
+      "id": 1,
+      "nombre": "Tarjeta de Crédito/Débito",
+      "estado": "activo"
+    },
+    {
+      "id": 2,
+      "nombre": "Yape",
+      "estado": "activo"
+    },
+    {
+      "id": 3,
+      "nombre": "Plin",
+      "estado": "inactivo"
+    },
+    {
+      "id": 4,
+      "nombre": "Efectivo",
+      "estado": "inactivo"
+    },
+    {
+      "id": 5,
+      "nombre": "Transferencia Bancaria",
+      "estado": "inactivo"
+    }
+  ],
+  "usuarios": [
+    {
+      "id": 25,
+      "nombre": "Empresa Corp SAC",
+      "dni": null,
+      "ruc": "20123456789",
+      "apellido": null,
+      "telefono": "987654326",
+      "direccion": "Av. Benavides 2345, Miraflores",
+      "fecha_nacimiento": null,
+      "genero": null,
+      "foto_perfil": null,
+      "estado": "activo",
+      "ultimo_acceso": null,
+      "email": "corporativo@empresa.com",
+      "password": "$2b$10$LHAU/.Ik3HQZ2dxZjjV08.CCcX.KslV3cOGtjJNGE/0HqURLjfAlC",
+      "rol": "corporativo",
+      "fecha_registro": "2025-10-23T04:48:03.201Z",
+      "token_version": 369,
+      "representante": "Roberto Gómez",
+      "cargo": "Gerente General"
+    },
+    {
+      "id": 29,
+      "nombre": "Banco de Crédito del Perú",
+      "dni": null,
+      "ruc": "20100047218",
+      "apellido": null,
+      "telefono": "987654327",
+      "direccion": "Av. Centenario 156, La Molina",
+      "fecha_nacimiento": null,
+      "genero": null,
+      "foto_perfil": null,
+      "estado": "activo",
+      "ultimo_acceso": null,
+      "email": "corporativo@bcp.com.pe",
+      "password": "$2b$10$5kD0PWRnv1uzT1Y1Ta4cGeMN1cKYYdk2GuUfExtv/qDFuG6CUpfb6",
+      "rol": "corporativo",
+      "fecha_registro": "2025-10-23T06:24:44.512Z",
+      "token_version": 369,
+      "representante": "Patricia Sánchez",
+      "cargo": "Jefa de Recursos Humanos"
+    },
+    {
+      "id": 22,
+      "nombre": "Administrador",
+      "dni": null,
+      "ruc": null,
+      "apellido": null,
+      "telefono": "6259090",
+      "direccion": null,
+      "fecha_nacimiento": null,
+      "genero": null,
+      "foto_perfil": null,
+      "estado": "activo",
+      "ultimo_acceso": null,
+      "email": "admin@cinestar.com",
+      "password": "$2b$10$n8GH4Hs1G5q//WnOGZrWM.hnGa32Cjnan/MSRlinvU5LFmoTwB7P6",
+      "rol": "admin",
+      "fecha_registro": "2025-10-23T04:48:03.201Z",
+      "token_version": 369,
+      "representante": null,
+      "cargo": null
+    },
+    {
+      "id": 32,
+      "nombre": "Gustavo",
+      "dni": "86950327",
+      "ruc": null,
+      "apellido": "Tijon",
+      "telefono": "999666505",
+      "direccion": "Av. machu pichu Lt 20, Mz 5",
+      "fecha_nacimiento": "2001-01-15",
+      "genero": "masculino",
+      "foto_perfil": "data:image/jpeg;base64,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",
+      "estado": "activo",
+      "ultimo_acceso": null,
+      "email": "tabotijon@gmail.com",
+      "password": "$2b$10$4xKVdHyECRE.CGURh9OIhOea.jmm8IpMIncXDX4Cdkm76dzwv0ZUK",
+      "rol": "cliente",
+      "fecha_registro": "2025-11-05T03:42:41.120Z",
+      "token_version": 11,
+      "representante": null,
+      "cargo": null
+    },
+    {
+      "id": 26,
+      "nombre": "Carlos",
+      "dni": "11223344",
+      "ruc": null,
+      "apellido": "Rodriguez",
+      "telefono": "987654323",
+      "direccion": "Av. Javier Prado 890, San Isidro",
+      "fecha_nacimiento": "1988-03-10",
+      "genero": "masculino",
+      "foto_perfil": null,
+      "estado": "activo",
+      "ultimo_acceso": null,
+      "email": "carlos@hotmail.com",
+      "password": "$2b$10$IG4PFk.zDHfEDKCrmRchF.wD1Y0ZAydVQ0w/TYtG3ltJuRgUnPxUa",
+      "rol": "cliente",
+      "fecha_registro": "2025-10-23T06:24:44.259Z",
+      "token_version": 369,
+      "representante": null,
+      "cargo": null
+    },
+    {
+      "id": 27,
+      "nombre": "Ana",
+      "dni": "55667788",
+      "ruc": null,
+      "apellido": "Torres",
+      "telefono": "987654324",
+      "direccion": "Calle Los Olivos 123, Miraflores",
+      "fecha_nacimiento": "1995-11-25",
+      "genero": "femenino",
+      "foto_perfil": null,
+      "estado": "activo",
+      "ultimo_acceso": null,
+      "email": "ana.torres@gmail.com",
+      "password": "$2b$10$NUC2O6GhDgTa3JxV3jOIxusUSAnH9cQXlqHL/uudR7V7VRyIF4ujO",
+      "rol": "cliente",
+      "fecha_registro": "2025-10-23T06:24:44.359Z",
+      "token_version": 369,
+      "representante": null,
+      "cargo": null
+    },
+    {
+      "id": 28,
+      "nombre": "Luis",
+      "dni": "99887766",
+      "ruc": null,
+      "apellido": "Martínez",
+      "telefono": "987654325",
+      "direccion": "Av. La Marina 456, Pueblo Libre",
+      "fecha_nacimiento": "1987-07-30",
+      "genero": "masculino",
+      "foto_perfil": null,
+      "estado": "activo",
+      "ultimo_acceso": null,
+      "email": "luis.martinez@outlook.com",
+      "password": "$2b$10$kYg4TypVheRjQ1voG.Kboua0IxyLnuQP7odUgWjoqt6aNQegBiNAy",
+      "rol": "cliente",
+      "fecha_registro": "2025-10-23T06:24:44.433Z",
+      "token_version": 369,
+      "representante": null,
+      "cargo": null
+    },
+    {
+      "id": 23,
+      "nombre": "Juan",
+      "dni": "12345678",
+      "ruc": null,
+      "apellido": "Pérez",
+      "telefono": "987654321",
+      "direccion": "Av. Arequipa 1234, Lima",
+      "fecha_nacimiento": "1990-05-15",
+      "genero": "masculino",
+      "foto_perfil": "",
+      "estado": "activo",
+      "ultimo_acceso": null,
+      "email": "juan@gmail.com",
+      "password": "$2b$10$PgBOwIzi6bIkg7RhxasyyuRRHCpTsVSSMH3nCRFTno3Q8IvxdoSam",
+      "rol": "cliente",
+      "fecha_registro": "2025-10-23T04:48:03.201Z",
+      "token_version": 369,
+      "representante": null,
+      "cargo": null
+    },
+    {
+      "id": 30,
+      "nombre": "Telefónica del Perú",
+      "dni": null,
+      "ruc": "20109072177",
+      "apellido": null,
+      "telefono": "987654328",
+      "direccion": "Av. Arequipa 1155, Lima",
+      "fecha_nacimiento": null,
+      "genero": null,
+      "foto_perfil": null,
+      "estado": "activo",
+      "ultimo_acceso": null,
+      "email": "eventos@telefonica.com.pe",
+      "password": "$2b$10$sNfavNsdaTxYSCF/SYV3buZLZlEMg.Mykhs/MTjCmAV9F39XRxZ5e",
+      "rol": "corporativo",
+      "fecha_registro": "2025-10-23T06:24:44.585Z",
+      "token_version": 369,
+      "representante": "Miguel Ángel Vargas",
+      "cargo": "Coordinador de Eventos"
+    },
+    {
+      "id": 24,
+      "nombre": "María",
+      "dni": "87654321",
+      "ruc": null,
+      "apellido": "García",
+      "telefono": "987654322",
+      "direccion": "Jr. Lima 567, Lima",
+      "fecha_nacimiento": "1992-08-20",
+      "genero": "femenino",
+      "foto_perfil": null,
+      "estado": "activo",
+      "ultimo_acceso": null,
+      "email": "maria@gmail.com",
+      "password": "$2b$10$ZSr/p2lKdpuVoTokRJQ2z.qqxPXuQcNyUUFHuU.UxoQUpkXgMDoW.",
+      "rol": "cliente",
+      "fecha_registro": "2025-10-23T04:48:03.201Z",
+      "token_version": 369,
+      "representante": null,
+      "cargo": null
+    },
+    {
+      "id": 31,
+      "nombre": "Leonardo",
+      "dni": "74140409",
+      "ruc": null,
+      "apellido": "Albornoz",
+      "telefono": "902246535",
+      "direccion": "Calle los Pacos pasaje 4 VES",
+      "fecha_nacimiento": "2001-02-12",
+      "genero": "masculino",
+      "foto_perfil": "",
+      "estado": "activo",
+      "ultimo_acceso": null,
+      "email": "juanleotak@gmail.com",
+      "password": "$2b$10$1NWz7Fo3iIadmkte1bu4duexzXoHaMXkp0iS4XEZQ86YcV0YFVAa.",
+      "rol": "cliente",
+      "fecha_registro": "2025-11-02T06:25:55.762Z",
+      "token_version": 194,
+      "representante": null,
+      "cargo": null
+    }
+  ],
+  "ordenes_compra": [
+    {
+      "id": 26,
+      "fecha_compra": "2025-11-04T18:17:55.432Z",
+      "id_usuario": 31,
+      "id_funcion": null,
+      "estado": "pagada",
+      "monto_total": "20.00"
+    },
+    {
+      "id": 27,
+      "fecha_compra": "2025-11-04T21:26:53.153Z",
+      "id_usuario": 31,
+      "id_funcion": 1618,
+      "estado": "pagada",
+      "monto_total": "63.50"
+    },
+    {
+      "id": 28,
+      "fecha_compra": "2025-11-04T23:13:48.883Z",
+      "id_usuario": 31,
+      "id_funcion": 1618,
+      "estado": "pagada",
+      "monto_total": "85.00"
+    },
+    {
+      "id": 29,
+      "fecha_compra": "2025-11-05T03:44:07.195Z",
+      "id_usuario": 32,
+      "id_funcion": null,
+      "estado": "pagada",
+      "monto_total": "167.50"
+    },
+    {
+      "id": 30,
+      "fecha_compra": "2025-11-05T03:54:22.810Z",
+      "id_usuario": 32,
+      "id_funcion": 1656,
+      "estado": "pagada",
+      "monto_total": "107.50"
+    }
+  ],
+  "ordenes_tickets": [
+    {
+      "id": 11,
+      "id_orden_compra": 27,
+      "cantidad": 3,
+      "precio_unitario": "10.00",
+      "descuento": "0.00",
+      "id_tipo_ticket": 10,
+      "id_tipo_usuario": null
+    },
+    {
+      "id": 12,
+      "id_orden_compra": 28,
+      "cantidad": 2,
+      "precio_unitario": "10.00",
+      "descuento": "0.00",
+      "id_tipo_ticket": 10,
+      "id_tipo_usuario": null
+    },
+    {
+      "id": 13,
+      "id_orden_compra": 28,
+      "cantidad": 1,
+      "precio_unitario": "6.00",
+      "descuento": "0.00",
+      "id_tipo_ticket": 11,
+      "id_tipo_usuario": null
+    },
+    {
+      "id": 14,
+      "id_orden_compra": 30,
+      "cantidad": 3,
+      "precio_unitario": "15.00",
+      "descuento": "0.00",
+      "id_tipo_ticket": 10,
+      "id_tipo_usuario": null
+    },
+    {
+      "id": 15,
+      "id_orden_compra": 30,
+      "cantidad": 1,
+      "precio_unitario": "10.00",
+      "descuento": "0.00",
+      "id_tipo_ticket": 11,
+      "id_tipo_usuario": null
+    }
+  ],
+  "ordenes_combos": [
+    {
+      "id": 3,
+      "id_orden_compra": 26,
+      "id_combo": 14,
+      "cantidad": 1,
+      "precio_unitario": "20.00",
+      "descuento": "0.00"
+    },
+    {
+      "id": 4,
+      "id_orden_compra": 27,
+      "id_combo": 22,
+      "cantidad": 1,
+      "precio_unitario": "33.50",
+      "descuento": "0.00"
+    },
+    {
+      "id": 5,
+      "id_orden_compra": 28,
+      "id_combo": 21,
+      "cantidad": 2,
+      "precio_unitario": "29.50",
+      "descuento": "0.00"
+    },
+    {
+      "id": 6,
+      "id_orden_compra": 29,
+      "id_combo": 22,
+      "cantidad": 5,
+      "precio_unitario": "33.50",
+      "descuento": "0.00"
+    },
+    {
+      "id": 7,
+      "id_orden_compra": 30,
+      "id_combo": 21,
+      "cantidad": 1,
+      "precio_unitario": "29.50",
+      "descuento": "0.00"
+    },
+    {
+      "id": 8,
+      "id_orden_compra": 30,
+      "id_combo": 17,
+      "cantidad": 2,
+      "precio_unitario": "11.50",
+      "descuento": "0.00"
+    }
+  ],
+  "pagos": [
+    {
+      "id": 6,
+      "id_orden_compra": 26,
+      "id_metodo_pago": 2,
+      "monto_total": "20.00",
+      "estado_pago": "completado",
+      "fecha_pago": "2025-11-04T18:17:57.527Z",
+      "numero_tarjeta": null,
+      "codigo_aprobacion": null,
+      "codigo_qr": "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=%7B%0A%20%20%22tipo%22%3A%20%22CINESTAR_TICKET%22%2C%0A%20%20%22orden_id%22%3A%2026%2C%0A%20%20%22pelicula%22%3A%20%22N%2FA%22%2C%0A%20%20%22funcion%22%3A%20%7B%0A%20%20%20%20%22fecha%22%3A%20%22N%2FA%22%2C%0A%20%20%20%20%22hora%22%3A%20%22N%2FA%22%0A%20%20%7D%2C%0A%20%20%22ubicacion%22%3A%20%7B%0A%20%20%20%20%22sede%22%3A%20%22N%2FA%22%2C%0A%20%20%20%20%22sala%22%3A%20%22N%2FA%22%0A%20%20%7D%2C%0A%20%20%22asientos%22%3A%20%5B%5D%2C%0A%20%20%22tickets%22%3A%20%5B%5D%2C%0A%20%20%22combos%22%3A%20%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22nombre%22%3A%20%22POP%20CORN%20SALADO%20GIGANTE%22%2C%0A%20%20%20%20%20%20%22cantidad%22%3A%201%0A%20%20%20%20%7D%0A%20%20%5D%2C%0A%20%20%22pago%22%3A%20%7B%0A%20%20%20%20%22total%22%3A%2020%2C%0A%20%20%20%20%22estado%22%3A%20%22completado%22%2C%0A%20%20%20%20%22metodo%22%3A%20%22Yape%22%0A%20%20%7D%2C%0A%20%20%22fecha_compra%22%3A%20%224%2F11%2F2025%2C%201%3A17%3A55%20p.%C2%A0m.%22%2C%0A%20%20%22cliente%22%3A%20%22Leonardo%22%0A%7D"
+    },
+    {
+      "id": 7,
+      "id_orden_compra": 27,
+      "id_metodo_pago": 1,
+      "monto_total": "63.50",
+      "estado_pago": "completado",
+      "fecha_pago": "2025-11-04T21:26:55.296Z",
+      "numero_tarjeta": null,
+      "codigo_aprobacion": null,
+      "codigo_qr": "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=%7B%0A%20%20%22tipo%22%3A%20%22CINESTAR_TICKET%22%2C%0A%20%20%22orden_id%22%3A%2027%2C%0A%20%20%22pelicula%22%3A%20%22Tel%C3%A9fono%20Negro%202%22%2C%0A%20%20%22funcion%22%3A%20%7B%0A%20%20%20%20%22fecha%22%3A%20%222025-11-04%22%2C%0A%20%20%20%20%22hora%22%3A%20%2218%3A30%3A00%22%0A%20%20%7D%2C%0A%20%20%22ubicacion%22%3A%20%7B%0A%20%20%20%20%22sede%22%3A%20%22CINESTAR%20SUR%22%2C%0A%20%20%20%20%22sala%22%3A%20%22Sala%205%22%0A%20%20%7D%2C%0A%20%20%22asientos%22%3A%20%5B%0A%20%20%20%20%22C4%22%2C%0A%20%20%20%20%22B5%22%2C%0A%20%20%20%20%22B4%22%0A%20%20%5D%2C%0A%20%20%22tickets%22%3A%20%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22tipo%22%3A%20%22Adulto%22%2C%0A%20%20%20%20%20%20%22cantidad%22%3A%203%2C%0A%20%20%20%20%20%20%22descripcion%22%3A%20%22x3%20Tickets%20Adulto%22%0A%20%20%20%20%7D%0A%20%20%5D%2C%0A%20%20%22combos%22%3A%20%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22nombre%22%3A%20%22COMBO%204%22%2C%0A%20%20%20%20%20%20%22cantidad%22%3A%201%0A%20%20%20%20%7D%0A%20%20%5D%2C%0A%20%20%22pago%22%3A%20%7B%0A%20%20%20%20%22total%22%3A%2063.5%2C%0A%20%20%20%20%22estado%22%3A%20%22completado%22%2C%0A%20%20%20%20%22metodo%22%3A%20%22Tarjeta%20de%20Cr%C3%A9dito%2FD%C3%A9bito%22%0A%20%20%7D%2C%0A%20%20%22fecha_compra%22%3A%20%224%2F11%2F2025%2C%204%3A26%3A53%20p.%C2%A0m.%22%2C%0A%20%20%22cliente%22%3A%20%22Leonardo%22%0A%7D"
+    },
+    {
+      "id": 8,
+      "id_orden_compra": 28,
+      "id_metodo_pago": 2,
+      "monto_total": "85.00",
+      "estado_pago": "completado",
+      "fecha_pago": "2025-11-04T23:13:51.003Z",
+      "numero_tarjeta": null,
+      "codigo_aprobacion": null,
+      "codigo_qr": "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=%7B%0A%20%20%22tipo%22%3A%20%22CINESTAR_TICKET%22%2C%0A%20%20%22orden_id%22%3A%2028%2C%0A%20%20%22pelicula%22%3A%20%22Tel%C3%A9fono%20Negro%202%22%2C%0A%20%20%22funcion%22%3A%20%7B%0A%20%20%20%20%22fecha%22%3A%20%222025-11-04%22%2C%0A%20%20%20%20%22hora%22%3A%20%2218%3A30%3A00%22%0A%20%20%7D%2C%0A%20%20%22ubicacion%22%3A%20%7B%0A%20%20%20%20%22sede%22%3A%20%22CINESTAR%20SUR%22%2C%0A%20%20%20%20%22sala%22%3A%20%22Sala%205%22%0A%20%20%7D%2C%0A%20%20%22asientos%22%3A%20%5B%0A%20%20%20%20%22B6%22%2C%0A%20%20%20%20%22B7%22%2C%0A%20%20%20%20%22B8%22%0A%20%20%5D%2C%0A%20%20%22tickets%22%3A%20%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22tipo%22%3A%20%22Adulto%20Mayor%22%2C%0A%20%20%20%20%20%20%22cantidad%22%3A%201%2C%0A%20%20%20%20%20%20%22descripcion%22%3A%20%22x1%20Ticket%20Adulto%20Mayor%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22tipo%22%3A%20%22Adulto%22%2C%0A%20%20%20%20%20%20%22cantidad%22%3A%202%2C%0A%20%20%20%20%20%20%22descripcion%22%3A%20%22x2%20Tickets%20Adulto%22%0A%20%20%20%20%7D%0A%20%20%5D%2C%0A%20%20%22combos%22%3A%20%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22nombre%22%3A%20%22COMBO%203%22%2C%0A%20%20%20%20%20%20%22cantidad%22%3A%202%0A%20%20%20%20%7D%0A%20%20%5D%2C%0A%20%20%22pago%22%3A%20%7B%0A%20%20%20%20%22total%22%3A%2085%2C%0A%20%20%20%20%22estado%22%3A%20%22completado%22%2C%0A%20%20%20%20%22metodo%22%3A%20%22Yape%22%0A%20%20%7D%2C%0A%20%20%22fecha_compra%22%3A%20%224%2F11%2F2025%2C%206%3A13%3A48%20p.%C2%A0m.%22%2C%0A%20%20%22cliente%22%3A%20%22Leonardo%22%0A%7D"
+    },
+    {
+      "id": 9,
+      "id_orden_compra": 29,
+      "id_metodo_pago": 2,
+      "monto_total": "167.50",
+      "estado_pago": "completado",
+      "fecha_pago": "2025-11-05T03:44:09.261Z",
+      "numero_tarjeta": null,
+      "codigo_aprobacion": null,
+      "codigo_qr": null
+    },
+    {
+      "id": 10,
+      "id_orden_compra": 30,
+      "id_metodo_pago": 2,
+      "monto_total": "107.50",
+      "estado_pago": "completado",
+      "fecha_pago": "2025-11-05T03:54:25.016Z",
+      "numero_tarjeta": null,
+      "codigo_aprobacion": null,
+      "codigo_qr": null
+    }
+  ],
+  "tarifas_corporativas": [],
+  "boletas_corporativas": [
+    {
+      "id": 1,
+      "tipo": "funcion_privada",
+      "id_referencia": 1619,
+      "codigo_qr": "{\n  \"codigo\": \"CORP-MHIOJP6J-16287868\",\n  \"tipo\": \"FUNCION_PRIVADA\",\n  \"fecha_emision\": \"2025-11-03T05:21:43.151Z\",\n  \"servicio\": {\n    \"id\": 1619,\n    \"pelicula\": \"Tron Ares\",\n    \"sala\": \"Sala 5\",\n    \"tipo_sala\": \"2D\",\n    \"sede\": \"CINESTAR SUR\",\n    \"ciudad\": \"SJM\",\n    \"fecha\": \"2025-11-04\",\n    \"hora_inicio\": \"13:00:00\",\n    \"hora_fin\": \"16:00:00\",\n    \"duracion\": \"3 horas\",\n    \"cliente\": \"Banco de Crédito del Perú\",\n    \"email_cliente\": \"corporativo@bcp.com.pe\",\n    \"descripcion\": \"Cumpleaños de un gerente\"\n  }\n}",
+      "fecha_emision": "2025-11-03T05:08:50.877Z",
+      "estado": "activa",
+      "created_at": "2025-11-03T05:08:50.877Z",
+      "updated_at": "2025-11-03T05:48:52.573Z"
+    },
+    {
+      "id": 2,
+      "tipo": "funcion_privada",
+      "id_referencia": 1660,
+      "codigo_qr": "{\n  \"codigo\": \"CORP-MHMEINLH-147AB007\",\n  \"tipo\": \"FUNCION_PRIVADA\",\n  \"fecha_emision\": \"2025-11-05T19:39:10.720Z\",\n  \"servicio\": {\n    \"id\": 1660,\n    \"pelicula\": \"Noche de Paz, Noche de Horror\",\n    \"sala\": \"Sala 2\",\n    \"tipo_sala\": \"2D\",\n    \"sede\": \"CINESTAR COMAS\",\n    \"ciudad\": \"Comas\",\n    \"fecha\": \"2025-11-06\",\n    \"hora_inicio\": \"16:00:00\",\n    \"hora_fin\": \"19:00:00\",\n    \"duracion\": \"3 horas\",\n    \"cliente\": \"Gustavo\",\n    \"email_cliente\": \"tabotijon@gmail.com\",\n    \"descripcion\": \"Celebración de un cumpleaños.\"\n  }\n}",
+      "fecha_emision": "2025-11-05T19:39:10.730Z",
+      "estado": "activa",
+      "created_at": "2025-11-05T19:39:10.731Z",
+      "updated_at": "2025-11-05T19:39:10.731Z"
+    },
+    {
+      "id": 3,
+      "tipo": "funcion_privada",
+      "id_referencia": 1661,
+      "codigo_qr": "{\n  \"codigo\": \"CORP-MHMPNXWR-62A46D2F\",\n  \"tipo\": \"FUNCION_PRIVADA\",\n  \"fecha_emision\": \"2025-11-06T00:51:13.143Z\",\n  \"servicio\": {\n    \"id\": 1661,\n    \"pelicula\": \"Teléfono Negro 2\",\n    \"sala\": \"Sala 2\",\n    \"tipo_sala\": \"3D\",\n    \"sede\": \"CINESTAR CHIMBOTE\",\n    \"ciudad\": \"Chimbote\",\n    \"fecha\": \"2025-12-16\",\n    \"hora_inicio\": \"19:30:00\",\n    \"hora_fin\": \"22:30:00\",\n    \"duracion\": \"3 horas\",\n    \"cliente\": \"Gustavo\",\n    \"email_cliente\": \"tabotijon@gmail.com\",\n    \"descripcion\": \"Reunión de una promoción de colegio.\"\n  }\n}",
+      "fecha_emision": "2025-11-06T00:51:13.160Z",
+      "estado": "activa",
+      "created_at": "2025-11-06T00:51:13.160Z",
+      "updated_at": "2025-11-06T00:51:13.160Z"
+    },
+    {
+      "id": 4,
+      "tipo": "funcion_privada",
+      "id_referencia": 1662,
+      "codigo_qr": "{\n  \"codigo\": \"CORP-MHMQDQNC-DFB13D60\",\n  \"tipo\": \"FUNCION_PRIVADA\",\n  \"fecha_emision\": \"2025-11-06T01:11:16.779Z\",\n  \"servicio\": {\n    \"id\": 1662,\n    \"pelicula\": \"Tron Ares\",\n    \"sala\": \"Sala 5\",\n    \"tipo_sala\": \"2D\",\n    \"sede\": \"CINESTAR SJL\",\n    \"ciudad\": \"SJL\",\n    \"fecha\": \"2025-11-15\",\n    \"hora_inicio\": \"19:00:00\",\n    \"hora_fin\": \"22:00:00\",\n    \"duracion\": \"3 horas\",\n    \"cliente\": \"Gustavo\",\n    \"email_cliente\": \"tabotijon@gmail.com\",\n    \"descripcion\": \"Reencuentro de Promoción.\"\n  }\n}",
+      "fecha_emision": "2025-11-06T01:11:16.798Z",
+      "estado": "activa",
+      "created_at": "2025-11-06T01:11:16.798Z",
+      "updated_at": "2025-11-06T01:11:16.798Z"
+    }
+  ],
+  "alquiler_salas": [],
+  "publicidad": []
+}

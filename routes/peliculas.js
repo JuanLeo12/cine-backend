@@ -7,6 +7,7 @@ const {
 const { validarPelicula } = require("../utils/validacionesPeliculas");
 const {
   listarPeliculas,
+  listarPeliculasCartelera,
   obtenerPelicula,
   crearPelicula,
   actualizarPelicula,
@@ -17,6 +18,7 @@ const {
 // Rutas públicas
 // -------------------------------
 router.get("/", listarPeliculas); // Soporta filtros: ?tipo=cartelera&genero=Acción&clasificacion=PG-13
+router.get("/cartelera/activas", listarPeliculasCartelera); // Nueva ruta específica para cartelera
 router.get("/:id", obtenerPelicula);
 
 // -------------------------------

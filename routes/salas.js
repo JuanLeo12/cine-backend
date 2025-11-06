@@ -11,10 +11,12 @@ const {
   crearSala,
   actualizarSala,
   eliminarSala,
+  verificarDisponibilidad,
 } = require("../controllers/salasController");
 
 // 📌 Público
 router.get("/", listarSalas);
+router.get("/:id/disponibilidad", verificarDisponibilidad); // Debe ir ANTES de /:id
 router.get("/:id", obtenerSala);
 
 // 📌 Admin

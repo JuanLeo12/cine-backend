@@ -52,6 +52,44 @@ exports.listarPeliculas = async (req, res) => {
   }
 };
 
+// 📌 Listar solo películas en cartelera
+exports.listarPeliculasCartelera = async (req, res) => {
+  try {
+    const peliculas = await Pelicula.findAll({
+      where: { 
+        estado: "activa",
+        tipo: "cartelera" 
+      },
+      attributes: [
+        "id",
+        "titulo",
+        "genero",
+        "clasificacion",
+        "duracion",
+        "sinopsis",
+        "imagen_url",
+        "estado",
+        "fecha_estreno",
+        "tipo",
+      ],
+      order: [["fecha_estreno", "DESC"]],
+      include: [
+        {
+          model: Funcion,
+          as: "funciones",
+          attributes: ["id", "fecha", "hora", "estado"],
+          required: false // LEFT JOIN - incluye películas sin funciones
+        },
+      ],
+    });
+
+    res.json(peliculas);
+  } catch (error) {
+    console.error("❌ Error al listar películas en cartelera:", error);
+    res.status(500).json({ error: "Error al obtener películas en cartelera" });
+  }
+};
+
 // 📌 Obtener película por ID
 exports.obtenerPelicula = async (req, res) => {
   try {

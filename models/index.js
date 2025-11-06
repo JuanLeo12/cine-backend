@@ -14,8 +14,10 @@ const OrdenCompra = require("./orden_compra");
 const Combo = require("./combo");
 const ValeCorporativo = require("./vale_corporativo");
 const TarifaCorporativa = require("./tarifa_corporativa");
+const TarifaSala = require("./tarifa_sala");
 const Publicidad = require("./publicidad");
 const AlquilerSala = require("./alquiler_sala");
+const BoletaCorporativa = require("./boleta_corporativa");
 const sequelize = require("../config/db"); 
 
 // Exportar todos los modelos
@@ -36,8 +38,10 @@ const models = {
   AsientoFuncion,
   ValeCorporativo,
   TarifaCorporativa,
+  TarifaSala,
   Publicidad,
   AlquilerSala,
+  BoletaCorporativa,
   sequelize
 };
 
@@ -63,6 +67,33 @@ AlquilerSala.belongsTo(Sala, { foreignKey: "id_sala", as: "sala" });
 
 Pago.hasOne(AlquilerSala, { foreignKey: "id_pago", as: "alquiler" });
 AlquilerSala.belongsTo(Pago, { foreignKey: "id_pago", as: "pago" });
+
+// 🔗 Boletas corporativas
+Funcion.hasMany(BoletaCorporativa, { 
+  foreignKey: "id_referencia", 
+  constraints: false,
+  scope: { tipo: 'funcion_privada' },
+  as: "boletasFuncion" 
+});
+
+AlquilerSala.hasMany(BoletaCorporativa, { 
+  foreignKey: "id_referencia", 
+  constraints: false,
+  scope: { tipo: 'alquiler_sala' },
+  as: "boletasAlquiler" 
+});
+
+BoletaCorporativa.belongsTo(Funcion, { 
+  foreignKey: "id_referencia", 
+  constraints: false,
+  as: "funcionPrivada" 
+});
+
+BoletaCorporativa.belongsTo(AlquilerSala, { 
+  foreignKey: "id_referencia", 
+  constraints: false,
+  as: "alquilerSala" 
+});
 
 // 🔗 Vales corporativos
 Pago.hasMany(ValeCorporativo, {
@@ -99,6 +130,16 @@ TarifaCorporativa.belongsTo(TipoTicket, {
   as: "tipoTicket",
 });
 
+// 🔗 Tarifas por sala
+TipoTicket.hasMany(TarifaSala, {
+  foreignKey: "id_tipo_ticket",
+  as: "tarifasSala",
+});
+TarifaSala.belongsTo(TipoTicket, {
+  foreignKey: "id_tipo_ticket",
+  as: "tipoTicket",
+});
+
 // 🔗 Ordenes y detalles
 OrdenCompra.hasMany(OrdenCombo, {
   foreignKey: "id_orden_compra",
@@ -126,7 +167,7 @@ TipoTicket.hasMany(OrdenTicket, {
   as: "ordenTickets",
 });
 OrdenTicket.belongsTo(TipoTicket, {
-  foreignKey: "id_tipo_usuario",
+  foreignKey: "id_tipo_ticket",
   as: "tipoTicket",
 });
 

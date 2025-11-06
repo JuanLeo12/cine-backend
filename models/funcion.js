@@ -10,11 +10,24 @@ const Funcion = sequelize.define(
     },
     hora: {
       type: DataTypes.TIME,
+      allowNull: true, // Mantenemos por compatibilidad
+    },
+    hora_inicio: {
+      type: DataTypes.TIME,
+      allowNull: false,
+    },
+    hora_fin: {
+      type: DataTypes.TIME,
       allowNull: false,
     },
     es_privada: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
+    },
+    descripcion_evento: {
+      type: DataTypes.STRING(500),
+      allowNull: true,
+      comment: 'Descripción del evento para funciones privadas'
     },
     id_cliente_corporativo: {
       type: DataTypes.INTEGER,
@@ -51,7 +64,7 @@ const Funcion = sequelize.define(
     indexes: [
       {
         unique: true,
-        fields: ["id_sala", "fecha", "hora"],
+        fields: ["id_sala", "fecha", "hora_inicio"], // Cambiar a hora_inicio
       },
     ],
   }

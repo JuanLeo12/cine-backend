@@ -1,11 +1,20 @@
 const { Funcion, Pelicula, Sala, Sede, Usuario } = require("../models");
 const { Op } = require("sequelize");
+const { 
+  calcularHoraFin, 
+  calcularHoraFinFuncionPrivada,
+  verificarDisponibilidadSala,
+  DURACION_FUNCION_PRIVADA_MINUTOS
+} = require("../utils/disponibilidadSalas");
 
-// 📌 Obtener todas las funciones (solo activas)
+// 📌 Obtener todas las funciones (solo activas y NO privadas para público)
 exports.listarFunciones = async (req, res) => {
   try {
     const funciones = await Funcion.findAll({
-      where: { estado: "activa" },
+      where: { 
+        estado: "activa",
+        es_privada: false // Solo funciones públicas
+      },
       include: [
         {
           model: Pelicula,
@@ -132,17 +141,18 @@ exports.obtenerFuncionesByPelicula = async (req, res) => {
   try {
     const { id_pelicula } = req.params;
     
-    // Solo devolver funciones activas y cuya sede esté activa (evita sedes fantasma)
+    // Solo devolver funciones activas, públicas y cuya sede esté activa (evita sedes fantasma)
     const funciones = await Funcion.findAll({
       where: { 
         id_pelicula,
-        estado: "activa" 
+        estado: "activa",
+        es_privada: false // Solo funciones públicas
       },
       include: [
         {
           model: Sala,
           as: "sala",
-          attributes: ["id", "nombre", "filas", "columnas"],
+          attributes: ["id", "nombre", "tipo_sala", "filas", "columnas"],
           include: [
             {
               model: Sede,
@@ -194,11 +204,23 @@ exports.obtenerFuncion = async (req, res) => {
 // 📌 Crear nueva función
 exports.crearFuncion = async (req, res) => {
   try {
-    if (req.user?.rol !== "admin") {
+    console.log('📝 Datos recibidos para crear función:', JSON.stringify(req.body, null, 2));
+    
+    const { fecha, hora, id_pelicula, id_sala, es_privada } = req.body;
+
+    // Validar permisos: Admin puede crear cualquier función, Cliente solo puede crear funciones privadas
+    if (req.user?.rol === "admin") {
+      // Admin puede crear cualquier tipo de función
+    } else if (req.user?.rol === "cliente" || req.user?.rol === "corporativo") {
+      // Clientes y corporativos solo pueden crear funciones privadas
+      if (!es_privada) {
+        return res.status(403).json({ 
+          error: "Los clientes solo pueden crear funciones privadas" 
+        });
+      }
+    } else {
       return res.status(403).json({ error: "No autorizado" });
     }
-
-    const { fecha, hora, id_pelicula, id_sala } = req.body;
 
     if (!fecha || !hora || !id_pelicula || !id_sala) {
       return res
@@ -206,8 +228,68 @@ exports.crearFuncion = async (req, res) => {
         .json({ error: "Campos obligatorios: película, sala, fecha y hora" });
     }
 
-    const nueva = await Funcion.create(req.body);
-    res.status(201).json({ mensaje: "Función creada correctamente", funcion: nueva });
+    // 1. Obtener duración de la película
+    const pelicula = await Pelicula.findByPk(id_pelicula);
+    if (!pelicula) {
+      return res.status(404).json({ error: "Película no encontrada" });
+    }
+
+    // 2. Calcular hora_fin: 
+    // - Funciones privadas: SIEMPRE 3 horas
+    // - Funciones normales: duración de la película
+    let hora_fin;
+    if (es_privada) {
+      hora_fin = calcularHoraFinFuncionPrivada(hora);
+      console.log(`🎬 Función Privada: 3 horas fijas (${hora} - ${hora_fin})`);
+    } else {
+      hora_fin = calcularHoraFin(hora, pelicula.duracion || 120);
+      console.log(`🎬 Función Normal: ${pelicula.duracion || 120} minutos (${hora} - ${hora_fin})`);
+    }
+
+    // 3. Verificar disponibilidad de la sala
+    const disponibilidad = await verificarDisponibilidadSala(
+      id_sala,
+      fecha,
+      hora,
+      hora_fin
+    );
+
+    if (!disponibilidad.disponible) {
+      return res.status(409).json({
+        error: "La sala no está disponible en ese horario",
+        conflictos: disponibilidad.conflictos,
+        mensaje: `Conflictos encontrados: ${disponibilidad.conflictos.map(c => 
+          `${c.titulo} (${c.hora_inicio} - ${c.hora_fin})`
+        ).join(', ')}`
+      });
+    }
+
+    // 4. Crear función con hora_fin calculada
+    // Si es función privada, asignar id_cliente_corporativo
+    const dataFuncion = {
+      ...req.body,
+      hora_inicio: hora,
+      hora_fin: hora_fin
+    };
+
+    if (es_privada && (req.user?.rol === "cliente" || req.user?.rol === "corporativo")) {
+      dataFuncion.id_cliente_corporativo = req.user.id;
+    }
+
+    console.log('💰 Datos de función a crear:', JSON.stringify(dataFuncion, null, 2));
+    console.log('💰 Precio corporativo recibido:', dataFuncion.precio_corporativo);
+
+    const nueva = await Funcion.create(dataFuncion);
+
+    res.status(201).json({ 
+      mensaje: es_privada 
+        ? `Función privada creada correctamente (3 horas: ${hora} - ${hora_fin})`
+        : "Función creada correctamente", 
+      funcion: nueva,
+      hora_fin_calculada: hora_fin,
+      duracion_minutos: es_privada ? DURACION_FUNCION_PRIVADA_MINUTOS : pelicula.duracion,
+      id: nueva.id // Incluir ID para crear boleta
+    });
   } catch (error) {
     console.error("Error crearFuncion:", error);
     if (error.name === "SequelizeUniqueConstraintError") {
@@ -239,8 +321,46 @@ exports.actualizarFuncion = async (req, res) => {
       return res.status(404).json({ error: "Función no encontrada" });
     }
 
-    await funcion.update(req.body);
-    res.json({ mensaje: "Función actualizada correctamente", funcion });
+    // 1. Obtener duración de la película
+    const pelicula = await Pelicula.findByPk(id_pelicula);
+    if (!pelicula) {
+      return res.status(404).json({ error: "Película no encontrada" });
+    }
+
+    // 2. Calcular hora_fin automáticamente
+    const hora_fin = calcularHoraFin(hora, pelicula.duracion || 120);
+
+    // 3. Verificar disponibilidad (excluyendo esta función)
+    const disponibilidad = await verificarDisponibilidadSala(
+      id_sala,
+      fecha,
+      hora,
+      hora_fin,
+      req.params.id // Excluir la función actual de la verificación
+    );
+
+    if (!disponibilidad.disponible) {
+      return res.status(409).json({
+        error: "La sala no está disponible en ese horario",
+        conflictos: disponibilidad.conflictos,
+        mensaje: `Conflictos encontrados: ${disponibilidad.conflictos.map(c => 
+          `${c.titulo} (${c.hora_inicio} - ${c.hora_fin})`
+        ).join(', ')}`
+      });
+    }
+
+    // 4. Actualizar con hora_fin calculada
+    await funcion.update({
+      ...req.body,
+      hora_inicio: hora,
+      hora_fin: hora_fin
+    });
+
+    res.json({ 
+      mensaje: "Función actualizada correctamente", 
+      funcion,
+      hora_fin_calculada: hora_fin
+    });
   } catch (error) {
     console.error("Error actualizarFuncion:", error);
     res.status(500).json({ error: "Error al actualizar función" });
