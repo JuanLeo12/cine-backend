@@ -47,7 +47,7 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
         {
           model: Usuario,
           as: 'clienteCorporativo',
-          attributes: ['nombre', 'email', 'cargo']
+          attributes: ['nombre', 'email', 'representante', 'cargo']
         }
       ]
     });
@@ -66,8 +66,9 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
         sala: funcion.sala?.nombre || 'N/A',
         tipo_sala: funcion.sala?.tipo_sala || 'N/A'
       },
+      empresa: funcion.clienteCorporativo?.nombre || 'N/A',
       representante: {
-        nombre: funcion.clienteCorporativo?.nombre || 'N/A',
+        nombre: funcion.clienteCorporativo?.representante || 'N/A',
         email: funcion.clienteCorporativo?.email || 'N/A',
         cargo: funcion.clienteCorporativo?.cargo || 'N/A'
       },
@@ -89,7 +90,7 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
         {
           model: Usuario,
           as: 'usuario',
-          attributes: ['nombre', 'email', 'cargo']
+          attributes: ['nombre', 'email', 'representante', 'cargo']
         }
       ]
     });
@@ -115,8 +116,9 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
         capacidad: alquiler.sala ? (alquiler.sala.filas * alquiler.sala.columnas) : 0
       },
       precio: parseFloat(alquiler.precio || 0),
+      empresa: alquiler.usuario?.nombre || 'N/A',
       representante: {
-        nombre: alquiler.usuario?.nombre || 'N/A',
+        nombre: alquiler.usuario?.representante || 'N/A',
         email: alquiler.usuario?.email || 'N/A',
         cargo: alquiler.usuario?.cargo || 'N/A'
       },
@@ -133,7 +135,7 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
         {
           model: Usuario,
           as: 'usuario',
-          attributes: ['nombre', 'email', 'cargo']
+          attributes: ['nombre', 'email', 'representante', 'cargo']
         }
       ]
     });
@@ -157,8 +159,9 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
       precio: parseFloat(publicidad.precio || 0),
       estado: publicidad.estado,
       cliente: publicidad.cliente,
+      empresa: publicidad.usuario?.nombre || 'N/A',
       representante: {
-        nombre: publicidad.usuario?.nombre || 'N/A',
+        nombre: publicidad.usuario?.representante || 'N/A',
         email: publicidad.usuario?.email || 'N/A',
         cargo: publicidad.usuario?.cargo || 'N/A'
       },
@@ -181,7 +184,7 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
           include: [{
             model: Usuario,
             as: 'usuario',
-            attributes: ['nombre', 'email', 'cargo']
+            attributes: ['nombre', 'email', 'representante', 'cargo']
           }]
         }]
       });
@@ -195,8 +198,9 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
         usos_disponibles: vale.usos_disponibles || 0,
         fecha_expiracion: vale.fecha_expiracion,
         estado: vale.usado ? 'agotado' : 'vigente',
+        empresa: pago?.orden?.usuario?.nombre || 'N/A',
         representante: pago?.orden?.usuario ? {
-          nombre: pago.orden.usuario.nombre || 'N/A',
+          nombre: pago.orden.usuario.representante || 'N/A',
           email: pago.orden.usuario.email || 'N/A',
           cargo: pago.orden.usuario.cargo || 'N/A'
         } : null,
