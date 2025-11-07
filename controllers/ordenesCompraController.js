@@ -112,8 +112,10 @@ exports.listarOrdenes = async (req, res) => {
     
     res.json(ordenes);
   } catch (error) {
-    console.error('Error listarOrdenes:', error);
-    res.status(500).json({ error: 'Error al listar órdenes' });
+    console.error('❌ Error listarOrdenes:', error);
+    console.error('Error details:', error.message);
+    console.error('Error stack:', error.stack);
+    res.status(500).json({ error: 'Error al listar órdenes', details: error.message });
   }
 };
 
