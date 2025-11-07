@@ -104,7 +104,7 @@ exports.listarOrdenes = async (req, res) => {
     const ordenes = await OrdenCompra.findAll({ 
       where, 
       include: ordenInclude, 
-      order: [['createdAt', 'DESC']] 
+      order: [['fecha_compra', 'DESC']] 
     });
     
     console.log(`📦 Encontradas ${ordenes.length} órdenes para usuario ${req.user.id}`);
