@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-require("./utils/liberarAsientos");
 
 // Inicializar app
 const app = express();
@@ -110,3 +109,7 @@ app.use((req, res) => {
 });
 
 module.exports = app;
+
+// Iniciar cron job de liberación de asientos (después de exportar app)
+require("./utils/liberarAsientos");
+
