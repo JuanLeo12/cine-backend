@@ -52,19 +52,40 @@ exports.listarTiposPorSala = async (req, res) => {
           as: "tarifasSala",
           where: { tipo_sala },
           attributes: ["tipo_sala", "precio"],
-          required: true, // INNER JOIN - solo tipos con tarifa configurada
+          required: false, // LEFT JOIN - devolver tipos aunque no tengan tarifa
         },
       ],
       order: [["id", "ASC"]],
     });
 
+    // Multiplicadores por tipo de sala (aplicar si no hay tarifa específica)
+    const multiplicadores = {
+      "2D": 1.0,
+      "3D": 1.3,
+      "4DX": 1.8,
+      "Xtreme": 1.5
+    };
+
     // Formatear respuesta con el precio correcto
-    const tiposConPrecio = tipos.map((tipo) => ({
-      id: tipo.id,
-      nombre: tipo.nombre,
-      precio: parseFloat(tipo.tarifasSala[0].precio), // Precio según tipo de sala
-      tipo_sala: tipo.tarifasSala[0].tipo_sala,
-    }));
+    const tiposConPrecio = tipos.map((tipo) => {
+      let precio;
+      
+      if (tipo.tarifasSala && tipo.tarifasSala.length > 0) {
+        // Usar tarifa específica si existe
+        precio = parseFloat(tipo.tarifasSala[0].precio);
+      } else {
+        // Usar precio base con multiplicador
+        const multiplicador = multiplicadores[tipo_sala] || 1.0;
+        precio = parseFloat(tipo.precio_base) * multiplicador;
+      }
+
+      return {
+        id: tipo.id,
+        nombre: tipo.nombre,
+        precio: precio,
+        tipo_sala: tipo_sala,
+      };
+    });
 
     res.json(tiposConPrecio);
   } catch (error) {
