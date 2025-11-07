@@ -142,17 +142,6 @@ exports.crearOrden = async (req, res) => {
   }
 };
 
-// 📌 Listar órdenes
-exports.listarOrdenes = async (req, res) => {
-  try {
-    const ordenes = await OrdenCompra.findAll({ include: ordenInclude });
-    res.json(ordenes);
-  } catch (error) {
-    console.error('Error listarOrdenes:', error);
-    res.status(500).json({ error: 'Error al listar órdenes' });
-  }
-};
-
 // 📌 Confirmar orden de compra (pago simulado)
 exports.confirmarOrden = async (req, res) => {
     try {
