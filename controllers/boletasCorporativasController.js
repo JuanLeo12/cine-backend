@@ -47,7 +47,7 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
         {
           model: Usuario,
           as: 'clienteCorporativo',
-          attributes: ['nombre', 'email']
+          attributes: ['nombre', 'email', 'cargo']
         }
       ]
     });
@@ -66,9 +66,10 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
         sala: funcion.sala?.nombre || 'N/A',
         tipo_sala: funcion.sala?.tipo_sala || 'N/A'
       },
-      cliente: {
+      representante: {
         nombre: funcion.clienteCorporativo?.nombre || 'N/A',
-        email: funcion.clienteCorporativo?.email || 'N/A'
+        email: funcion.clienteCorporativo?.email || 'N/A',
+        cargo: funcion.clienteCorporativo?.cargo || 'N/A'
       },
       id_funcion: funcion.id
     };
@@ -88,7 +89,7 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
         {
           model: Usuario,
           as: 'usuario',
-          attributes: ['nombre', 'email']
+          attributes: ['nombre', 'email', 'cargo']
         }
       ]
     });
@@ -114,9 +115,10 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
         capacidad: alquiler.sala ? (alquiler.sala.filas * alquiler.sala.columnas) : 0
       },
       precio: parseFloat(alquiler.precio || 0),
-      cliente: {
+      representante: {
         nombre: alquiler.usuario?.nombre || 'N/A',
-        email: alquiler.usuario?.email || 'N/A'
+        email: alquiler.usuario?.email || 'N/A',
+        cargo: alquiler.usuario?.cargo || 'N/A'
       },
       id_alquiler: alquiler.id
     };
@@ -131,7 +133,7 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
         {
           model: Usuario,
           as: 'usuario',
-          attributes: ['nombre', 'email']
+          attributes: ['nombre', 'email', 'cargo']
         }
       ]
     });
@@ -154,10 +156,11 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
       },
       precio: parseFloat(publicidad.precio || 0),
       estado: publicidad.estado,
-      cliente: {
-        empresa: publicidad.cliente,
-        contacto: publicidad.usuario?.nombre || 'N/A',
-        email: publicidad.usuario?.email || 'N/A'
+      cliente: publicidad.cliente,
+      representante: {
+        nombre: publicidad.usuario?.nombre || 'N/A',
+        email: publicidad.usuario?.email || 'N/A',
+        cargo: publicidad.usuario?.cargo || 'N/A'
       },
       id_publicidad: publicidad.id,
       archivo_publicidad: publicidad.archivo_publicidad || null
@@ -170,6 +173,19 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
     });
 
     if (vale) {
+      // Obtener información del pago para incluir datos del usuario
+      const pago = await Pago.findByPk(id_referencia, {
+        include: [{
+          model: OrdenCompra,
+          as: 'orden',
+          include: [{
+            model: Usuario,
+            as: 'usuario',
+            attributes: ['nombre', 'email', 'cargo']
+          }]
+        }]
+      });
+
       datosQR.servicio = {
         tipo_servicio: 'Vale Corporativo',
         codigo: vale.codigo,
@@ -179,6 +195,11 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
         usos_disponibles: vale.usos_disponibles || 0,
         fecha_expiracion: vale.fecha_expiracion,
         estado: vale.usado ? 'agotado' : 'vigente',
+        representante: pago?.orden?.usuario ? {
+          nombre: pago.orden.usuario.nombre || 'N/A',
+          email: pago.orden.usuario.email || 'N/A',
+          cargo: pago.orden.usuario.cargo || 'N/A'
+        } : null,
         id_pago: id_referencia
       };
     } else {
