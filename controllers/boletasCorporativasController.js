@@ -1,4 +1,4 @@
-const { BoletaCorporativa, Funcion, AlquilerSala, Sala, Sede, Pelicula, Usuario, Publicidad, ValeCorporativo } = require('../models');
+const { BoletaCorporativa, Funcion, AlquilerSala, Sala, Sede, Pelicula, Usuario, Publicidad, ValeCorporativo, Pago, OrdenCompra, MetodoPago } = require('../models');
 const crypto = require('crypto');
 
 /**
@@ -456,6 +456,15 @@ const obtenerMisBoletas = async (req, res) => {
     const idsPagos = pagos.map(p => p.id);
     console.log('💰 IDs de pagos:', idsPagos);
 
+    // Para vales, necesitamos buscar los IDs de los vales que tienen esos pagos
+    const valesDelUsuario = await ValeCorporativo.findAll({
+      where: { id_pago: idsPagos },
+      attributes: ['id']
+    });
+    
+    const idsVales = valesDelUsuario.map(v => v.id);
+    console.log('🎟️ IDs de vales (por pagos del usuario):', idsVales);
+
     // Construir condiciones OR dinámicamente
     const whereConditions = [];
     
@@ -471,8 +480,9 @@ const obtenerMisBoletas = async (req, res) => {
       whereConditions.push({ tipo: 'publicidad', id_referencia: idsPublicidad });
     }
     
-    if (idsPagos.length > 0) {
-      whereConditions.push({ tipo: 'vales_corporativos', id_referencia: idsPagos });
+    // Para vales: usar los IDs de los vales (no los pagos) porque id_referencia apunta al vale
+    if (idsVales.length > 0) {
+      whereConditions.push({ tipo: 'vales_corporativos', id_referencia: idsVales });
     }
 
     console.log('🔎 Condiciones de búsqueda:', JSON.stringify(whereConditions, null, 2));
@@ -535,42 +545,48 @@ const obtenerMisBoletas = async (req, res) => {
             ]
           });
         } else if (boleta.tipo === 'vales_corporativos') {
-          console.log(`🎟️ Buscando vale para pago ID: ${boleta.id_referencia}`);
+          console.log(`🎟️ Buscando vale con ID: ${boleta.id_referencia}`);
           
-          // Para vales, obtener el vale asociado al pago (ahora solo 1)
-          const vale = await ValeCorporativo.findOne({
-            where: { id_pago: boleta.id_referencia },
-            attributes: ['id', 'codigo', 'tipo', 'valor', 'fecha_expiracion', 'usado', 'cantidad_usos', 'usos_disponibles']
+          // Para vales, id_referencia apunta directamente al vale
+          const vale = await ValeCorporativo.findByPk(boleta.id_referencia, {
+            attributes: ['id', 'codigo', 'tipo', 'valor', 'fecha_expiracion', 'usado', 'cantidad_usos', 'usos_disponibles', 'id_pago']
           });
           
           if (vale) {
             vales = [vale]; // Mantener como array para compatibilidad
             console.log(`✅ Vale encontrado: ${vale.codigo} con ${vale.usos_disponibles} usos disponibles`);
           } else {
-            console.log(`⚠️ No se encontró vale para pago ${boleta.id_referencia}`);
+            console.log(`⚠️ No se encontró vale con ID ${boleta.id_referencia}`);
           }
           
-          // El detalle es el pago
-          const pago = await Pago.findByPk(boleta.id_referencia, {
+          // Obtener el pago asociado al vale
+          const pago = vale ? await Pago.findByPk(vale.id_pago, {
             include: [{
               model: OrdenCompra,
               as: 'ordenCompra',
-              attributes: ['id', 'fecha_compra']
+              attributes: ['id', 'fecha_compra', 'id_usuario']
             }],
             attributes: ['id', 'monto_total', 'fecha_pago']
-          });
+          }) : null;
           
-          console.log(`💰 Pago encontrado:`, pago ? `ID ${pago.id}, monto: ${pago.monto_total}` : 'No encontrado');
+          console.log(`💰 Pago encontrado:`, pago ? `ID ${pago.id}, monto: ${pago.monto_total}, orden: ${pago.ordenCompra?.id}` : 'No encontrado');
+          
+          // Calcular monto correcto basado en cantidad de usos del vale
+          const montoCalculado = vale ? (vale.cantidad_usos * 7.00) : 0;
           
           detalles = {
             tipo: 'vales_corporativos',
             cantidad_vales: vale ? 1 : 0,
             cantidad_usos: vale ? vale.cantidad_usos : 0,
             usos_disponibles: vale ? vale.usos_disponibles : 0,
-            monto_total: pago?.monto_total || 0,
+            monto_total: montoCalculado, // Usar monto calculado en vez del pago
+            monto_pago_original: pago?.monto_total, // Guardar el original por referencia
             fecha_compra: pago?.ordenCompra?.fecha_compra || pago?.fecha_pago,
-            id_orden_compra: pago?.ordenCompra?.id // Agregar id de orden para filtrado
+            id_orden_compra: pago?.ordenCompra?.id || null, // Siempre incluir, aunque sea null
+            id_usuario_orden: pago?.ordenCompra?.id_usuario || null // ID del usuario de la orden
           };
+          
+          console.log(`💵 Monto recalculado: ${montoCalculado} (original: ${pago?.monto_total}), orden: ${detalles.id_orden_compra}`);
         }
 
         const resultado = {
@@ -666,7 +682,37 @@ const obtenerTodasBoletasAdmin = async (req, res) => {
           });
         } else if (boleta.tipo === 'vales_corporativos') {
           detalles = await ValeCorporativo.findByPk(boleta.id_referencia, {
-            attributes: ['id', 'codigo', 'tipo', 'valor', 'fecha_expiracion', 'usado']
+            attributes: ['id', 'codigo', 'tipo', 'valor', 'fecha_expiracion', 'usado', 'cantidad_usos', 'usos_disponibles', 'id_pago', 'id_orden_compra'],
+            include: [
+              {
+                model: Pago,
+                as: 'pago',
+                required: false, // Opcional: permite que el vale no tenga pago
+                attributes: ['id', 'monto_total', 'fecha_pago', 'id_metodo_pago'],
+                include: [
+                  {
+                    model: MetodoPago,
+                    as: 'metodoPago',
+                    required: false,
+                    attributes: ['id', 'nombre']
+                  },
+                  {
+                    model: OrdenCompra,
+                    as: 'ordenCompra',
+                    required: false, // Opcional
+                    attributes: ['id', 'id_usuario'],
+                    include: [
+                      {
+                        model: Usuario,
+                        as: 'usuario',
+                        required: false, // Opcional
+                        attributes: ['id', 'nombre', 'email', 'representante', 'cargo', 'ruc']
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           });
         }
 

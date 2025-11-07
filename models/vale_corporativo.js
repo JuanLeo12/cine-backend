@@ -14,6 +14,7 @@ const ValeCorporativo = sequelize.define(
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: { min: 0.01 },
+      comment: "Porcentaje de descuento (ej: 15.00 = 15%)"
     },
     fecha_expiracion: { type: DataTypes.DATEONLY, allowNull: false },
     cantidad_usos: { 

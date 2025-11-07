@@ -33,10 +33,14 @@ exports.listarVales = async (req, res) => {
 // 📌 Crear vale
 exports.crearVale = async (req, res) => {
   try {
-    const { codigo, tipo, valor, fecha_expiracion, id_pago, id_orden_compra } =
+    const { codigo, tipo, valor, fecha_expiracion, id_pago, id_orden_compra, cantidad_usos } =
       req.body;
 
-    const errores = validarVale({ codigo, tipo, valor, fecha_expiracion });
+    // FORZAR VALOR A 20% (PORCENTAJE DE DESCUENTO)
+    const valorFinal = 20.00; // 20% de descuento fijo para todos los vales
+    const cantidadUsosFinal = cantidad_usos || 1; // Respetar cantidad de usos solicitada
+
+    const errores = validarVale({ codigo, tipo, valor: valorFinal, fecha_expiracion });
     if (errores.length > 0) return res.status(400).json({ errores });
 
     const existe = await ValeCorporativo.findOne({ where: { codigo } });
@@ -75,8 +79,10 @@ exports.crearVale = async (req, res) => {
     const nuevo = await ValeCorporativo.create({
       codigo,
       tipo,
-      valor,
+      valor: valorFinal, // 20% de descuento
       fecha_expiracion,
+      cantidad_usos: cantidadUsosFinal,
+      usos_disponibles: cantidadUsosFinal,
       usado: false,
       id_pago: id_pago || null,
       id_orden_compra: id_orden_compra || null,
@@ -200,11 +206,11 @@ exports.validarValeCodigo = async (req, res) => {
       });
     }
 
-    // Verificar si ya fue usado
-    if (vale.usado) {
+    // Verificar si tiene usos disponibles
+    if (vale.usos_disponibles <= 0) {
       return res.status(400).json({ 
         valido: false, 
-        error: 'Este vale ya fue utilizado' 
+        error: `Este vale ya fue utilizado completamente (${vale.cantidad_usos} de ${vale.cantidad_usos} usos consumidos)` 
       });
     }
 
@@ -218,6 +224,9 @@ exports.validarValeCodigo = async (req, res) => {
       });
     }
 
+    const usosRestantes = vale.usos_disponibles;
+    const usosConsumidos = vale.cantidad_usos - vale.usos_disponibles;
+
     res.json({
       valido: true,
       vale: {
@@ -225,9 +234,12 @@ exports.validarValeCodigo = async (req, res) => {
         codigo: vale.codigo,
         tipo: vale.tipo,
         valor: vale.valor,
-        fecha_expiracion: vale.fecha_expiracion
+        fecha_expiracion: vale.fecha_expiracion,
+        usos_disponibles: usosRestantes,
+        usos_consumidos: usosConsumidos,
+        cantidad_usos: vale.cantidad_usos
       },
-      mensaje: `Vale válido: S/ ${vale.valor} de descuento en ${vale.tipo === 'entrada' ? 'entradas' : 'combos'}`
+      mensaje: `Vale válido: ${vale.valor}% de descuento en ${vale.tipo === 'entrada' ? 'entradas' : 'combos'} (${usosRestantes} de ${vale.cantidad_usos} usos disponibles)`
     });
 
   } catch (error) {

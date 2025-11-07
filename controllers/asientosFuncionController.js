@@ -265,3 +265,40 @@ exports.liberarAsiento = async (req, res) => {
     res.status(500).json({ error: "Error al liberar asiento" });
   }
 };
+
+// 📌 Liberar todos los asientos bloqueados por el usuario actual en una función
+exports.liberarAsientosUsuarioEnFuncion = async (req, res) => {
+  try {
+    const { id_funcion } = req.params;
+
+    const asientos = await AsientoFuncion.findAll({
+      where: { 
+        id_funcion,
+        id_usuario_bloqueo: req.user.id,
+        estado: 'bloqueado'
+      }
+    });
+
+    if (asientos.length === 0) {
+      return res.json({ 
+        mensaje: "No hay asientos bloqueados por ti en esta función",
+        liberados: 0
+      });
+    }
+
+    console.log(`🧹 Liberando ${asientos.length} asientos del usuario ${req.user.id} en función ${id_funcion}`);
+    
+    for (const asiento of asientos) {
+      await asiento.destroy();
+      console.log(`  - Liberado: ${asiento.fila}${asiento.numero}`);
+    }
+
+    res.json({ 
+      mensaje: `${asientos.length} asiento(s) liberado(s) correctamente`,
+      liberados: asientos.length
+    });
+  } catch (error) {
+    console.error("Error liberarAsientosUsuarioEnFuncion:", error);
+    res.status(500).json({ error: "Error al liberar asientos" });
+  }
+};

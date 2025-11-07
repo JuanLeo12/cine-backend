@@ -258,14 +258,29 @@ exports.confirmarOrden = async (req, res) => {
       if (vale_id) {
         vale = await ValeCorporativo.findByPk(vale_id);
         if (!vale) return res.status(404).json({ error: 'Vale no encontrado' });
-        if (vale.usado) return res.status(400).json({ error: 'Vale ya fue utilizado' });
+        
+        // Verificar que tenga usos disponibles
+        if (vale.usos_disponibles <= 0) {
+          return res.status(400).json({ error: 'Vale sin usos disponibles (ya fue utilizado completamente)' });
+        }
+        
         const ahora = new Date();
         if (vale.fecha_expiracion && new Date(vale.fecha_expiracion) < ahora) return res.status(400).json({ error: 'Vale expirado' });
 
-        if (vale.tipo === 'entrada') descuentoAplicado = Math.min(vale.valor || 0, ticketsSubtotal);
-        else if (vale.tipo === 'combo') descuentoAplicado = Math.min(vale.valor || 0, combosSubtotal);
+        // El campo "valor" representa el PORCENTAJE de descuento (ej: 20 = 20%)
+        const porcentajeDescuento = (vale.valor || 0) / 100;
+        
+        if (vale.tipo === 'entrada') {
+          // Aplicar porcentaje de descuento sobre tickets
+          descuentoAplicado = ticketsSubtotal * porcentajeDescuento;
+        } else if (vale.tipo === 'combo') {
+          // Aplicar porcentaje de descuento sobre combos
+          descuentoAplicado = combosSubtotal * porcentajeDescuento;
+        }
 
         montoTotal = Math.max(0, montoTotal - descuentoAplicado);
+        
+        console.log(`💰 Vale aplicado: ${vale.valor}% de descuento = S/ ${descuentoAplicado.toFixed(2)}`);
       }
 
       // Crear OrdenTicket (solo si hay tickets)
@@ -346,9 +361,21 @@ exports.confirmarOrden = async (req, res) => {
       // Actualizar orden
       await orden.update({ estado: 'pagada', monto_total: montoTotal });
 
-      // Marcar vale usado
+      // Decrementar usos disponibles del vale
       if (vale) {
-        try { await vale.update({ usado: true, id_orden_compra: orden.id }); } catch (err) { console.error('Error marcando vale como usado:', err); }
+        try {
+          const nuevosUsos = vale.usos_disponibles - 1;
+          const yaUsado = nuevosUsos <= 0;
+          
+          await vale.update({ 
+            usos_disponibles: nuevosUsos,
+            usado: yaUsado // Marcar como usado solo cuando no quedan usos
+          });
+          
+          console.log(`✅ Vale ${vale.codigo}: ${nuevosUsos} usos restantes ${yaUsado ? '(AGOTADO)' : ''}`);
+        } catch (err) { 
+          console.error('Error actualizando usos del vale:', err); 
+        }
       }
 
       const ordenCompleta = await OrdenCompra.findByPk(orden.id, { include: ordenInclude });
