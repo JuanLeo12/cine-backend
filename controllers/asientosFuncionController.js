@@ -57,12 +57,18 @@ exports.bloquearAsiento = async (req, res) => {
     if (!funcion)
       return res.status(404).json({ error: "Función no encontrada" });
 
-    const fechaHoraFuncion = new Date(`${funcion.fecha}T${funcion.hora}`);
-    if (fechaHoraFuncion <= new Date()) {
+    // Validar que la función no haya iniciado
+    // Nota: Las fechas en DB están en hora de Perú (UTC-5)
+    const fechaHoraFuncion = new Date(`${funcion.fecha}T${funcion.hora_inicio}-05:00`);
+    const ahora = new Date();
+    
+    // Permitir compra hasta que la función haya iniciado
+    if (ahora >= fechaHoraFuncion) {
+      const minutosRestantes = Math.floor((fechaHoraFuncion - ahora) / 60000);
       return res
         .status(400)
         .json({
-          error: "No se puede bloquear asiento de una función ya iniciada",
+          error: `No se puede bloquear asiento. La función ${minutosRestantes > 0 ? `inicia en ${minutosRestantes} minutos` : 'ya comenzó'}`,
         });
     }
 
