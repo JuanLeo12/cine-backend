@@ -1,9 +1,12 @@
 const { Sequelize } = require("sequelize");
 const dotenv = require("dotenv");
 
-dotenv.config({
-  path: process.env.NODE_ENV === "test" ? ".env.test" : ".env",
-});
+// Solo cargar .env en desarrollo/test, no en producción
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config({
+    path: process.env.NODE_ENV === "test" ? ".env.test" : ".env",
+  });
+}
 
 // Control del logging
 const shouldLogSQL =
