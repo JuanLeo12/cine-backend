@@ -1,9 +1,13 @@
+// Cargar variables de entorno PRIMERO (antes de cualquier otro require)
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config({
+    path: process.env.NODE_ENV === "test" ? ".env.test" : ".env",
+  });
+}
+
 const sequelize = require("./config/db");
 const app = require("./app");
 const { invalidarTodasLasSesiones } = require("./utils/invalidarSesiones");
-
-// Iniciar cron job para liberar asientos
-require("./utils/liberarAsientos");
 
 const PORT = process.env.PORT || 4000;
 
