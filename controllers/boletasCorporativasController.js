@@ -593,12 +593,13 @@ const obtenerMisBoletas = async (req, res) => {
             include: [{
               model: OrdenCompra,
               as: 'ordenCompra',
+              required: false, // Opcional: pagos directos sin orden
               attributes: ['id', 'fecha_compra', 'id_usuario']
             }],
             attributes: ['id', 'monto_total', 'fecha_pago']
           }) : null;
           
-          console.log(`💰 Pago encontrado:`, pago ? `ID ${pago.id}, monto: ${pago.monto_total}, orden: ${pago.ordenCompra?.id}` : 'No encontrado');
+          console.log(`💰 Pago encontrado:`, pago ? `ID ${pago.id}, monto: ${pago.monto_total}, fecha: ${pago.fecha_pago}, orden: ${pago.ordenCompra?.id || 'Sin orden'}` : 'No encontrado');
           
           // Calcular monto correcto basado en cantidad de usos del vale
           const montoCalculado = vale ? (vale.cantidad_usos * 7.00) : 0;
@@ -610,22 +611,35 @@ const obtenerMisBoletas = async (req, res) => {
             usos_disponibles: vale ? vale.usos_disponibles : 0,
             monto_total: montoCalculado, // Usar monto calculado en vez del pago
             monto_pago_original: pago?.monto_total, // Guardar el original por referencia
-            fecha_compra: pago?.ordenCompra?.fecha_compra || pago?.fecha_pago,
+            // Usar fecha del pago si no hay orden asociada
+            fecha_compra: pago?.ordenCompra?.fecha_compra || pago?.fecha_pago || new Date().toISOString(),
             id_orden_compra: pago?.ordenCompra?.id || null, // Siempre incluir, aunque sea null
-            id_usuario_orden: pago?.ordenCompra?.id_usuario || null // ID del usuario de la orden
+            id_usuario_orden: pago?.ordenCompra?.id_usuario || null, // ID del usuario de la orden
+            id_pago: vale?.id_pago // Incluir ID del pago para referencia
           };
           
-          console.log(`💵 Monto recalculado: ${montoCalculado} (original: ${pago?.monto_total}), orden: ${detalles.id_orden_compra}`);
+          console.log(`💵 Detalles de vale creados:`, {
+            monto: montoCalculado,
+            fecha_compra: detalles.fecha_compra,
+            id_pago: detalles.id_pago,
+            tiene_orden: !!pago?.ordenCompra
+          });
         }
 
         const resultado = {
           ...boleta.toJSON(),
           detalles,
-          vales: vales.length > 0 ? vales : undefined,
+          vales: vales.length > 0 ? vales : [], // Siempre un array, aunque esté vacío
           id_pago_orden: detalles?.id_orden_compra // Exponer para fácil acceso en frontend
         };
         
-        console.log(`✅ Boleta ${boleta.id} procesada con ${vales.length} vales`);
+        console.log(`✅ Boleta ${boleta.id} procesada:`, {
+          tipo: resultado.tipo,
+          cant_vales: vales.length,
+          tiene_detalles: !!detalles,
+          id_pago: detalles?.id_pago,
+          id_orden: detalles?.id_orden_compra
+        });
         
         return resultado;
       })
