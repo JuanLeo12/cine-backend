@@ -228,6 +228,20 @@ exports.crearFuncion = async (req, res) => {
         .json({ error: "Campos obligatorios: película, sala, fecha y hora" });
     }
 
+    // 🕐 Validar que no se cree función en horario pasado (zona horaria Perú UTC-5)
+    const fechaHoraFuncion = new Date(`${fecha}T${hora}-05:00`);
+    const ahora = new Date();
+    
+    if (fechaHoraFuncion < ahora) {
+      const diferencia = Math.round((ahora - fechaHoraFuncion) / 60000); // minutos
+      return res.status(400).json({ 
+        error: "No se puede crear una función en un horario que ya pasó",
+        detalles: `La función sería ${diferencia} minuto${diferencia !== 1 ? 's' : ''} en el pasado`,
+        fecha_funcion: fechaHoraFuncion.toISOString(),
+        fecha_actual: ahora.toISOString()
+      });
+    }
+
     // 1. Obtener duración de la película
     const pelicula = await Pelicula.findByPk(id_pelicula);
     if (!pelicula) {
@@ -314,6 +328,20 @@ exports.actualizarFuncion = async (req, res) => {
       return res
         .status(400)
         .json({ error: "Campos obligatorios: película, sala, fecha y hora" });
+    }
+
+    // 🕐 Validar que no se actualice a un horario pasado (zona horaria Perú UTC-5)
+    const fechaHoraFuncion = new Date(`${fecha}T${hora}-05:00`);
+    const ahora = new Date();
+    
+    if (fechaHoraFuncion < ahora) {
+      const diferencia = Math.round((ahora - fechaHoraFuncion) / 60000); // minutos
+      return res.status(400).json({ 
+        error: "No se puede programar una función en un horario que ya pasó",
+        detalles: `El horario sería ${diferencia} minuto${diferencia !== 1 ? 's' : ''} en el pasado`,
+        fecha_funcion: fechaHoraFuncion.toISOString(),
+        fecha_actual: ahora.toISOString()
+      });
     }
 
     const funcion = await Funcion.findByPk(req.params.id);
