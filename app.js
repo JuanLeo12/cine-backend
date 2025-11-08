@@ -72,6 +72,78 @@ app.get("/", (req, res) => {
   res.send("🎬 Backend CINE funcionando correctamente");
 });
 
+// 🔧 Endpoint temporal para ejecutar migración de pagos (SOLO ADMIN)
+app.get("/admin/migrate-pagos-nullable", async (req, res) => {
+  try {
+    // Importar sequelize
+    const sequelize = require('./config/db');
+    
+    console.log('🔧 Ejecutando migración: Permitir id_orden_compra NULL en pagos...');
+    
+    // Verificar estado actual
+    const [checkBefore] = await sequelize.query(`
+      SELECT column_name, is_nullable, data_type
+      FROM information_schema.columns
+      WHERE table_name = 'pagos' AND column_name = 'id_orden_compra';
+    `);
+    
+    console.log('📊 Estado ANTES:', checkBefore[0]);
+    
+    if (checkBefore[0]?.is_nullable === 'YES') {
+      return res.json({
+        success: true,
+        message: '✅ La migración ya fue ejecutada anteriormente',
+        estado: 'Ya migrado',
+        detalles: checkBefore[0]
+      });
+    }
+    
+    // Ejecutar migración
+    await sequelize.query(`
+      ALTER TABLE pagos 
+      ALTER COLUMN id_orden_compra DROP NOT NULL;
+    `);
+    
+    console.log('✅ Migración ejecutada');
+    
+    // Verificar estado después
+    const [checkAfter] = await sequelize.query(`
+      SELECT column_name, is_nullable, data_type
+      FROM information_schema.columns
+      WHERE table_name = 'pagos' AND column_name = 'id_orden_compra';
+    `);
+    
+    console.log('📊 Estado DESPUÉS:', checkAfter[0]);
+    
+    if (checkAfter[0]?.is_nullable === 'YES') {
+      res.json({
+        success: true,
+        message: '✅ ¡Migración completada exitosamente!',
+        estado: 'Migrado',
+        antes: checkBefore[0],
+        despues: checkAfter[0],
+        info: 'La columna id_orden_compra ahora permite valores NULL. Los vales corporativos ya funcionarán correctamente.'
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: '⚠️ La migración se ejecutó pero la verificación falló',
+        antes: checkBefore[0],
+        despues: checkAfter[0]
+      });
+    }
+    
+  } catch (error) {
+    console.error('❌ Error ejecutando migración:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al ejecutar migración',
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
+  }
+});
+
 // ⚠️ Middleware de manejo de errores global (debe estar al final)
 app.use((err, req, res, next) => {
   console.error('❌ Error no manejado:', err);
