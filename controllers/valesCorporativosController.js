@@ -46,22 +46,32 @@ exports.crearVale = async (req, res) => {
     const existe = await ValeCorporativo.findOne({ where: { codigo } });
     if (existe) return res.status(409).json({ error: "El código ya existe" });
 
+    // Validar pago si se proporciona
     if (id_pago) {
       const pago = await Pago.findByPk(id_pago, {
         include: [
-          { model: OrdenCompra, as: "ordenCompra", attributes: ["id_usuario"] },
+          { 
+            model: OrdenCompra, 
+            as: "ordenCompra", 
+            attributes: ["id_usuario"],
+            required: false // ← OPCIONAL: permite pagos sin orden
+          },
         ],
       });
       if (!pago) return res.status(404).json({ error: "Pago no encontrado" });
 
-      if (
-        req.user.rol !== "admin" &&
-        pago.ordenCompra?.id_usuario !== req.user.id
-      ) {
-        return res.status(403).json({
-          error: "No puedes asociar un vale a un pago que no es tuyo",
-        });
+      // Solo validar si el pago tiene una orden asociada
+      if (pago.ordenCompra) {
+        if (
+          req.user.rol !== "admin" &&
+          pago.ordenCompra.id_usuario !== req.user.id
+        ) {
+          return res.status(403).json({
+            error: "No puedes asociar un vale a un pago que no es tuyo",
+          });
+        }
       }
+      // Si no tiene orden, asumir que es un pago directo del usuario autenticado (vales corporativos)
     }
 
     if (id_orden_compra) {
