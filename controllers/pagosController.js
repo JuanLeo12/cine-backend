@@ -88,6 +88,15 @@ exports.crearPago = async (req, res) => {
       estado_pago = "completado",
     } = req.body;
 
+    console.log('💰 Datos recibidos para crear pago:', {
+      id_orden_compra,
+      id_funcion,
+      id_metodo_pago,
+      monto_total,
+      estado_pago,
+      user: req.user?.id
+    });
+
     const errores = validarPago({
       id_orden_compra,
       id_funcion,
@@ -95,14 +104,25 @@ exports.crearPago = async (req, res) => {
       monto_total,
       estado_pago,
     });
-    if (errores.length > 0) return res.status(400).json({ errores });
+    
+    // Permitir pagos sin orden si es usuario corporativo/cliente (para vales)
+    const esPagoCorporativoSinOrden = (req.user?.rol === 'corporativo' || req.user?.rol === 'cliente') 
+                                       && !id_orden_compra 
+                                       && !id_funcion;
+    
+    if (errores.length > 0 && !esPagoCorporativoSinOrden) {
+      console.log('❌ Errores de validación:', errores);
+      return res.status(400).json({ errores });
+    }
 
     // Validar método de pago
     const metodo = await MetodoPago.findByPk(id_metodo_pago);
-    if (!metodo)
+    if (!metodo) {
+      console.log('❌ Método de pago no encontrado:', id_metodo_pago);
       return res.status(404).json({ error: "Método de pago no encontrado" });
+    }
 
-    // Validar OrdenCompra
+    // Validar OrdenCompra (solo si se proporciona)
     if (id_orden_compra) {
       const orden = await OrdenCompra.findByPk(id_orden_compra);
       if (!orden)
@@ -114,7 +134,7 @@ exports.crearPago = async (req, res) => {
       }
     }
 
-    // Validar Funcion (corporativo)
+    // Validar Funcion (corporativo) - solo si se proporciona
     if (id_funcion) {
       const funcion = await Funcion.findByPk(id_funcion);
       if (!funcion)
@@ -138,7 +158,8 @@ exports.crearPago = async (req, res) => {
       fecha_pago: new Date(),
     });
 
-    res.status(201).json({ mensaje: "Pago registrado con éxito", pago: nuevo });
+    console.log('✅ Pago creado exitosamente:', nuevo.id);
+    res.status(201).json({ mensaje: "Pago registrado con éxito", pago: nuevo, id: nuevo.id });
   } catch (error) {
     console.error("Error crearPago:", error);
     res.status(500).json({ error: "Error al registrar pago" });

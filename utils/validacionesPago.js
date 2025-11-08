@@ -13,9 +13,11 @@ const validarPago = (data) => {
     estado_pago,
   } = data;
 
-  if ((!id_orden_compra && !id_funcion) || !id_metodo_pago || !monto_total) {
+  // Validar que al menos exista método de pago y monto
+  // Permitir pagos sin orden ni función (para vales corporativos)
+  if (!id_metodo_pago || !monto_total) {
     errores.push(
-      "Debes indicar orden de compra o función, método de pago y monto total"
+      "Debes indicar método de pago y monto total"
     );
   }
 

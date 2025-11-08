@@ -80,7 +80,7 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
         {
           model: Sala,
           as: 'sala',
-          attributes: ['nombre', 'tipo_sala', 'capacidad'],
+          attributes: ['nombre', 'tipo_sala', 'filas', 'columnas'],
           include: [{
             model: Sede,
             as: 'sede',
@@ -362,7 +362,7 @@ const obtenerBoletaPorQR = async (req, res) => {
           {
             model: Sala,
             as: 'sala',
-            attributes: ['nombre', 'tipo_sala', 'capacidad'],
+            attributes: ['nombre', 'tipo_sala', 'filas', 'columnas'],
             include: [{
               model: Sede,
               as: 'sede',
@@ -679,7 +679,7 @@ const obtenerTodasBoletasAdmin = async (req, res) => {
               { 
                 model: Sala, 
                 as: 'sala', 
-                attributes: ['nombre', 'tipo_sala', 'capacidad'],
+                attributes: ['nombre', 'tipo_sala', 'filas', 'columnas'],
                 include: [{ model: Sede, as: 'sede', attributes: ['nombre', 'ciudad'] }]
               },
               {
