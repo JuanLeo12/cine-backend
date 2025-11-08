@@ -9,13 +9,24 @@ const { Sequelize, DataTypes } = require('sequelize');
 const crypto = require('crypto');
 
 // ⚠️ CONFIGURACIÓN DE BASE DE DATOS DE RAILWAY (PRODUCCIÓN)
-const DATABASE_URL = process.env.DATABASE_URL || 'postgresql://postgres:NHnawdJgaWJXKLIVwVGNTunbDpKOIdKy@postgres.railway.internal:5432/railway';
+// IMPORTANTE: Ejecutar este script con: railway run node actualizar-qr-corporativos-railway.js
+// Esto inyectará automáticamente la variable DATABASE_URL de Railway
+const DATABASE_URL = process.env.DATABASE_URL;
+
+if (!DATABASE_URL) {
+  console.error('❌ ERROR: DATABASE_URL no está definida');
+  console.error('💡 Ejecuta el script con: railway run node actualizar-qr-corporativos-railway.js');
+  process.exit(1);
+}
 
 const sequelize = new Sequelize(DATABASE_URL, {
   dialect: 'postgres',
   logging: false,
   dialectOptions: {
-    ssl: false // Railway internal no necesita SSL
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
   }
 });
 
