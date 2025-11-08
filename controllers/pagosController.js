@@ -161,7 +161,12 @@ exports.crearPago = async (req, res) => {
     console.log('✅ Pago creado exitosamente:', nuevo.id);
     res.status(201).json({ mensaje: "Pago registrado con éxito", pago: nuevo, id: nuevo.id });
   } catch (error) {
-    console.error("Error crearPago:", error);
-    res.status(500).json({ error: "Error al registrar pago" });
+    console.error("❌ Error crearPago:", error);
+    console.error("Stack trace:", error.stack);
+    res.status(500).json({ 
+      error: "Error al registrar pago",
+      detalle: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 };

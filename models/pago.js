@@ -4,7 +4,10 @@ const sequelize = require("../config/db");
 const Pago = sequelize.define(
   "Pago",
   {
-    id_orden_compra: { type: DataTypes.INTEGER, allowNull: false },
+    id_orden_compra: { 
+      type: DataTypes.INTEGER, 
+      allowNull: true // Permitir null para pagos directos (ej: vales corporativos)
+    },
     id_metodo_pago: { type: DataTypes.INTEGER, allowNull: false },
 
     monto_total: {
