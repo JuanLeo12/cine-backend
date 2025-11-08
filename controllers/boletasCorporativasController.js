@@ -169,25 +169,28 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
       archivo_publicidad: publicidad.archivo_publicidad || null
     };
   } else if (tipo === 'vales_corporativos') {
-    // Para vales corporativos, el id_referencia es el id_pago
-    // Buscamos el vale asociado a ese pago (ahora solo hay 1 vale por pago)
-    const vale = await ValeCorporativo.findOne({
-      where: { id_pago: id_referencia }
-    });
-
-    if (vale) {
-      // Obtener información del pago para incluir datos del usuario
-      const pago = await Pago.findByPk(id_referencia, {
+    // Para vales corporativos, id_referencia es el ID del vale
+    const vale = await ValeCorporativo.findByPk(id_referencia, {
+      include: [{
+        model: Pago,
+        as: 'pago',
+        required: false,
         include: [{
           model: OrdenCompra,
-          as: 'orden',
+          as: 'ordenCompra',
+          required: false,
           include: [{
             model: Usuario,
             as: 'usuario',
             attributes: ['nombre', 'email', 'representante', 'cargo']
           }]
         }]
-      });
+      }]
+    });
+
+    if (vale) {
+      // Obtener información del usuario desde el pago (si existe orden)
+      const usuario = vale.pago?.ordenCompra?.usuario;
 
       datosQR.servicio = {
         tipo_servicio: 'Vale Corporativo',
@@ -197,20 +200,21 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
         cantidad_usos_total: vale.cantidad_usos || 1,
         usos_disponibles: vale.usos_disponibles || 0,
         fecha_expiracion: vale.fecha_expiracion,
-        estado: vale.usado ? 'agotado' : 'vigente',
-        empresa: pago?.orden?.usuario?.nombre || 'N/A',
-        representante: pago?.orden?.usuario ? {
-          nombre: pago.orden.usuario.representante || 'N/A',
-          email: pago.orden.usuario.email || 'N/A',
-          cargo: pago.orden.usuario.cargo || 'N/A'
+        estado: vale.usos_disponibles > 0 ? 'vigente' : 'agotado',
+        empresa: usuario?.nombre || 'N/A',
+        representante: usuario ? {
+          nombre: usuario.representante || 'N/A',
+          email: usuario.email || 'N/A',
+          cargo: usuario.cargo || 'N/A'
         } : null,
-        id_pago: id_referencia
+        id_vale: vale.id,
+        id_pago: vale.id_pago
       };
     } else {
       datosQR.servicio = {
         tipo_servicio: 'Vales Corporativos',
         mensaje: 'Vale no encontrado',
-        id_pago: id_referencia
+        id_referencia: id_referencia
       };
     }
   }
