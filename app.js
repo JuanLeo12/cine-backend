@@ -253,21 +253,37 @@ app.get("/admin/fix-orphan-vales", async (req, res) => {
     
     for (const vale of valesHuerfanos) {
       try {
-        // Buscar usuario a través de las boletas que usan este vale
-        const [usuario] = await sequelize.query(`
-          SELECT id_usuario_corporativo as usuario_id
-          FROM funciones f
-          INNER JOIN boletas_corporativas bc ON bc.id_referencia = f.id
-          WHERE bc.tipo = 'funcion_privada'
-          LIMIT 1;
-        `);
-
-        // Si no encontramos usuario por funciones, buscar por quien tiene acceso al vale
-        // Asumimos que es el primer usuario corporativo/cliente que existe
-        let usuarioFinal = usuario[0]?.usuario_id;
+        // Estrategia 1: Si el usuario está autenticado y es corporativo/cliente, asumir que es suyo
+        // Estrategia 2: Buscar el usuario a través de la boleta del vale
+        // Estrategia 3: Si todo falla, asignar al primer usuario corporativo
         
+        let usuarioFinal = null;
+
+        // Buscar quién creó la boleta de este vale (si existe)
+        if (vale.boleta_id) {
+          const [boletaInfo] = await sequelize.query(`
+            SELECT 
+              CASE 
+                WHEN bc.tipo = 'funcion_privada' THEN f.id_cliente_corporativo
+                WHEN bc.tipo = 'alquiler_sala' THEN a.id_usuario
+                WHEN bc.tipo = 'publicidad' THEN pub.id_usuario
+                ELSE NULL
+              END as usuario_id
+            FROM boletas_corporativas bc
+            LEFT JOIN funciones f ON bc.id_referencia = f.id AND bc.tipo = 'funcion_privada'
+            LEFT JOIN alquiler_sala a ON bc.id_referencia = a.id AND bc.tipo = 'alquiler_sala'
+            LEFT JOIN publicidad pub ON bc.id_referencia = pub.id AND bc.tipo = 'publicidad'
+            WHERE bc.id = :boleta_id
+            LIMIT 1;
+          `, {
+            replacements: { boleta_id: vale.boleta_id }
+          });
+          
+          usuarioFinal = boletaInfo[0]?.usuario_id;
+        }
+
+        // Si no encontramos usuario por boleta, buscar cualquier usuario corporativo o cliente
         if (!usuarioFinal) {
-          // Buscar el primer usuario corporativo o cliente
           const [primerUsuario] = await sequelize.query(`
             SELECT id 
             FROM usuarios 
@@ -296,6 +312,7 @@ app.get("/admin/fix-orphan-vales", async (req, res) => {
             vale_codigo: vale.vale_codigo,
             pago_id: vale.pago_id,
             usuario_asignado: usuarioFinal,
+            metodo: vale.boleta_id ? 'por_boleta' : 'primer_usuario_corporativo',
             estado: 'actualizado'
           });
           
