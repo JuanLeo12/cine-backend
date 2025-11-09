@@ -472,7 +472,11 @@ const obtenerMisBoletas = async (req, res) => {
     // Obtener pagos del usuario (para vales corporativos)
     const { Pago } = require('../models');
     const { OrdenCompra } = require('../models');
-    const pagos = await Pago.findAll({
+    
+    // Buscar pagos de dos formas:
+    // 1. Pagos con orden de compra del usuario
+    // 2. Pagos directos (sin orden) del usuario mismo
+    const pagosConOrden = await Pago.findAll({
       include: [{
         model: OrdenCompra,
         as: 'ordenCompra',
@@ -482,8 +486,21 @@ const obtenerMisBoletas = async (req, res) => {
       attributes: ['id']
     });
 
-    const idsPagos = pagos.map(p => p.id);
-    console.log('💰 IDs de pagos:', idsPagos);
+    const pagosSinOrden = await Pago.findAll({
+      where: { 
+        id_usuario: idUsuario,
+        id_orden_compra: null 
+      },
+      attributes: ['id']
+    });
+
+    const idsPagosConOrden = pagosConOrden.map(p => p.id);
+    const idsPagosSinOrden = pagosSinOrden.map(p => p.id);
+    const idsPagos = [...idsPagosConOrden, ...idsPagosSinOrden];
+    
+    console.log('💰 IDs de pagos con orden:', idsPagosConOrden);
+    console.log('💳 IDs de pagos sin orden (directos):', idsPagosSinOrden);
+    console.log('💵 Total IDs de pagos:', idsPagos);
 
     // Para vales, necesitamos buscar los IDs de los vales que tienen esos pagos
     const valesDelUsuario = await ValeCorporativo.findAll({
