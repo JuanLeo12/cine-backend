@@ -359,6 +359,87 @@ app.get("/admin/fix-orphan-vales", async (req, res) => {
   }
 });
 
+// 🔧 Endpoint para asignar pagos específicos a un usuario
+// Uso: /admin/assign-payment-to-user/22/29 (asigna pago 22 a usuario 29)
+app.get("/admin/assign-payment-to-user/:idPago/:idUsuario", async (req, res) => {
+  try {
+    const sequelize = require('./config/db');
+    const { idPago, idUsuario } = req.params;
+    
+    console.log(`🔄 Asignando pago ${idPago} a usuario ${idUsuario}...`);
+
+    // Verificar que el pago existe
+    const [pago] = await sequelize.query(`
+      SELECT id, id_usuario, monto_total
+      FROM pagos
+      WHERE id = :id_pago;
+    `, {
+      replacements: { id_pago: idPago }
+    });
+
+    if (!pago || pago.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: `Pago ${idPago} no encontrado`
+      });
+    }
+
+    // Verificar que el usuario existe
+    const [usuario] = await sequelize.query(`
+      SELECT id, nombre, email, rol
+      FROM usuarios
+      WHERE id = :id_usuario;
+    `, {
+      replacements: { id_usuario: idUsuario }
+    });
+
+    if (!usuario || usuario.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: `Usuario ${idUsuario} no encontrado`
+      });
+    }
+
+    // Actualizar el pago
+    await sequelize.query(`
+      UPDATE pagos
+      SET id_usuario = :id_usuario
+      WHERE id = :id_pago;
+    `, {
+      replacements: {
+        id_usuario: idUsuario,
+        id_pago: idPago
+      }
+    });
+
+    // Buscar vales asociados a este pago
+    const [vales] = await sequelize.query(`
+      SELECT id, codigo, tipo
+      FROM vales_corporativos
+      WHERE id_pago = :id_pago;
+    `, {
+      replacements: { id_pago: idPago }
+    });
+
+    res.json({
+      success: true,
+      message: `✅ Pago ${idPago} asignado exitosamente a usuario ${idUsuario}`,
+      pago_anterior: pago[0],
+      usuario_asignado: usuario[0],
+      vales_asociados: vales,
+      nota: 'Recarga "Mis Compras" para ver los cambios'
+    });
+
+  } catch (error) {
+    console.error('❌ Error asignando pago:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Error al asignar pago',
+      detalle: error.message
+    });
+  }
+});
+
 // ⚠️ Middleware de manejo de errores global (debe estar al final)
 app.use((err, req, res, next) => {
   console.error('❌ Error no manejado:', err);
