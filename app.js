@@ -271,7 +271,7 @@ app.get("/admin/fix-orphan-vales", async (req, res) => {
               END as usuario_id
             FROM boletas_corporativas bc
             LEFT JOIN funciones f ON bc.id_referencia = f.id AND bc.tipo = 'funcion_privada'
-            LEFT JOIN alquiler_sala a ON bc.id_referencia = a.id AND bc.tipo = 'alquiler_sala'
+            LEFT JOIN alquileres_sala a ON bc.id_referencia = a.id AND bc.tipo = 'alquiler_sala'
             LEFT JOIN publicidad pub ON bc.id_referencia = pub.id AND bc.tipo = 'publicidad'
             WHERE bc.id = :boleta_id
             LIMIT 1;
