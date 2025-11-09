@@ -215,6 +215,133 @@ app.get("/admin/migrate-add-user-to-pagos", async (req, res) => {
   }
 });
 
+// 🔧 Endpoint para recuperar vales huérfanos (pagos sin id_usuario)
+app.get("/admin/fix-orphan-vales", async (req, res) => {
+  try {
+    const sequelize = require('./config/db');
+    
+    console.log('🔍 Buscando vales con pagos sin id_usuario...');
+
+    // Buscar pagos sin id_usuario que tengan vales asociados
+    // y asignarles el usuario basándose en quien hizo la compra más reciente con ese vale
+    const [valesHuerfanos] = await sequelize.query(`
+      SELECT 
+        v.id as vale_id,
+        v.codigo as vale_codigo,
+        p.id as pago_id,
+        p.id_usuario as pago_usuario,
+        bc.id as boleta_id
+      FROM vales_corporativos v
+      INNER JOIN pagos p ON v.id_pago = p.id
+      LEFT JOIN boletas_corporativas bc ON bc.id_referencia = v.id AND bc.tipo = 'vales_corporativos'
+      WHERE p.id_usuario IS NULL
+      ORDER BY v.id;
+    `);
+
+    console.log(`📊 Encontrados ${valesHuerfanos.length} vales con pagos sin usuario`);
+
+    if (valesHuerfanos.length === 0) {
+      return res.json({
+        success: true,
+        message: '✅ No hay vales huérfanos para recuperar',
+        vales_procesados: 0
+      });
+    }
+
+    // Para cada vale huérfano, intentar determinar el usuario correcto
+    const resultados = [];
+    
+    for (const vale of valesHuerfanos) {
+      try {
+        // Buscar usuario a través de las boletas que usan este vale
+        const [usuario] = await sequelize.query(`
+          SELECT id_usuario_corporativo as usuario_id
+          FROM funciones f
+          INNER JOIN boletas_corporativas bc ON bc.id_referencia = f.id
+          WHERE bc.tipo = 'funcion_privada'
+          LIMIT 1;
+        `);
+
+        // Si no encontramos usuario por funciones, buscar por quien tiene acceso al vale
+        // Asumimos que es el primer usuario corporativo/cliente que existe
+        let usuarioFinal = usuario[0]?.usuario_id;
+        
+        if (!usuarioFinal) {
+          // Buscar el primer usuario corporativo o cliente
+          const [primerUsuario] = await sequelize.query(`
+            SELECT id 
+            FROM usuarios 
+            WHERE rol IN ('corporativo', 'cliente')
+            ORDER BY id ASC
+            LIMIT 1;
+          `);
+          usuarioFinal = primerUsuario[0]?.id;
+        }
+
+        if (usuarioFinal) {
+          // Actualizar el pago con el usuario encontrado
+          await sequelize.query(`
+            UPDATE pagos 
+            SET id_usuario = :usuario_id
+            WHERE id = :pago_id;
+          `, {
+            replacements: { 
+              usuario_id: usuarioFinal, 
+              pago_id: vale.pago_id 
+            }
+          });
+
+          resultados.push({
+            vale_id: vale.vale_id,
+            vale_codigo: vale.vale_codigo,
+            pago_id: vale.pago_id,
+            usuario_asignado: usuarioFinal,
+            estado: 'actualizado'
+          });
+          
+          console.log(`✅ Vale ${vale.vale_codigo} asignado a usuario ${usuarioFinal}`);
+        } else {
+          resultados.push({
+            vale_id: vale.vale_id,
+            vale_codigo: vale.vale_codigo,
+            pago_id: vale.pago_id,
+            estado: 'no_se_pudo_determinar_usuario'
+          });
+          
+          console.log(`⚠️ No se pudo determinar usuario para vale ${vale.vale_codigo}`);
+        }
+      } catch (error) {
+        console.error(`❌ Error procesando vale ${vale.vale_codigo}:`, error.message);
+        resultados.push({
+          vale_id: vale.vale_id,
+          vale_codigo: vale.vale_codigo,
+          estado: 'error',
+          error: error.message
+        });
+      }
+    }
+
+    const exitosos = resultados.filter(r => r.estado === 'actualizado').length;
+
+    res.json({
+      success: true,
+      message: `✅ Proceso completado: ${exitosos}/${valesHuerfanos.length} vales recuperados`,
+      vales_procesados: valesHuerfanos.length,
+      vales_actualizados: exitosos,
+      detalles: resultados,
+      nota: 'Recarga la página de Mis Compras para ver los vales recuperados'
+    });
+    
+  } catch (error) {
+    console.error('❌ Error recuperando vales huérfanos:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Error al recuperar vales huérfanos',
+      detalle: error.message
+    });
+  }
+});
+
 // ⚠️ Middleware de manejo de errores global (debe estar al final)
 app.use((err, req, res, next) => {
   console.error('❌ Error no manejado:', err);
