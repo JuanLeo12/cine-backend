@@ -222,19 +222,20 @@ app.get("/admin/fix-orphan-vales", async (req, res) => {
     
     console.log('🔍 Buscando vales con pagos sin id_usuario...');
 
-    // Buscar pagos sin id_usuario que tengan vales asociados
-    // y asignarles el usuario basándose en quien hizo la compra más reciente con ese vale
+    // Buscar pagos que tengan vales asociados
+    // y asignarles el usuario basándose en la orden de compra o boleta corporativa
     const [valesHuerfanos] = await sequelize.query(`
       SELECT 
         v.id as vale_id,
         v.codigo as vale_codigo,
         p.id as pago_id,
-        p.id_usuario as pago_usuario,
+        oc.id_usuario as pago_usuario,
         bc.id as boleta_id
       FROM vales_corporativos v
       INNER JOIN pagos p ON v.id_pago = p.id
+      LEFT JOIN ordenes_compra oc ON p.id_orden_compra = oc.id
       LEFT JOIN boletas_corporativas bc ON bc.id_referencia = v.id AND bc.tipo = 'vales_corporativos'
-      WHERE p.id_usuario IS NULL
+      WHERE oc.id_usuario IS NULL AND p.id_orden_compra IS NULL
       ORDER BY v.id;
     `);
 
@@ -271,7 +272,7 @@ app.get("/admin/fix-orphan-vales", async (req, res) => {
               END as usuario_id
             FROM boletas_corporativas bc
             LEFT JOIN funciones f ON bc.id_referencia = f.id AND bc.tipo = 'funcion_privada'
-            LEFT JOIN alquileres_sala a ON bc.id_referencia = a.id AND bc.tipo = 'alquiler_sala'
+            LEFT JOIN alquiler_salas a ON bc.id_referencia = a.id AND bc.tipo = 'alquiler_sala'
             LEFT JOIN publicidad pub ON bc.id_referencia = pub.id AND bc.tipo = 'publicidad'
             WHERE bc.id = :boleta_id
             LIMIT 1;

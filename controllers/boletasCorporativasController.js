@@ -80,7 +80,7 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
         {
           model: Sala,
           as: 'sala',
-          attributes: ['nombre', 'tipo_sala', 'filas', 'columnas'],
+          attributes: ['nombre', 'tipo_sala'],
           include: [{
             model: Sede,
             as: 'sede',
@@ -112,8 +112,7 @@ const generarDatosQR = async (tipo, id_referencia, codigo_unico) => {
         ciudad: alquiler.sala?.sede?.ciudad || 'N/A',
         direccion: alquiler.sala?.sede?.direccion || 'N/A',
         sala: alquiler.sala?.nombre || 'N/A',
-        tipo_sala: alquiler.sala?.tipo_sala || 'N/A',
-        capacidad: alquiler.sala ? (alquiler.sala.filas * alquiler.sala.columnas) : 0
+        tipo_sala: alquiler.sala?.tipo_sala || 'N/A'
       },
       precio: parseFloat(alquiler.precio || 0),
       empresa: alquiler.usuario?.nombre || 'N/A',
