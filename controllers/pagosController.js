@@ -152,13 +152,14 @@ exports.crearPago = async (req, res) => {
     const nuevo = await Pago.create({
       id_orden_compra: id_orden_compra || null,
       id_funcion: id_funcion || null,
+      id_usuario: req.user.id, // ← GUARDAR USUARIO QUE HIZO EL PAGO
       id_metodo_pago,
       monto_total,
       estado_pago,
       fecha_pago: new Date(),
     });
 
-    console.log('✅ Pago creado exitosamente:', nuevo.id);
+    console.log('✅ Pago creado exitosamente:', nuevo.id, 'Usuario:', req.user.id);
     res.status(201).json({ mensaje: "Pago registrado con éxito", pago: nuevo, id: nuevo.id });
   } catch (error) {
     console.error("❌ Error crearPago:", error);

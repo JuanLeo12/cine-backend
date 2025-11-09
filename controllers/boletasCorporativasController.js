@@ -469,47 +469,41 @@ const obtenerMisBoletas = async (req, res) => {
     const idsPublicidad = publicidadCampanas.map(p => p.id);
     console.log('📺 IDs de publicidad:', idsPublicidad);
 
-    // Obtener pagos del usuario (para vales corporativos)
-    const { Pago } = require('../models');
-    const { OrdenCompra } = require('../models');
+    // Obtener vales corporativos del usuario:
+    // 1. Vales con orden del usuario (id_orden_compra → ordenCompra.id_usuario)
+    // 2. Vales con pago directo del usuario (id_pago → pago.id_usuario) ← NUEVO
+    const { Pago, OrdenCompra } = require('../models');
     
-    // Buscar pagos de dos formas:
-    // 1. Pagos con orden de compra del usuario
-    // 2. Pagos directos (sin orden) del usuario mismo
-    const pagosConOrden = await Pago.findAll({
-      include: [{
-        model: OrdenCompra,
-        as: 'ordenCompra',
-        where: { id_usuario: idUsuario },
-        attributes: ['id', 'id_usuario']
-      }],
-      attributes: ['id']
-    });
-
-    const pagosSinOrden = await Pago.findAll({
-      where: { 
-        id_usuario: idUsuario,
-        id_orden_compra: null 
-      },
-      attributes: ['id']
-    });
-
-    const idsPagosConOrden = pagosConOrden.map(p => p.id);
-    const idsPagosSinOrden = pagosSinOrden.map(p => p.id);
-    const idsPagos = [...idsPagosConOrden, ...idsPagosSinOrden];
-    
-    console.log('💰 IDs de pagos con orden:', idsPagosConOrden);
-    console.log('💳 IDs de pagos sin orden (directos):', idsPagosSinOrden);
-    console.log('💵 Total IDs de pagos:', idsPagos);
-
-    // Para vales, necesitamos buscar los IDs de los vales que tienen esos pagos
     const valesDelUsuario = await ValeCorporativo.findAll({
-      where: { id_pago: idsPagos },
+      include: [
+        {
+          model: OrdenCompra,
+          as: 'ordenCompra',
+          where: { id_usuario: idUsuario },
+          attributes: ['id'],
+          required: false // Permite vales sin orden
+        },
+        {
+          model: Pago,
+          as: 'pago',
+          where: { id_usuario: idUsuario },
+          attributes: ['id'],
+          required: false // Permite vales sin pago
+        }
+      ],
       attributes: ['id']
     });
     
-    const idsVales = valesDelUsuario.map(v => v.id);
-    console.log('🎟️ IDs de vales (por pagos del usuario):', idsVales);
+    // Filtrar: incluir vales que tienen orden del usuario O pago del usuario
+    const idsVales = valesDelUsuario
+      .filter(v => {
+        const tieneOrdenPropia = v.ordenCompra && v.ordenCompra.id !== null;
+        const tienePagoPropio = v.pago && v.pago.id !== null;
+        return tieneOrdenPropia || tienePagoPropio;
+      })
+      .map(v => v.id);
+    
+    console.log('🎟️ IDs de vales del usuario (por orden o pago directo):', idsVales);
 
     // Construir condiciones OR dinámicamente
     const whereConditions = [];

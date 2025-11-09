@@ -8,6 +8,11 @@ const Pago = sequelize.define(
       type: DataTypes.INTEGER, 
       allowNull: true // Permitir null para pagos directos (ej: vales corporativos)
     },
+    id_usuario: {
+      type: DataTypes.INTEGER,
+      allowNull: true, // Permitir null para pagos antiguos antes de la migración
+      comment: 'Usuario que realizó el pago (especialmente importante para pagos sin orden)'
+    },
     id_metodo_pago: { type: DataTypes.INTEGER, allowNull: false },
 
     monto_total: {
