@@ -144,6 +144,77 @@ app.get("/admin/migrate-pagos-nullable", async (req, res) => {
   }
 });
 
+// 🔧 Endpoint temporal para ejecutar migración: Agregar id_usuario a pagos
+app.get("/admin/migrate-add-user-to-pagos", async (req, res) => {
+  try {
+    const sequelize = require('./config/db');
+    const { Pago } = require('./models');
+    
+    console.log('🚀 Iniciando migración: Agregar id_usuario a pagos...');
+
+    // 1. Verificar si la columna ya existe
+    const [checkColumn] = await sequelize.query(`
+      SELECT column_name 
+      FROM information_schema.columns
+      WHERE table_name = 'pagos' AND column_name = 'id_usuario';
+    `);
+    
+    if (checkColumn.length > 0) {
+      console.log('⚠️ La columna id_usuario ya existe');
+    } else {
+      // Agregar columna id_usuario
+      await sequelize.query(`
+        ALTER TABLE pagos 
+        ADD COLUMN id_usuario INTEGER REFERENCES usuarios(id);
+      `);
+      console.log('✅ Columna id_usuario agregada a tabla pagos');
+    }
+
+    // 2. Poblar id_usuario para pagos existentes que tienen orden
+    const [results] = await sequelize.query(`
+      UPDATE pagos 
+      SET id_usuario = ordenes_compra.id_usuario
+      FROM ordenes_compra
+      WHERE pagos.id_orden_compra = ordenes_compra.id
+        AND pagos.id_usuario IS NULL;
+    `);
+    console.log(`✅ ${results.rowCount || 0} pagos actualizados con id_usuario de su orden`);
+
+    // 3. Verificar pagos sin id_usuario
+    const pagosSinUsuario = await Pago.count({
+      where: { id_usuario: null }
+    });
+    
+    res.json({
+      success: true,
+      message: '✅ Migración completada exitosamente',
+      detalles: {
+        columna_creada: checkColumn.length === 0,
+        columna_ya_existia: checkColumn.length > 0,
+        pagos_actualizados: results.rowCount || 0,
+        pagos_sin_usuario: pagosSinUsuario,
+        nota: pagosSinUsuario > 0 
+          ? `Hay ${pagosSinUsuario} pagos sin id_usuario (probablemente pagos directos antiguos sin orden)`
+          : 'Todos los pagos tienen id_usuario correctamente asignado'
+      },
+      proximos_pasos: [
+        'Los nuevos pagos se crearán con id_usuario automáticamente',
+        'Los vales corporativos ahora se mostrarán correctamente en Mis Compras',
+        'Recarga la página de Mis Compras para ver los cambios'
+      ]
+    });
+    
+  } catch (error) {
+    console.error('❌ Error en migración:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Error al ejecutar migración',
+      detalle: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
+  }
+});
+
 // ⚠️ Middleware de manejo de errores global (debe estar al final)
 app.use((err, req, res, next) => {
   console.error('❌ Error no manejado:', err);
