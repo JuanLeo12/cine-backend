@@ -469,8 +469,7 @@ const obtenerMisBoletas = async (req, res) => {
     console.log('📺 IDs de publicidad:', idsPublicidad);
 
     // Obtener vales corporativos del usuario:
-    // 1. Vales con orden del usuario (id_orden_compra → ordenCompra.id_usuario)
-    // 2. Vales con pago directo del usuario (id_pago → pago.id_usuario) ← NUEVO
+    // Solo buscar vales que tienen orden de compra del usuario
     const { Pago, OrdenCompra } = require('../models');
     
     const valesDelUsuario = await ValeCorporativo.findAll({
@@ -480,29 +479,15 @@ const obtenerMisBoletas = async (req, res) => {
           as: 'ordenCompra',
           where: { id_usuario: idUsuario },
           attributes: ['id'],
-          required: false // Permite vales sin orden
-        },
-        {
-          model: Pago,
-          as: 'pago',
-          where: { id_usuario: idUsuario },
-          attributes: ['id'],
-          required: false // Permite vales sin pago
+          required: true // Solo vales con orden del usuario
         }
       ],
       attributes: ['id']
     });
     
-    // Filtrar: incluir vales que tienen orden del usuario O pago del usuario
-    const idsVales = valesDelUsuario
-      .filter(v => {
-        const tieneOrdenPropia = v.ordenCompra && v.ordenCompra.id !== null;
-        const tienePagoPropio = v.pago && v.pago.id !== null;
-        return tieneOrdenPropia || tienePagoPropio;
-      })
-      .map(v => v.id);
+    const idsVales = valesDelUsuario.map(v => v.id);
     
-    console.log('🎟️ IDs de vales del usuario (por orden o pago directo):', idsVales);
+    console.log('🎟️ IDs de vales del usuario (por orden de compra):', idsVales);
 
     // Construir condiciones OR dinámicamente
     const whereConditions = [];
