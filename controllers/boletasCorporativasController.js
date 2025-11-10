@@ -253,6 +253,15 @@ const crearBoletaCorporativa = async (req, res) => {
       });
     }
 
+    // 🔒 VALIDACIÓN DE ROL: Clientes solo pueden crear funciones privadas
+    if (req.usuario.rol === 'cliente') {
+      if (tipo !== 'funcion_privada' && tipo !== 'alquiler_sala') {
+        return res.status(403).json({ 
+          message: 'Los clientes solo pueden contratar funciones privadas. Los demás servicios corporativos requieren rol corporativo.' 
+        });
+      }
+    }
+
     // Verificar que la referencia exista
     if (tipo === 'funcion_privada') {
       const funcion = await Funcion.findByPk(id_referencia);
