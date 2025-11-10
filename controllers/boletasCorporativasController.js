@@ -254,7 +254,7 @@ const crearBoletaCorporativa = async (req, res) => {
     }
 
     // 🔒 VALIDACIÓN DE ROL: Clientes solo pueden crear funciones privadas
-    if (req.usuario.rol === 'cliente') {
+    if (req.user && req.user.rol === 'cliente') {
       if (tipo !== 'funcion_privada') {
         return res.status(403).json({ 
           message: 'Los clientes solo pueden contratar funciones privadas. Los demás servicios corporativos (alquiler de sala, vales, publicidad) requieren rol corporativo.' 
