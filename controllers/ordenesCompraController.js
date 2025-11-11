@@ -342,8 +342,33 @@ exports.confirmarOrden = async (req, res) => {
 
       // Aplicar descuento en registro correspondiente
       if (descuentoAplicado > 0) {
-        if (vale.tipo === 'entrada' && ordenTicketPrimero) await ordenTicketPrimero.update({ descuento: descuentoAplicado });
-        if (vale.tipo === 'combo' && ordenComboPrimero) await ordenComboPrimero.update({ descuento: descuentoAplicado });
+        if (vale.tipo === 'entrada' && tickets && tickets.length > 0) {
+          // Calcular descuento unitario por ticket
+          const cantidadTotalTickets = tickets.reduce((sum, item) => sum + item.cantidad, 0);
+          const descuentoUnitario = descuentoAplicado / cantidadTotalTickets;
+          
+          // Aplicar descuento unitario a todos los OrdenTicket
+          const ordenesTickets = await OrdenTicket.findAll({ where: { id_orden_compra: orden.id } });
+          for (const ordenTicket of ordenesTickets) {
+            await ordenTicket.update({ descuento: descuentoUnitario });
+          }
+          
+          console.log(`📊 Descuento unitario por ticket: S/ ${descuentoUnitario.toFixed(2)}`);
+        }
+        
+        if (vale.tipo === 'combo' && combos && combos.length > 0) {
+          // Calcular descuento unitario por combo
+          const cantidadTotalCombos = combos.reduce((sum, item) => sum + item.cantidad, 0);
+          const descuentoUnitario = descuentoAplicado / cantidadTotalCombos;
+          
+          // Aplicar descuento unitario a todos los OrdenCombo
+          const ordenesCombos = await OrdenCombo.findAll({ where: { id_orden_compra: orden.id } });
+          for (const ordenCombo of ordenesCombos) {
+            await ordenCombo.update({ descuento: descuentoUnitario });
+          }
+          
+          console.log(`📊 Descuento unitario por combo: S/ ${descuentoUnitario.toFixed(2)}`);
+        }
       }
 
       // Registrar pago
