@@ -169,12 +169,15 @@ exports.eliminarPelicula = async (req, res) => {
     }
 
     const asociada = await Funcion.findOne({
-      where: { id_pelicula: pelicula.id },
+      where: { 
+        id_pelicula: pelicula.id,
+        estado: "activa"
+      },
     });
 
     if (asociada) {
       return res.status(400).json({
-        error: "No se puede eliminar una película con funciones asociadas.",
+        error: "No se puede eliminar una película con funciones activas asociadas.",
       });
     }
 
